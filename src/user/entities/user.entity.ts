@@ -1,11 +1,14 @@
 import { Exclude } from 'class-transformer';
+import { Verification } from 'src/verification/entities/verification.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   Index,
+  OneToOne,
   PrimaryGeneratedColumn,
+  Relation,
   UpdateDateColumn
 } from 'typeorm';
 
@@ -25,8 +28,8 @@ export class User {
   @Column({ name: 'banned_at', type: 'timestamptz', nullable: true })
   bannedAt?: Date;
 
-  @Column({ name: 'verified_at', type: 'timestamptz', nullable: true })
-  verifiedAt?: Date;
+  @OneToOne(() => Verification, { nullable: true })
+  verification?: Relation<Verification>;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
