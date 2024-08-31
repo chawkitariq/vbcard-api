@@ -17,6 +17,12 @@ export class VerificationService {
     return this.verificationRepository.save(verification);
   }
 
+  findOneByToken(token: string) {
+    return this.verificationRepository.findOneBy({
+      token
+    });
+  }
+
   async update(id: string, updateVerificationDto: UpdateVerificationDto) {
     return this.verificationRepository.update(id, updateVerificationDto);
   }
