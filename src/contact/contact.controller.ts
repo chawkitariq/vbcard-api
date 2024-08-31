@@ -10,8 +10,8 @@ import {
   InternalServerErrorException
 } from '@nestjs/common';
 import { ContactService } from './contact.service';
-import { CreateContactDto } from './dto/create-contact.dto';
-import { UpdateContactDto } from './dto/update-contact.dto';
+import { CreateContactDto } from './dto/create.dto';
+import { UpdateContactDto } from './dto/update.dto';
 import { UpdateResult } from 'typeorm';
 import { FileService } from 'src/file/file.service';
 

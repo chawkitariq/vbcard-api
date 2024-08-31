@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
+import { CreateFileDto } from './dto/create.dto';
+import { UpdateFileDto } from './dto/update.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { File } from './entities/file.entity';
 import { IsNull, Repository } from 'typeorm';

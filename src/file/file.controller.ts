@@ -12,8 +12,8 @@ import {
   InternalServerErrorException
 } from '@nestjs/common';
 import { FileService } from './file.service';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
+import { CreateFileDto } from './dto/create.dto';
+import { UpdateFileDto } from './dto/update.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileManagerService } from 'src/file-manager/file-manager.service';
 import { DataSource } from 'typeorm';
