@@ -18,4 +18,8 @@ export class Verification {
   @OneToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'user_id' })
   user?: Relation<User>;
+
+  isExpired() {
+    return !this.expiredAt || this.expiredAt <= new Date();
+  }
 }
