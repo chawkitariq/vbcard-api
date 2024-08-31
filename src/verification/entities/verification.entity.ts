@@ -16,6 +16,6 @@ export class Verification {
   verifiedAt?: Date;
 
   @OneToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'photo_id' })
+  @JoinColumn({ name: 'user_id' })
   user?: Relation<User>;
 }
