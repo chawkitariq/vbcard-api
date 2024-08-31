@@ -9,11 +9,15 @@ import { AuthJwtStrategy } from './strategies/jwt.strategy';
 import { HashModule } from 'src/hash/hash.module';
 import { AuthVerifiedGuard } from './guards/verified.guard';
 import { AuthRegisterListener } from './listeners/register.listener';
+import { VerificationModule } from 'src/verification/verification.module';
+import { TokenModule } from 'src/token/token.module';
 
 @Module({
   imports: [
     HashModule,
     UserModule,
+    VerificationModule,
+    TokenModule,
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
