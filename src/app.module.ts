@@ -13,6 +13,7 @@ import { S3Module } from './s3/s3.module';
 import { FileManagerModule } from './file-manager/file-manager.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConstraintModule } from './constraint/constraint.module';
+import { VerificationModule } from './verification/verification.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { ConstraintModule } from './constraint/constraint.module';
     ContactModule,
     FileModule,
     S3Module,
-    FileManagerModule
+    FileManagerModule,
+    VerificationModule
   ],
   controllers: [AppController],
   providers: [
