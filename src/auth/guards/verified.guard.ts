@@ -1,19 +1,22 @@
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { User } from 'src/user/entities/user.entity';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthVerifiedGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(private readonly userService: UserService) {}
 
-  canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const user = request.user as User;
 
     if (!user) {
       throw new UnauthorizedException('Not authenticated');
     }
 
-    if (!user.verifiedAt) {
+    const { verification } = await this.userService.findOne(user.id);
+
+    if (!verification?.verifiedAt) {
       throw new ForbiddenException('Not verified');
     }
 
