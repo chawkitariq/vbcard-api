@@ -6,6 +6,7 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
@@ -29,6 +30,7 @@ export class User {
   bannedAt?: Date;
 
   @OneToOne(() => Verification, { nullable: true })
+  @JoinColumn({ name: 'verification_id' })
   verification?: Relation<Verification>;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })

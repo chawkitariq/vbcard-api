@@ -1,5 +1,4 @@
-import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'verifications' })
 export class Verification {
@@ -14,10 +13,6 @@ export class Verification {
 
   @Column({ name: 'verified_at', type: 'timestamptz', nullable: true })
   verifiedAt?: Date;
-
-  @OneToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'user_id' })
-  user?: Relation<User>;
 
   isExpired() {
     return !this.expiredAt || this.expiredAt <= new Date();
