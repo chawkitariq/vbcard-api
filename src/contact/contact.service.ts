@@ -44,7 +44,7 @@ export class ContactService {
     try {
       contact = await this.findOne(id);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to find contact');
+      throw new InternalServerErrorException('Something wrong');
     }
 
     if (!contact) {

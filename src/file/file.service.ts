@@ -44,7 +44,7 @@ export class FileService {
     try {
       file = await this.findOne(id);
     } catch (error) {
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Something wrong');
     }
 
     if (!file) {

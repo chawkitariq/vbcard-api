@@ -32,7 +32,7 @@ export class ContactController {
 
       return this.contactService.create(createContactDto);
     } catch (error) {
-      throw new InternalServerErrorException('Create contact failed');
+      throw new InternalServerErrorException('Something wrong');
     }
   }
 
@@ -41,7 +41,7 @@ export class ContactController {
     try {
       return this.contactService.findAll();
     } catch (error) {
-      throw new InternalServerErrorException('Failed to find contacts');
+      throw new InternalServerErrorException('Something wrong');
     }
   }
 
@@ -57,7 +57,7 @@ export class ContactController {
     try {
       result = await this.contactService.update(id, updateContactDto);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to update contact');
+      throw new InternalServerErrorException('Something wrong');
     }
 
     if (!result.affected) {
@@ -74,7 +74,7 @@ export class ContactController {
     try {
       result = await this.contactService.remove(id);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to delete contact');
+      throw new InternalServerErrorException('Something wrong');
     }
 
     if (!result.affected) {

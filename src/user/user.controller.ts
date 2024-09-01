@@ -23,7 +23,7 @@ export class UserController {
     try {
       return this.userService.create(createUserDto);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create user');
+      throw new InternalServerErrorException('Something wrong');
     }
   }
 
@@ -48,7 +48,7 @@ export class UserController {
     try {
       result = await this.userService.update(id, updateUserDto);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to update user');
+      throw new InternalServerErrorException('Something wrong');
     }
 
     if (result.affected <= 0) {
@@ -65,7 +65,7 @@ export class UserController {
     try {
       result = await this.userService.remove(id);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to remove user');
+      throw new InternalServerErrorException('Something wrong');
     }
 
     if (result.affected <= 0) {

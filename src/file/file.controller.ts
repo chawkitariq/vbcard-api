@@ -53,7 +53,7 @@ export class FileController {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Something wrong');
     } finally {
       await queryRunner.release();
     }
@@ -107,7 +107,7 @@ export class FileController {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Something wrong');
     } finally {
       await queryRunner.release();
     }
@@ -131,7 +131,7 @@ export class FileController {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Something wrong');
     } finally {
       await queryRunner.release();
     }

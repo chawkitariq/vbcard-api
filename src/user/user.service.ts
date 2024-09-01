@@ -50,7 +50,7 @@ export class UserService {
     try {
       user = await this.findOne(id);
     } catch (error) {
-      throw new InternalServerErrorException('Failed to find user');
+      throw new InternalServerErrorException('Something wrong');
     }
 
     if (!user) {
