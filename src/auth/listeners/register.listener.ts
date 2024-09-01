@@ -15,16 +15,15 @@ export class AuthRegisterListener {
 
   @OnEvent(AuthRegisterEvent.name)
   async handle({ userId }: AuthRegisterEvent) {
-    const user = await this.userService.findOne(userId);
-
     const token = this.tokenService.generateOpt();
     const expiredAt = this.generateExpiration();
 
-    await this.verificationService.create({
+    const verification = await this.verificationService.create({
       token,
-      expiredAt,
-      user
+      expiredAt
     });
+
+    await this.userService.update(userId, { verification });
   }
 
   generateExpiration(): Date {
