@@ -25,8 +25,11 @@ export class VerificationController {
     }
 
     try {
-      verification.verifiedAt = new Date();
-      await this.verificationService.update(verification.id, verification);
+      await this.verificationService.update(verification.id, {
+        token: '',
+        expiredAt: null,
+        verifiedAt: new Date()
+      });
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
