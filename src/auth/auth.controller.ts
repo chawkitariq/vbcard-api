@@ -13,7 +13,6 @@ import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { AuthRegisterDto } from './dto/register.dto';
 import { UserService } from 'src/user/user.service';
-import { AuthVerifiedGuard } from './guards/verified.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -44,9 +43,9 @@ export class AuthController {
     }
   }
 
-  @Public()
-  @UseGuards(AuthLocalGuard, AuthVerifiedGuard)
   @Post('login')
+  @Public()
+  @UseGuards(AuthLocalGuard)
   async login(@Request() { user }: { user: User }) {
     try {
       return this.authService.login(user);
