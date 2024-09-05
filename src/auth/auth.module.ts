@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthJwtStrategy } from './strategies/jwt.strategy';
 import { HashModule } from 'src/hash/hash.module';
 import { AuthRegisterListener } from './listeners/register.listener';
+import { AuthVerifiedGuard } from './guards/verified.guard';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { AuthRegisterListener } from './listeners/register.listener';
       }
     })
   ],
-  providers: [AuthService, AuthLocalStrategy, AuthJwtStrategy, AuthRegisterListener],
+  providers: [AuthService, AuthLocalStrategy, AuthJwtStrategy, AuthVerifiedGuard, AuthRegisterListener],
   controllers: [AuthController]
 })
 export class AuthModule {}
