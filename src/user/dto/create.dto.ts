@@ -1,5 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { Verification } from 'src/verification/entities/verification.entity';
 
 export class CreateUserDto {
   @Exclude()
@@ -7,7 +6,4 @@ export class CreateUserDto {
 
   @Exclude()
   password: string;
-
-  @Exclude()
-  verification?: Verification;
 }

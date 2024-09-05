@@ -7,17 +7,12 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthJwtStrategy } from './strategies/jwt.strategy';
 import { HashModule } from 'src/hash/hash.module';
-import { AuthVerifiedGuard } from './guards/verified.guard';
 import { AuthRegisterListener } from './listeners/register.listener';
-import { VerificationModule } from 'src/verification/verification.module';
-import { TokenModule } from 'src/token/token.module';
 
 @Module({
   imports: [
     HashModule,
     UserModule,
-    VerificationModule,
-    TokenModule,
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
@@ -26,7 +21,7 @@ import { TokenModule } from 'src/token/token.module';
       }
     })
   ],
-  providers: [AuthService, AuthLocalStrategy, AuthJwtStrategy, AuthVerifiedGuard, AuthRegisterListener],
+  providers: [AuthService, AuthLocalStrategy, AuthJwtStrategy, AuthRegisterListener],
   controllers: [AuthController]
 })
 export class AuthModule {}
