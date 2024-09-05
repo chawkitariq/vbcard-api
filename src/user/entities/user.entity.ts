@@ -26,11 +26,14 @@ export class User {
   @Column({ name: 'verification_token', nullable: true })
   verificationToken?: string;
 
-  @Column({ name: 'banned_at', type: 'timestamptz', nullable: true })
-  bannedAt?: Date;
+  @Column({ name: 'verification_token_expiration_at', type: 'timestamptz', nullable: true })
+  verificationTokenExpirationAt?: Date;
 
   @Column({ name: 'verified_at', type: 'timestamptz', nullable: true })
   verfiedAt?: Date;
+
+  @Column({ name: 'banned_at', type: 'timestamptz', nullable: true })
+  bannedAt?: Date;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
@@ -44,6 +47,6 @@ export class User {
 
   @Exclude()
   isVerified(): boolean {
-    return !!this.verfiedAt
+    return !!this.verfiedAt;
   }
 }
