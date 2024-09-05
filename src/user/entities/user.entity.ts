@@ -41,4 +41,9 @@ export class User {
   @Exclude()
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz' })
   deletedAt: Date;
+
+  @Exclude()
+  isVerified(): boolean {
+    return !!this.verfiedAt
+  }
 }
