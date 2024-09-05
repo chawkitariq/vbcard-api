@@ -9,6 +9,7 @@ import { AuthJwtStrategy } from './strategies/jwt.strategy';
 import { HashModule } from 'src/hash/hash.module';
 import { AuthRegisterListener } from './listeners/register.listener';
 import { AuthVerifiedGuard } from './guards/verified.guard';
+import { AuthCompositeGuard } from './guards/composite.guard';
 
 @Module({
   imports: [
@@ -22,7 +23,14 @@ import { AuthVerifiedGuard } from './guards/verified.guard';
       }
     })
   ],
-  providers: [AuthService, AuthLocalStrategy, AuthJwtStrategy, AuthVerifiedGuard, AuthRegisterListener],
+  providers: [
+    AuthService,
+    AuthLocalStrategy,
+    AuthJwtStrategy,
+    AuthVerifiedGuard,
+    AuthCompositeGuard,
+    AuthRegisterListener
+  ],
   controllers: [AuthController]
 })
 export class AuthModule {}
