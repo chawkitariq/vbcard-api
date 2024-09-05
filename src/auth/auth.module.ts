@@ -23,6 +23,7 @@ import { AuthVerifiedGuard } from './guards/verified.guard';
     })
   ],
   providers: [AuthService, AuthLocalStrategy, AuthJwtStrategy, AuthVerifiedGuard, AuthRegisterListener],
+  exports: [AuthVerifiedGuard],
   controllers: [AuthController]
 })
 export class AuthModule {}
