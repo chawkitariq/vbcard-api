@@ -22,15 +22,18 @@ export class User {
   @Column()
   password: string;
 
+  @Exclude()
   @Index()
   @Column({ name: 'verification_token', nullable: true })
   verificationToken?: string;
 
+  @Exclude()
   @Column({ name: 'verification_token_expiration_at', type: 'timestamptz', nullable: true })
   verificationTokenExpirationAt?: Date;
 
+  @Exclude()
   @Column({ name: 'verified_at', type: 'timestamptz', nullable: true })
-  verfiedAt?: Date;
+  verifiedAt?: Date;
 
   @Column({ name: 'banned_at', type: 'timestamptz', nullable: true })
   bannedAt?: Date;
@@ -47,6 +50,12 @@ export class User {
 
   @Exclude()
   isVerified(): boolean {
-    return !!this.verfiedAt;
+    return !!this.verifiedAt;
+  }
+
+  @Exclude()
+  isVerificationTokenExpired(): boolean {
+    const now = new Date();
+    return this.verificationTokenExpirationAt <= now;
   }
 }

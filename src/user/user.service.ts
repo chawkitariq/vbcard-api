@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create.dto';
 import { UpdateUserDto } from './dto/update.dto';
-import { IsNull, Repository } from 'typeorm';
+import { IsNull, MoreThan, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -30,6 +30,14 @@ export class UserService {
   async findOneByEmail(email: string) {
     return this.userRepository.findOne({
       where: { email }
+    });
+  }
+
+  async findOneByVerificationToken(verificationToken: string) {
+    return this.userRepository.findOne({
+      where: {
+        verificationToken
+      }
     });
   }
 

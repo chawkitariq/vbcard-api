@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -14,6 +15,7 @@ import { Public } from './decorators/public.decorator';
 import { AuthRegisterDto } from './dto/register.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthVerifiedGuard } from './guards/verified.guard';
+import { AuthVerifyDto } from './dto/verify.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -42,6 +44,28 @@ export class AuthController {
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
+  }
+
+  @Post('verify')
+  @Public()
+  async verify(@Body() { token }: AuthVerifyDto) {
+    let user: User | null;
+
+    try {
+      user = await this.userService.findOneByVerificationToken(token);
+    } catch (error) {
+      throw new InternalServerErrorException('Something wrong');
+    }
+
+    if (!user) {
+      throw new BadRequestException('Invalid token');
+    }
+
+    if (user.isVerificationTokenExpired()) {
+      throw new BadRequestException('Token expired');
+    }
+
+    await this.authService.verify(user);
   }
 
   @Post('login')
