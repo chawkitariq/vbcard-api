@@ -35,6 +35,7 @@ export class User {
   @Column({ name: 'verified_at', type: 'timestamptz', nullable: true })
   verifiedAt?: Date;
 
+  @Exclude()
   @Column({ name: 'banned_at', type: 'timestamptz', nullable: true })
   bannedAt?: Date;
 
