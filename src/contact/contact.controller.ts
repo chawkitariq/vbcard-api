@@ -14,6 +14,8 @@ import { CreateContactDto } from './dto/create.dto';
 import { UpdateContactDto } from './dto/update.dto';
 import { UpdateResult } from 'typeorm';
 import { FileService } from 'src/file/file.service';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller('contacts')
 export class ContactController {
@@ -23,14 +25,17 @@ export class ContactController {
   ) {}
 
   @Post()
-  async create(@Body() { photoId, ...createContactDto }: CreateContactDto) {
+  async create(@GetUser() user: User, @Body() { photoId, ...createContactDto }: CreateContactDto) {
     try {
       if (photoId) {
         const photo = await this.fileService.findOne(photoId);
         createContactDto.photo = photo;
       }
 
-      return this.contactService.create(createContactDto);
+      return this.contactService.create({
+        ...createContactDto,
+        author: user
+      });
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
