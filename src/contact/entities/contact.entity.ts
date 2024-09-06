@@ -1,11 +1,13 @@
 import { Exclude } from 'class-transformer';
 import { File } from 'src/file/entities/file.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
@@ -21,6 +23,10 @@ export class Contact {
 
   @Column({ type: 'text', nullable: true })
   vcf?: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'author_id' })
+  author?: Relation<User>;
 
   @OneToOne(() => File, { nullable: true })
   @JoinColumn({ name: 'photo_id' })
