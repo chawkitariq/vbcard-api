@@ -46,7 +46,7 @@ export class AuthController {
     }
   }
 
-  @Post('verify')
+  @Post('register/verify')
   @Public()
   async verify(@Body() { token }: AuthVerifyDto) {
     let user: User | null;
@@ -62,7 +62,7 @@ export class AuthController {
     }
 
     if (user.isVerificationTokenExpired()) {
-      throw new BadRequestException('Token expired');
+      throw new BadRequestException('Expired token');
     }
 
     await this.authService.verify(user);
