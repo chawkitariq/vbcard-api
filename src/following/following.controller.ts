@@ -12,12 +12,12 @@ import {
 import { FollowingService } from './following.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { UserMeFollowingDto } from './dto/user-me-following.dto';
 import { CreateFollowingDto } from './dto/create-following.dto';
 import { UpdateFollowingDto } from './dto/update-following.dto';
 import { ContactService } from 'src/contact/contact.service';
 import { Following } from './entities/following.entity';
 import { UpdateResult } from 'typeorm';
+import { ContactIdDto } from 'src/dto/contact-id.dto';
 
 @Controller()
 export class FollowingController {
@@ -27,7 +27,7 @@ export class FollowingController {
   ) {}
 
   @Post('users/me/followings/:contactId')
-  async follow(@GetUser() user: User, @Param() { contactId }: UserMeFollowingDto, @Body() body: CreateFollowingDto) {
+  async follow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateFollowingDto) {
     let following: Following | null;
 
     try {
@@ -49,11 +49,7 @@ export class FollowingController {
   }
 
   @Patch('users/me/followings/:contactId')
-  async updateFollow(
-    @GetUser() user: User,
-    @Param() { contactId }: UserMeFollowingDto,
-    @Body() body: UpdateFollowingDto
-  ) {
+  async updateFollow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: UpdateFollowingDto) {
     let updateResult: UpdateResult | undefined;
 
     try {
@@ -68,7 +64,7 @@ export class FollowingController {
   }
 
   @Delete('users/me/followings/:contactId')
-  async unfollow(@GetUser() user: User, @Param() { contactId }: UserMeFollowingDto) {
+  async unfollow(@GetUser() user: User, @Param() { contactId }: ContactIdDto) {
     let updateResult: UpdateResult | undefined;
 
     try {
@@ -88,7 +84,7 @@ export class FollowingController {
   }
 
   @Get('contacts/:contactId/followers')
-  async findOneContactFollowers(@Param() { contactId }: UserMeFollowingDto) {
+  async findOneContactFollowers(@Param() { contactId }: ContactIdDto) {
     return this.followingService.findOneContactFollowers(contactId);
   }
 }
