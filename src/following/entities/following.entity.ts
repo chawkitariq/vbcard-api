@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -15,15 +16,16 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'followings' })
-@Unique(['user', 'contact'])
 export class Following {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index()
   @ManyToOne(() => Contact)
   @JoinColumn({ name: 'contact_id' })
   contact: Relation<Contact>;
 
+  @Index()
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: Relation<User>;
