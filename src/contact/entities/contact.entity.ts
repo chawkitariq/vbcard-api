@@ -22,7 +22,7 @@ export class Contact {
   id: string;
 
   @Column({ type: 'text', nullable: true })
-  vcf?: string;
+  vcard?: string;
 
   @Column({ default: 'private' })
   visibility: Contact.Visibility;
