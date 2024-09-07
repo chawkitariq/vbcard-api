@@ -5,6 +5,6 @@ import { Contact } from 'src/contact/entities/contact.entity';
 export class ContactIdDto {
   @IsDefined()
   @IsUUID('4')
-  @IsExist(Contact)
+  @IsExist(Contact, { message: 'Contact by id not found' })
   contactId: string;
 }
