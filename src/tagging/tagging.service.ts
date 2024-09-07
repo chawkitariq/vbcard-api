@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaggingDto } from './dto/create-tagging.dto';
-import { UpdateTaggingDto } from './dto/update-tagging.dto';
 import { Tagging } from './entities/tagging.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,22 +12,15 @@ export class TaggingService {
   ) {}
 
   create(createTaggingDto: CreateTaggingDto) {
-    return 'This action adds a new tagging';
+    const tag = this.taggingRepository.create(createTaggingDto);
+    return this.taggingRepository.save(tag);
   }
 
-  findAll() {
-    return `This action returns all tagging`;
-  }
-
-  findOne(id: string) {
-    return `This action returns a #${id} tagging`;
-  }
-
-  update(id: string, updateTaggingDto: UpdateTaggingDto) {
-    return `This action updates a #${id} tagging`;
-  }
-
-  remove(id: string) {
-    return `This action removes a #${id} tagging`;
+  remove(userId: string, contactId: string, tagId: string) {
+    return this.taggingRepository.delete({
+      user: { id: userId },
+      contact: { id: contactId },
+      tag: { id: tagId }
+    });
   }
 }

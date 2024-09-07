@@ -1,34 +1,57 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  Delete,
+  InternalServerErrorException,
+  BadRequestException
+} from '@nestjs/common';
 import { TaggingService } from './tagging.service';
-import { CreateTaggingDto } from './dto/create-tagging.dto';
-import { UpdateTaggingDto } from './dto/update-tagging.dto';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/user/entities/user.entity';
+import { ContactService } from 'src/contact/contact.service';
+import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
+import { TagService } from 'src/tag/tag.service';
+import { ContactIdDto } from 'src/dto/contact-id.dto';
+import { TagIdDto } from 'src/dto/tag-id.dto';
+import { DeleteResult } from 'typeorm';
 
-@Controller('tagging')
+@Controller()
 export class TaggingController {
-  constructor(private readonly taggingService: TaggingService) {}
+  constructor(
+    private readonly taggingService: TaggingService,
+    private readonly contactService: ContactService,
+    private readonly tagService: TagService
+  ) {}
 
-  @Post()
-  create(@Body() createTaggingDto: CreateTaggingDto) {
-    return this.taggingService.create(createTaggingDto);
+  @Post('users/me/contacts/:contactId/tags')
+  async create(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateTagDto) {
+    try {
+      const tag = await this.tagService.create(body);
+      const contact = await this.contactService.findOne(contactId);
+      return this.taggingService.create({
+        user,
+        contact,
+        tag
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Something wrong');
+    }
   }
 
-  @Get()
-  findAll() {
-    return this.taggingService.findAll();
-  }
+  @Delete('users/me/contacts/:contactId/tags/:tagId')
+  async remove(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Param() { tagId }: TagIdDto) {
+    let deleteResult: DeleteResult | undefined;
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taggingService.findOne(id);
-  }
+    try {
+      deleteResult = await this.taggingService.remove(user.id, contactId, tagId);
+    } catch (error) {
+      throw new InternalServerErrorException('Something wrong');
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaggingDto: UpdateTaggingDto) {
-    return this.taggingService.update(id, updateTaggingDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taggingService.remove(id);
+    if (!deleteResult.affected) {
+      throw new BadRequestException('Contact have not tag');
+    }
   }
 }
