@@ -5,6 +5,6 @@ import { Tag } from 'src/tag/entities/tag.entity';
 export class TagIdDto {
   @IsDefined()
   @IsUUID('4')
-  @IsExist(Tag, { message: 'Tag by id not found' })
+  @IsExist(Tag, { message: 'Tag id not found' })
   tagId: string;
 }
