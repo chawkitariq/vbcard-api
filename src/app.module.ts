@@ -14,6 +14,7 @@ import { FileManagerModule } from './file-manager/file-manager.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConstraintModule } from './constraint/constraint.module';
 import { FollowingModule } from './following/following.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { FollowingModule } from './following/following.module';
     FileModule,
     S3Module,
     FileManagerModule,
-    FollowingModule
+    FollowingModule,
+    TagModule
   ],
   controllers: [AppController],
   providers: [
