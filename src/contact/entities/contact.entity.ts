@@ -24,6 +24,9 @@ export class Contact {
   @Column({ type: 'text', nullable: true })
   vcf?: string;
 
+  @Column({ default: 'private' })
+  visibility: Contact.Visibility;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'author_id' })
   author?: Relation<User>;
@@ -41,4 +44,12 @@ export class Contact {
   @Exclude()
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz' })
   deletedAt: Date;
+}
+
+export namespace Contact {
+  export enum Visibility {
+    Public = 'public',
+    Shared = 'shared',
+    Private = 'private'
+  }
 }
