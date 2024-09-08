@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import vCard from 'vcf';
 
-type CardVersion = '2.1' | '3.0' | '4.0';
+type CardVersion = vCard['version'];
 
 @ValidatorConstraint({ name: 'IsVcf', async: false })
 @Injectable()
