@@ -8,8 +8,6 @@ import {
 } from 'class-validator';
 import vCard = require('vcf');
 
-const validVersions: vCard['version'][] = ['2.1', '3.0', '4.0'];
-
 @ValidatorConstraint({ name: 'IsVcardConstraint', async: true })
 @Injectable()
 export class IsVcardConstraint implements ValidatorConstraintInterface {
