@@ -1,14 +1,14 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 import { IsExist } from 'src/constraint/is-exist.constraint';
-import { IsVcf } from 'src/constraint/is-vcf.constraint';
+import { IsVcard } from 'src/constraint/is-vcard.constraint';
 import { File } from 'src/file/entities/file.entity';
 import { User } from 'src/user/entities/user.entity';
 
 export class CreateContactDto {
   @IsOptional()
   @IsString()
-  @IsVcf('4.0')
-  vcf?: string;
+  @IsVcard()
+  vcard?: string;
 
   @IsOptional()
   @IsString()
