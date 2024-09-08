@@ -5,6 +5,6 @@ import { Contact } from 'src/contact/entities/contact.entity';
 export class ContactIdDto {
   @IsDefined()
   @IsUUID('4')
-  @IsOneExist(Contact, (id: string) => ({ where: { id } }), { message: 'Contact id not found' })
+  @IsOneExist(Contact, (id: string) => ({ where: { id } }), { message: 'Contact does not exist' })
   contactId: string;
 }
