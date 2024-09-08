@@ -1,10 +1,10 @@
 import { IsDefined, IsUUID } from 'class-validator';
-import { IsExist } from 'src/constraint/is-exist.constraint';
+import { IsOneExist } from 'src/constraint/is-one-exist.constraint';
 import { Contact } from 'src/contact/entities/contact.entity';
 
 export class ContactIdDto {
   @IsDefined()
   @IsUUID('4')
-  @IsExist(Contact, { message: 'Contact id not found' })
+  @IsOneExist(Contact, (id: string) => ({ where: { id } }), { message: 'Contact id not found' })
   contactId: string;
 }

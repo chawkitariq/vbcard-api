@@ -1,5 +1,5 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
-import { IsExist } from 'src/constraint/is-exist.constraint';
+import { IsOneExist } from 'src/constraint/is-one-exist.constraint';
 import { IsVcard } from 'src/constraint/is-vcard.constraint';
 import { File } from 'src/file/entities/file.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -13,7 +13,7 @@ export class CreateContactDto {
   @IsOptional()
   @IsString()
   @IsUUID('4')
-  @IsExist(File)
+  @IsOneExist(File, (id: string) => ({ where: { id } }))
   photoId?: string;
 
   photo?: File;
