@@ -34,7 +34,7 @@ export class IsOneExistConstraint<Entity> implements ValidatorConstraintInterfac
   }
 }
 
-export function IsOneExists<Entity>(
+export function IsOneExist<Entity>(
   entity: EntityTarget<Entity>,
   findOneCallback: (value: unknown) => FindOneOptions<Entity> | FindOneOptions<Entity>[],
   validationOptions?: ValidationOptions
