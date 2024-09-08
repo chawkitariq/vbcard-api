@@ -6,47 +6,49 @@ import {
   ValidationArguments
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { DataSource, In } from 'typeorm';
+import { EntityTarget, FindOneOptions, DataSource } from 'typeorm';
 
-@Injectable()
 @ValidatorConstraint({ name: 'IsExistConstraint', async: true })
-export class IsExistConstraint implements ValidatorConstraintInterface {
-  constructor(private readonly dataSource: DataSource) {}
+@Injectable()
+export class IsExistConstraint<Entity> implements ValidatorConstraintInterface {
+  constructor(private dataSource: DataSource) {}
 
-  async validate(ids: any, { constraints }: ValidationArguments): Promise<boolean> {
-    const entityClass = constraints[0];
+  async validate(value: unknown, args: ValidationArguments): Promise<boolean> {
+    const [entityClass, findOneCallback]: [EntityTarget<Entity>, (value: unknown) => FindOneOptions<Entity>] =
+      args.constraints as [EntityTarget<Entity>, (value: unknown) => FindOneOptions<Entity>];
+
     const repository = this.dataSource.getRepository(entityClass);
 
+    const findOne = findOneCallback(value);
+
     try {
-      if (!Array.isArray(ids)) {
-        const entity = await repository.findOneBy({ id: ids });
-        return !!entity;
-      } else {
-        const entities = await repository.findBy({ id: In(ids) });
-        return entities.length === ids.length;
-      }
+      const entity = await repository.findOne(findOne);
+      return !!entity;
     } catch (error) {
       return false;
     }
   }
 
-  defaultMessage({ property, value }: ValidationArguments): string {
-    if (Array.isArray(value)) {
-      return `Some of the IDs in ${property} do not exist`;
-    } else {
-      return `${property} does not exist`;
-    }
+  defaultMessage(args: ValidationArguments) {
+    return `${args.property} does not exist!`;
   }
 }
 
-export function IsExist(entityClass: Function, validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+export function IsExist<Entity>(
+  entity: EntityTarget<Entity>,
+  findOneCallback: (value: unknown) => FindOneOptions<Entity> | FindOneOptions<Entity>[],
+  validationOptions?: ValidationOptions
+) {
+  return function (object: unknown, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      constraints: [entityClass],
-      validator: IsExistConstraint
+      constraints: [entity, findOneCallback] as [
+        EntityTarget<Entity>,
+        (value: unknown) => FindOneOptions<Entity> | FindOneOptions<Entity>[]
+      ],
+      validator: IsExistConstraint<Entity>
     });
   };
 }
