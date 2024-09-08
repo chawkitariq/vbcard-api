@@ -8,9 +8,9 @@ import {
 import { Injectable } from '@nestjs/common';
 import { EntityTarget, FindManyOptions, DataSource } from 'typeorm';
 
-@ValidatorConstraint({ name: 'isManyExistConstraint', async: true })
+@ValidatorConstraint({ name: 'IsManyExistConstraint', async: true })
 @Injectable()
-export class isManyExistConstraint<Entity> implements ValidatorConstraintInterface {
+export class IsManyExistConstraint<Entity> implements ValidatorConstraintInterface {
   constructor(private dataSource: DataSource) {}
 
   async validate(value: unknown, args: ValidationArguments): Promise<boolean> {
@@ -45,7 +45,7 @@ export function IsManyExist<Entity>(
       propertyName: propertyName,
       options: validationOptions,
       constraints: [entity, findCallback] as [EntityTarget<Entity>, (value: unknown) => FindManyOptions<Entity>],
-      validator: isManyExistConstraint<Entity>
+      validator: IsManyExistConstraint<Entity>
     });
   };
 }
