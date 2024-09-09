@@ -8,10 +8,10 @@ import {
 } from 'class-validator';
 import vCard = require('vcf');
 
-@ValidatorConstraint({ name: 'IsVcardConstraint', async: true })
 @Injectable()
+@ValidatorConstraint({ name: 'IsVcardConstraint', async: true })
 export class IsVcardConstraint implements ValidatorConstraintInterface {
-  private errorMessage = 'Invalid vCard';
+  private errorMessage?: string;
 
   validate(vcard: string, _: ValidationArguments): boolean {
     try {
