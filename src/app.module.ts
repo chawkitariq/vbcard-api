@@ -16,6 +16,7 @@ import { ConstraintModule } from './constraint/constraint.module';
 import { FollowingModule } from './following/following.module';
 import { TagModule } from './tag/tag.module';
 import { TaggingModule } from './tagging/tagging.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { TaggingModule } from './tagging/tagging.module';
     FileManagerModule,
     FollowingModule,
     TagModule,
-    TaggingModule
+    TaggingModule,
+    NotificationModule
   ],
   controllers: [AppController],
   providers: [
