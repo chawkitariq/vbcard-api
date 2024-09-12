@@ -17,6 +17,7 @@ import { FollowingModule } from './following/following.module';
 import { TagModule } from './tag/tag.module';
 import { TaggingModule } from './tagging/tagging.module';
 import { NotificationModule } from './notification/notification.module';
+import { VcardModule } from './vcard/vcard.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { NotificationModule } from './notification/notification.module';
     FollowingModule,
     TagModule,
     TaggingModule,
-    NotificationModule
+    NotificationModule,
+    VcardModule
   ],
   controllers: [AppController],
   providers: [
