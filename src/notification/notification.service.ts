@@ -3,7 +3,7 @@ import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Notification } from './entities/notification.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 
 @Injectable()
 export class NotificationService {
@@ -13,22 +13,28 @@ export class NotificationService {
   ) {}
 
   create(createNotificationDto: CreateNotificationDto) {
-    return 'This action adds a new notification';
+    const user = this.notificationRepository.create(createNotificationDto);
+    return this.notificationRepository.save(user);
   }
 
   findAll() {
-    return `This action returns all notification`;
+    return this.notificationRepository.find();
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} notification`;
+    return this.notificationRepository.findOne({
+      where: { id }
+    });
   }
 
   update(id: string, updateNotificationDto: UpdateNotificationDto) {
-    return `This action updates a #${id} notification`;
+    return this.notificationRepository.update(id, updateNotificationDto);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} notification`;
+    return this.notificationRepository.softDelete({
+      id,
+      deletedAt: IsNull()
+    });
   }
 }
