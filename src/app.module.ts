@@ -18,6 +18,7 @@ import { TagModule } from './tag/tag.module';
 import { TaggingModule } from './tagging/tagging.module';
 import { NotificationModule } from './notification/notification.module';
 import { VcardModule } from './vcard/vcard.module';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { VcardModule } from './vcard/vcard.module';
     TagModule,
     TaggingModule,
     NotificationModule,
-    VcardModule
+    VcardModule,
+    StatisticModule
   ],
   controllers: [AppController],
   providers: [
