@@ -32,7 +32,7 @@ export class UserController {
     try {
       return this.userService.findAll();
     } catch (error) {
-      throw new NotFoundException('Failed to find users');
+      throw new InternalServerErrorException('Something wrong');
     }
   }
 
