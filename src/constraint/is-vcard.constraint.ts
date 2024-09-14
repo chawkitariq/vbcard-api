@@ -15,8 +15,7 @@ export class IsVcardConstraint implements ValidatorConstraintInterface {
 
   validate(vcard: string, _: ValidationArguments): boolean {
     try {
-      const parsedVcard = vcard.replace(/\r?\n/g, '\r\n');
-      new vCard().parse(parsedVcard);
+      new vCard().parse(vcard);
       return true;
     } catch (error) {
       this.errorMessage = error.message;
