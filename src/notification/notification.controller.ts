@@ -42,7 +42,11 @@ export class NotificationController {
 
   @Get()
   findAll() {
-    return this.notificationService.findAll();
+    try {
+      return this.notificationService.findAll();
+    } catch (error) {
+      throw new InternalServerErrorException('Something wrong');
+    }
   }
 
   @Get(':id')
