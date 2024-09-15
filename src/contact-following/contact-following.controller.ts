@@ -9,26 +9,26 @@ import {
   InternalServerErrorException,
   BadRequestException
 } from '@nestjs/common';
-import { FollowingService } from './following.service';
+import { ContactFollowingService } from './contact-following.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { CreateFollowingDto } from './dto/create-following.dto';
-import { UpdateFollowingDto } from './dto/update-following.dto';
+import { CreateContactFollowingDto } from './dto/create-contact-following.dto';
+import { UpdateContactFollowingDto } from './dto/update-contact-following.dto';
 import { ContactService } from 'src/contact/contact.service';
-import { Following } from './entities/following.entity';
+import { ContactFollowing } from './entities/contact-following.entity';
 import { UpdateResult } from 'typeorm';
 import { ContactIdDto } from 'src/dto/contact-id.dto';
 
 @Controller()
-export class FollowingController {
+export class ContactFollowingController {
   constructor(
-    private readonly followingService: FollowingService,
+    private readonly followingService: ContactFollowingService,
     private readonly contactService: ContactService
   ) {}
 
   @Post('users/me/followings/:contactId')
-  async follow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateFollowingDto) {
-    let following: Following | null;
+  async follow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateContactFollowingDto) {
+    let following: ContactFollowing | null;
 
     try {
       following = await this.followingService.findOneByUserAndContact(user.id, contactId);
@@ -49,7 +49,11 @@ export class FollowingController {
   }
 
   @Patch('users/me/followings/:contactId')
-  async updateFollow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: UpdateFollowingDto) {
+  async updateFollow(
+    @GetUser() user: User,
+    @Param() { contactId }: ContactIdDto,
+    @Body() body: UpdateContactFollowingDto
+  ) {
     let updateResult: UpdateResult | undefined;
 
     try {
@@ -59,7 +63,7 @@ export class FollowingController {
     }
 
     if (!updateResult.affected) {
-      throw new BadRequestException('Following does not exist');
+      throw new BadRequestException('ContactFollowing does not exist');
     }
   }
 
@@ -74,13 +78,13 @@ export class FollowingController {
     }
 
     if (!updateResult.affected) {
-      throw new BadRequestException('Following does not exist');
+      throw new BadRequestException('ContactFollowing does not exist');
     }
   }
 
   @Get('users/me/followings')
-  findOneUserFollowings(@GetUser() user: User) {
-    return this.followingService.findOneUserFollowings(user.id);
+  findOneUserContactFollowings(@GetUser() user: User) {
+    return this.followingService.findOneUserContactFollowings(user.id);
   }
 
   @Get('contacts/:contactId/followers')

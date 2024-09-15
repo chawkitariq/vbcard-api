@@ -11,12 +11,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Relation,
-  Unique,
   UpdateDateColumn
 } from 'typeorm';
 
-@Entity({ name: 'followings' })
-export class Following {
+@Entity({ name: 'contacts_followings' })
+export class ContactFollowing {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
