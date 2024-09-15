@@ -17,7 +17,6 @@ import { FollowingModule } from './following/following.module';
 import { TagModule } from './tag/tag.module';
 import { TaggingModule } from './tagging/tagging.module';
 import { NotificationModule } from './notification/notification.module';
-import { VcardModule } from './vcard/vcard.module';
 import { StatisticModule } from './statistic/statistic.module';
 import { VerificationModule } from './verification/verification.module';
 
@@ -40,7 +39,6 @@ import { VerificationModule } from './verification/verification.module';
     TagModule,
     TaggingModule,
     NotificationModule,
-    VcardModule,
     StatisticModule,
     VerificationModule
   ],
