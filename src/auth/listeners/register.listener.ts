@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { AuthRegisterEvent } from '../events/register.event';
-import { UserService } from 'src/user/user.service';
+import { VerificationService } from 'src/verification/verification.service';
 
 @Injectable()
 export class AuthRegisterListener {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly verificationService: VerificationService) {}
 
   @OnEvent(AuthRegisterEvent.name)
   async handle({ userId }: AuthRegisterEvent) {
-    await this.userService.refreshOneVerification(userId);
+    await this.verificationService.refresh(userId);
   }
 }

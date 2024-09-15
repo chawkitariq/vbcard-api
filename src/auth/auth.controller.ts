@@ -18,11 +18,13 @@ import { UserService } from 'src/user/user.service';
 import { AuthVerifiedGuard } from './guards/verified.guard';
 import { AuthVerifyDto } from './dto/verify.dto';
 import { AuthVerifyResendDto } from './dto/verify-resend.dto';
+import { VerificationService } from 'src/verification/verification.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly verificationService: VerificationService,
     private readonly userService: UserService
   ) {}
 
@@ -85,7 +87,7 @@ export class AuthController {
       throw new ConflictException('User already verified');
     }
 
-    await this.userService.refreshOneVerification(user.id);
+    await this.verificationService.refresh(user.id);
   }
 
   @Post('login')

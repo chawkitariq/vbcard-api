@@ -19,6 +19,7 @@ import { TaggingModule } from './tagging/tagging.module';
 import { NotificationModule } from './notification/notification.module';
 import { VcardModule } from './vcard/vcard.module';
 import { StatisticModule } from './statistic/statistic.module';
+import { VerificationModule } from './verification/verification.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { StatisticModule } from './statistic/statistic.module';
     TaggingModule,
     NotificationModule,
     VcardModule,
-    StatisticModule
+    StatisticModule,
+    VerificationModule
   ],
   controllers: [AppController],
   providers: [
