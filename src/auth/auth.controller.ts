@@ -5,6 +5,7 @@ import {
   Controller,
   InternalServerErrorException,
   Post,
+  Query,
   Request,
   UseGuards
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { AuthRegisterDto } from './dto/register.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthVerifiedGuard } from './guards/verified.guard';
 import { AuthVerifyDto } from './dto/verify.dto';
+import { AuthVerifyResendDto } from './dto/verify-resend.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -68,6 +70,30 @@ export class AuthController {
     await this.authService.verify(user);
   }
 
+  @Post('register/verify/resend')
+  @Public()
+  async verifyRefresh(@Query() { email }: AuthVerifyResendDto) {
+    let user: User | null;
+
+    try {
+      user = await this.userService.findOneByEmail(email);
+    } catch (error) {
+      throw new InternalServerErrorException('Something wrong');
+    }
+
+    if (user.isVerified()) {
+      throw new ConflictException('User already verified');
+    }
+
+    const verificationToken = this.generateOptToken();
+    const verificationTokenExpirationAt = this.generateExpirationDate();
+
+    await this.userService.update(user.id, {
+      verificationToken,
+      verificationTokenExpirationAt
+    });
+  }
+
   @Post('login')
   @Public()
   @UseGuards(AuthLocalGuard, AuthVerifiedGuard)
@@ -77,5 +103,15 @@ export class AuthController {
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
+  }
+
+  generateOptToken(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  generateExpirationDate(): Date {
+    const expiration = new Date();
+    expiration.setMinutes(expiration.getMinutes() + 1);
+    return expiration;
   }
 }
