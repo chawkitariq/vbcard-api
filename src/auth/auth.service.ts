@@ -6,7 +6,7 @@ import { AuthRegisterDto } from './dto/register.dto';
 import { HashService } from 'src/hash/hash.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AuthRegisterEvent } from './events/register.event';
-import { AuthVerifyEvent } from './events/verify.event';
+import { AuthVerifiedEvent } from './events/verify.event';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +37,7 @@ export class AuthService {
       verificationTokenExpirationAt: null
     });
 
-    this.eventEmitter.emit(AuthVerifyEvent.name, new AuthVerifyEvent(id));
+    this.eventEmitter.emit(AuthVerifiedEvent.name, new AuthVerifiedEvent(id));
 
     return updateResult;
   }
