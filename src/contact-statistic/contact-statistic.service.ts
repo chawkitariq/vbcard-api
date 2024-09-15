@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Statistic } from './entities/contact.entity';
+import { ContactStatistic } from './entities/contact-statistic.entity';
 
 @Injectable()
-export class StatisticService {
+export class ContactStatisticService {
   constructor(
-    @InjectRepository(Statistic)
-    private statisticRepository: Repository<Statistic>
+    @InjectRepository(ContactStatistic)
+    private statisticRepository: Repository<ContactStatistic>
   ) {}
 
   async incrementViewed(contactId: string) {

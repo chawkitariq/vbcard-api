@@ -15,7 +15,7 @@ import {
 
 @Entity({ name: 'contacts_statistics' })
 @Unique(['contact'])
-export class Statistic {
+export class ContactStatistic {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

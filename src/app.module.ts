@@ -17,7 +17,7 @@ import { FollowingModule } from './following/following.module';
 import { TagModule } from './tag/tag.module';
 import { TaggingModule } from './tagging/tagging.module';
 import { NotificationModule } from './notification/notification.module';
-import { StatisticModule } from './statistic/statistic.module';
+import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { VerificationModule } from './verification/verification.module';
 
 @Module({
@@ -39,7 +39,7 @@ import { VerificationModule } from './verification/verification.module';
     TagModule,
     TaggingModule,
     NotificationModule,
-    StatisticModule,
+    ContactStatisticModule,
     VerificationModule
   ],
   controllers: [AppController],

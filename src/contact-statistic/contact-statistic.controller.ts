@@ -1,23 +1,23 @@
 import { Controller, Param, Patch } from '@nestjs/common';
-import { StatisticService } from './statistic.service';
+import { ContactStatisticService } from './contact-statistic.service';
 import { ContactIdDto } from 'src/dto/contact-id.dto';
 
 @Controller('contacts/:contactId/statistics')
-export class StatisticController {
-  constructor(private readonly statisticService: StatisticService) {}
+export class ContactStatisticController {
+  constructor(private readonly contactStatisticService: ContactStatisticService) {}
 
   @Patch('viewed')
   async incrementViewed(@Param() { contactId }: ContactIdDto) {
-    return this.statisticService.incrementViewed(contactId);
+    return this.contactStatisticService.incrementViewed(contactId);
   }
 
   @Patch('shared')
   async incrementShared(@Param() { contactId }: ContactIdDto) {
-    return this.statisticService.incrementShared(contactId);
+    return this.contactStatisticService.incrementShared(contactId);
   }
 
   @Patch('scanned')
   async incrementScanned(@Param() { contactId }: ContactIdDto) {
-    return this.statisticService.incrementScanned(contactId);
+    return this.contactStatisticService.incrementScanned(contactId);
   }
 }
