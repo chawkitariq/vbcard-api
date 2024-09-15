@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ContactStatisticService } from './contact-statistic.service';
 import { ContactStatisticController } from './contact-statistic.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ContactStatistic } from './entities/contact-statistic.entity';
+import { Contact } from 'src/contact/entities/contact.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ContactStatistic])],
+  imports: [TypeOrmModule.forFeature([Contact])],
   providers: [ContactStatisticService],
   controllers: [ContactStatisticController]
 })
