@@ -24,15 +24,6 @@ export class Contact {
   @Column({ type: 'text', nullable: true })
   vcard?: string;
 
-  @Column({ default: 0 })
-  viewed: number;
-
-  @Column({ default: 0 })
-  shared: number;
-
-  @Column({ default: 0 })
-  scanned: number;
-
   @Column({ default: 'private' })
   visibility: Contact.Visibility;
 
