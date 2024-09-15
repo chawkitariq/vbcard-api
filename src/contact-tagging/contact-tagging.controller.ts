@@ -7,7 +7,7 @@ import {
   InternalServerErrorException,
   BadRequestException
 } from '@nestjs/common';
-import { TaggingService } from './tagging.service';
+import { ContactTaggingService } from './contact-tagging.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { ContactService } from 'src/contact/contact.service';
@@ -18,9 +18,9 @@ import { TagIdDto } from 'src/dto/tag-id.dto';
 import { DeleteResult } from 'typeorm';
 
 @Controller()
-export class TaggingController {
+export class ContactTaggingController {
   constructor(
-    private readonly taggingService: TaggingService,
+    private readonly taggingService: ContactTaggingService,
     private readonly contactService: ContactService,
     private readonly tagService: TagService
   ) {}

@@ -4,9 +4,9 @@ import { Tag } from 'src/tag/entities/tag.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation, Unique } from 'typeorm';
 
-@Entity({ name: 'taggings' })
+@Entity({ name: 'contacts_taggings' })
 @Unique(['contact', 'user', 'tag'])
-export class Tagging {
+export class ContactTagging {
   @Exclude()
   @PrimaryGeneratedColumn('uuid')
   id: string;

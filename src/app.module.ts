@@ -13,12 +13,12 @@ import { S3Module } from './s3/s3.module';
 import { FileManagerModule } from './file-manager/file-manager.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConstraintModule } from './constraint/constraint.module';
-import { ContactFollowingModule } from './contact-following/contact-following.module';
 import { TagModule } from './tag/tag.module';
-import { TaggingModule } from './tagging/tagging.module';
 import { NotificationModule } from './notification/notification.module';
-import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { VerificationModule } from './verification/verification.module';
+import { ContactFollowingModule } from './contact-following/contact-following.module';
+import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
+import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 
 @Module({
   imports: [
@@ -37,7 +37,7 @@ import { VerificationModule } from './verification/verification.module';
     FileManagerModule,
     ContactFollowingModule,
     TagModule,
-    TaggingModule,
+    ContactTaggingModule,
     NotificationModule,
     ContactStatisticModule,
     VerificationModule
