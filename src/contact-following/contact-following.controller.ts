@@ -10,7 +10,7 @@ import {
   BadRequestException
 } from '@nestjs/common';
 import { ContactFollowingService } from './contact-following.service';
-import { GetUser } from 'src/decorators/get-user.decorator';
+import { GetUser } from 'src/decorator/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { CreateContactFollowingDto } from './dto/create-contact-following.dto';
 import { UpdateContactFollowingDto } from './dto/update-contact-following.dto';

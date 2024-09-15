@@ -8,7 +8,7 @@ import {
   BadRequestException
 } from '@nestjs/common';
 import { ContactTaggingService } from './contact-tagging.service';
-import { GetUser } from 'src/decorators/get-user.decorator';
+import { GetUser } from 'src/decorator/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { ContactService } from 'src/contact/contact.service';
 import { CreateTagDto } from 'src/tag/dto/create-tag.dto';
