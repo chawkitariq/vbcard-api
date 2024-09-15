@@ -85,13 +85,7 @@ export class AuthController {
       throw new ConflictException('User already verified');
     }
 
-    const verificationToken = this.generateOptToken();
-    const verificationTokenExpirationAt = this.generateExpirationDate();
-
-    await this.userService.update(user.id, {
-      verificationToken,
-      verificationTokenExpirationAt
-    });
+    await this.userService.refreshOneVerification(user.id);
   }
 
   @Post('login')
@@ -103,15 +97,5 @@ export class AuthController {
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
-  }
-
-  generateOptToken(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  }
-
-  generateExpirationDate(): Date {
-    const expiration = new Date();
-    expiration.setMinutes(expiration.getMinutes() + 1);
-    return expiration;
   }
 }

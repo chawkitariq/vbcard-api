@@ -9,22 +9,6 @@ export class AuthRegisterListener {
 
   @OnEvent(AuthRegisterEvent.name)
   async handle({ userId }: AuthRegisterEvent) {
-    const verificationToken = this.generateOptToken();
-    const verificationTokenExpirationAt = this.generateExpirationDate();
-
-    await this.userService.update(userId, {
-      verificationToken,
-      verificationTokenExpirationAt
-    });
-  }
-
-  generateOptToken(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  }
-
-  generateExpirationDate(): Date {
-    const expiration = new Date();
-    expiration.setMinutes(expiration.getMinutes() + 1);
-    return expiration;
+    await this.userService.refreshOneVerification(userId);
   }
 }

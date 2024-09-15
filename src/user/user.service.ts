@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create.dto';
 import { UpdateUserDto } from './dto/update.dto';
-import { IsNull, MoreThan, Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -66,5 +66,25 @@ export class UserService {
     }
 
     return user;
+  }
+
+  refreshOneVerification(userId: string) {
+    const verificationToken = this.generateOptToken();
+    const verificationTokenExpirationAt = this.generateExpirationDate();
+
+    return this.update(userId, {
+      verificationToken,
+      verificationTokenExpirationAt
+    });
+  }
+
+  private generateOptToken(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  private generateExpirationDate(): Date {
+    const expiration = new Date();
+    expiration.setMinutes(expiration.getMinutes() + 1);
+    return expiration;
   }
 }
