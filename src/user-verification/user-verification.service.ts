@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
-export class VerificationService {
+export class UserVerificationService {
   constructor(private readonly userService: UserService) {}
 
   refresh(userId: string) {

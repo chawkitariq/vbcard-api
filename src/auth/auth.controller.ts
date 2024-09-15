@@ -18,13 +18,13 @@ import { UserService } from 'src/user/user.service';
 import { AuthVerifiedGuard } from './guards/verified.guard';
 import { AuthVerifyDto } from './dto/verify.dto';
 import { AuthVerifyResendDto } from './dto/verify-resend.dto';
-import { VerificationService } from 'src/verification/verification.service';
+import { UserVerificationService } from 'src/user-verification/user-verification.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly verificationService: VerificationService,
+    private readonly verificationService: UserVerificationService,
     private readonly userService: UserService
   ) {}
 

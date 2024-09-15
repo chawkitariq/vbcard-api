@@ -2,12 +2,10 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
-import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthJwtGuard } from './auth/guards/jwt.guard';
 import { HashModule } from './hash/hash.module';
-import { ContactModule } from './contact/contact.module';
 import { FileModule } from './file/file.module';
 import { S3Module } from './s3/s3.module';
 import { FileManagerModule } from './file-manager/file-manager.module';
@@ -15,7 +13,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConstraintModule } from './constraint/constraint.module';
 import { TagModule } from './tag/tag.module';
 import { NotificationModule } from './notification/notification.module';
-import { VerificationModule } from './verification/verification.module';
+import { UserModule } from './user/user.module';
+import { UserVerificationModule } from './user-verification/user-verification.module';
+import { ContactModule } from './contact/contact.module';
 import { ContactFollowingModule } from './contact-following/contact-following.module';
 import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
@@ -40,7 +40,7 @@ import { ContactStatisticModule } from './contact-statistic/contact-statistic.mo
     ContactTaggingModule,
     NotificationModule,
     ContactStatisticModule,
-    VerificationModule
+    UserVerificationModule
   ],
   controllers: [AppController],
   providers: [
