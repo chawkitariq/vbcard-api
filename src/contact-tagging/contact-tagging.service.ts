@@ -8,16 +8,16 @@ import { Repository } from 'typeorm';
 export class ContactTaggingService {
   constructor(
     @InjectRepository(ContactTagging)
-    private readonly taggingRepository: Repository<ContactTagging>
+    private readonly contactTaggingRepository: Repository<ContactTagging>
   ) {}
 
   create(createContactTaggingDto: CreateContactTaggingDto) {
-    const tag = this.taggingRepository.create(createContactTaggingDto);
-    return this.taggingRepository.save(tag);
+    const tag = this.contactTaggingRepository.create(createContactTaggingDto);
+    return this.contactTaggingRepository.save(tag);
   }
 
   remove(userId: string, contactId: string, tagId: string) {
-    return this.taggingRepository.delete({
+    return this.contactTaggingRepository.delete({
       user: { id: userId },
       contact: { id: contactId },
       tag: { id: tagId }
