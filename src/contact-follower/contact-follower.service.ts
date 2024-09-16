@@ -24,13 +24,13 @@ export class ContactFollowerService {
     });
   }
 
-  findOneUserContactFollowers(userId: string) {
+  findUserFollowings(userId: string) {
     return this.contactFollowerRepository.findBy({
       user: { id: userId }
     });
   }
 
-  findOneContactFollowers(contactId: string) {
+  findContactFollowers(contactId: string) {
     return this.contactFollowerRepository.findBy({
       contact: { id: contactId }
     });

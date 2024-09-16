@@ -9,7 +9,6 @@ import {
   InternalServerErrorException,
   BadRequestException
 } from '@nestjs/common';
-import { ContactFollowerService } from './contact-follower.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { CreateContactFollowerDto } from './dto/create-contact-follower.dto';
@@ -18,6 +17,7 @@ import { ContactService } from 'src/contact/contact.service';
 import { ContactFollower } from './entities/contact-follower.entity';
 import { UpdateResult } from 'typeorm';
 import { ContactIdDto } from 'src/dto/contact-id.dto';
+import { ContactFollowerService } from './contact-follower.service';
 
 @Controller()
 export class ContactFollowerController {
@@ -83,12 +83,12 @@ export class ContactFollowerController {
   }
 
   @Get('users/me/followings')
-  findOneUserContactFollowers(@GetUser() user: User) {
-    return this.contactFollowerService.findOneUserContactFollowers(user.id);
+  findUserMeFollowings(@GetUser() user: User) {
+    return this.contactFollowerService.findUserFollowings(user.id);
   }
 
   @Get('contacts/:contactId/followers')
-  async findOneContactFollowers(@Param() { contactId }: ContactIdDto) {
-    return this.contactFollowerService.findOneContactFollowers(contactId);
+  async findContactFollowers(@Param() { contactId }: ContactIdDto) {
+    return this.contactFollowerService.findContactFollowers(contactId);
   }
 }
