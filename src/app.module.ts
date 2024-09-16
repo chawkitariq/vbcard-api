@@ -21,6 +21,7 @@ import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { SettingModule } from './setting/setting.module';
 import { StoryModule } from './story/story.module';
+import { BillingModule } from './billing/billing.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { StoryModule } from './story/story.module';
     ContactStatisticModule,
     UserVerificationModule,
     SettingModule,
-    StoryModule
+    StoryModule,
+    BillingModule
   ],
   controllers: [AppController],
   providers: [
