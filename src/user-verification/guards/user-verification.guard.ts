@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC } from 'src/decorator/public.decorator';
+import { IS_PUBLIC } from 'src/decorators/public.decorator';
 
 @Injectable()
 export class UserVerificationGuard implements CanActivate {

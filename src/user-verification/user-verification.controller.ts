@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { Public } from 'src/decorator/public.decorator';
+import { Public } from 'src/decorators/public.decorator';
 import { UserVerifyDto } from './dto/user-verify.dto';
 import { UserVerifyResendDto } from './dto/user-verify-resend.dto';
 import { UserVerificationService } from './user-verification.service';
