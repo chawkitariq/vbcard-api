@@ -2,7 +2,7 @@ import { IsLatitude, IsLongitude, IsNumberString, IsOptional, IsString } from 'c
 import { Contact } from 'src/contact/entities/contact.entity';
 import { User } from 'src/user/entities/user.entity';
 
-export class CreateContactFollowingDto {
+export class CreateContactFollowerDto {
   @IsOptional()
   @IsString()
   note?: string;

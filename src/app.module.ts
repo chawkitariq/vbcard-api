@@ -14,7 +14,7 @@ import { TagModule } from './tag/tag.module';
 import { NotificationModule } from './notification/notification.module';
 import { UserModule } from './user/user.module';
 import { ContactModule } from './contact/contact.module';
-import { ContactFollowingModule } from './contact-following/contact-following.module';
+import { ContactFollowerModule } from './contact-follower/contact-follower.module';
 import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { SettingModule } from './setting/setting.module';
@@ -35,7 +35,7 @@ import { UserVerificationModule } from './user-verification/user-verification.mo
     FileModule,
     S3Module,
     FileManagerModule,
-    ContactFollowingModule,
+    ContactFollowerModule,
     TagModule,
     ContactTaggingModule,
     NotificationModule,
