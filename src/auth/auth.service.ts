@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { AuthRegisterDto } from './dto/register.dto';
+import { AuthRegisterDto } from './dto/auth-register.dto';
 import { HashService } from 'src/hash/hash.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AuthRegisterEvent } from './events/register.event';
+import { AuthRegisterEvent } from './events/auth-register.event';
 
 @Injectable()
 export class AuthService {

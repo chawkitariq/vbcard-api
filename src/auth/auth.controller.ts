@@ -11,7 +11,7 @@ import { User } from 'src/user/entities/user.entity';
 import { AuthLocalGuard } from './guards/local.guard';
 import { AuthService } from './auth.service';
 import { Public } from '../decorator/public.decorator';
-import { AuthRegisterDto } from './dto/register.dto';
+import { AuthRegisterDto } from './dto/auth-register.dto';
 import { UserService } from 'src/user/user.service';
 
 @Controller('auth')

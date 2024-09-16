@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { AuthRegisterEvent } from '../../auth/events/register.event';
+import { AuthRegisterEvent } from '../../auth/events/auth-register.event';
 import { UserVerificationService } from '../user-verification.service';
 
 @Injectable()
