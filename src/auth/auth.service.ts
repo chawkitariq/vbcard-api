@@ -6,7 +6,6 @@ import { AuthRegisterDto } from './dto/register.dto';
 import { HashService } from 'src/hash/hash.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AuthRegisterEvent } from './events/register.event';
-import { AuthVerifiedEvent } from './events/verify.event';
 
 @Injectable()
 export class AuthService {
@@ -28,18 +27,6 @@ export class AuthService {
     this.eventEmitter.emit(AuthRegisterEvent.name, new AuthRegisterEvent(user.id));
 
     return user;
-  }
-
-  async verify({ id }: User) {
-    const updateResult = await this.userService.update(id, {
-      verifiedAt: new Date(),
-      verificationToken: null,
-      verificationTokenExpirationAt: null
-    });
-
-    this.eventEmitter.emit(AuthVerifiedEvent.name, new AuthVerifiedEvent(id));
-
-    return updateResult;
   }
 
   async login({ id, email }: User) {

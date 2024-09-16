@@ -1,6 +1,6 @@
 import { IsDefined, IsNotEmpty, IsNumberString, MaxLength, MinLength } from 'class-validator';
 
-export class AuthVerifyDto {
+export class UserVerifyDto {
   @IsDefined()
   @IsNumberString()
   @IsNotEmpty()

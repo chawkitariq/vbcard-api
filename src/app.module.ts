@@ -14,7 +14,6 @@ import { ConstraintModule } from './constraint/constraint.module';
 import { TagModule } from './tag/tag.module';
 import { NotificationModule } from './notification/notification.module';
 import { UserModule } from './user/user.module';
-import { UserVerificationModule } from './user-verification/user-verification.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactFollowingModule } from './contact-following/contact-following.module';
 import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
@@ -23,6 +22,7 @@ import { SettingModule } from './setting/setting.module';
 import { StoryModule } from './story/story.module';
 import { BillingModule } from './billing/billing.module';
 import { ActivityModule } from './activity/activity.module';
+import { UserVerificationModule } from './user-verification/user-verification.module';
 
 @Module({
   imports: [

@@ -1,11 +1,9 @@
 import {
-  BadRequestException,
   Body,
   ConflictException,
   Controller,
   InternalServerErrorException,
   Post,
-  Query,
   Request,
   UseGuards
 } from '@nestjs/common';
@@ -16,15 +14,11 @@ import { Public } from './decorators/public.decorator';
 import { AuthRegisterDto } from './dto/register.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthVerifiedGuard } from './guards/verified.guard';
-import { AuthVerifyDto } from './dto/verify.dto';
-import { AuthVerifyResendDto } from './dto/verify-resend.dto';
-import { UserVerificationService } from 'src/user-verification/user-verification.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly verificationService: UserVerificationService,
     private readonly userService: UserService
   ) {}
 
@@ -48,46 +42,6 @@ export class AuthController {
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
-  }
-
-  @Post('register/verify')
-  @Public()
-  async verify(@Body() { token }: AuthVerifyDto) {
-    let user: User | null;
-
-    try {
-      user = await this.userService.findOneByVerificationToken(token);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (!user) {
-      throw new BadRequestException('Invalid token');
-    }
-
-    if (user.isVerificationTokenExpired()) {
-      throw new BadRequestException('Expired token');
-    }
-
-    await this.authService.verify(user);
-  }
-
-  @Post('register/verify/resend')
-  @Public()
-  async verifyRefresh(@Query() { email }: AuthVerifyResendDto) {
-    let user: User | null;
-
-    try {
-      user = await this.userService.findOneByEmail(email);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (user.isVerified()) {
-      throw new ConflictException('User already verified');
-    }
-
-    await this.verificationService.refresh(user.id);
   }
 
   @Post('login')
