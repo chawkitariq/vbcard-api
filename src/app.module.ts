@@ -20,6 +20,7 @@ import { ContactFollowingModule } from './contact-following/contact-following.mo
 import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { SettingModule } from './setting/setting.module';
+import { StoryModule } from './story/story.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { SettingModule } from './setting/setting.module';
     NotificationModule,
     ContactStatisticModule,
     UserVerificationModule,
-    SettingModule
+    SettingModule,
+    StoryModule
   ],
   controllers: [AppController],
   providers: [
