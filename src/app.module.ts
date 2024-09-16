@@ -3,8 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthJwtGuard } from './auth/guards/jwt.guard';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HashModule } from './hash/hash.module';
 import { FileModule } from './file/file.module';
 import { S3Module } from './s3/s3.module';
@@ -53,10 +52,6 @@ import { UserVerificationModule } from './user-verification/user-verification.mo
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthJwtGuard
-    },
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor

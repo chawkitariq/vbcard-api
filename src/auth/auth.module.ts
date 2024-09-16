@@ -7,7 +7,8 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthJwtStrategy } from './strategies/jwt.strategy';
 import { HashModule } from 'src/hash/hash.module';
-import { AuthVerifiedGuard } from './guards/verified.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthJwtGuard } from './guards/jwt.guard';
 
 @Module({
   imports: [
@@ -21,8 +22,15 @@ import { AuthVerifiedGuard } from './guards/verified.guard';
       }
     })
   ],
-  providers: [AuthService, AuthLocalStrategy, AuthJwtStrategy, AuthVerifiedGuard],
-  exports: [AuthVerifiedGuard],
+  providers: [
+    AuthService,
+    AuthLocalStrategy,
+    AuthJwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: AuthJwtGuard
+    }
+  ],
   controllers: [AuthController]
 })
 export class AuthModule {}

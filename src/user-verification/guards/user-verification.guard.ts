@@ -3,14 +3,12 @@ import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC } from 'src/auth/decorators/public.decorator';
 
 @Injectable()
-export class AuthVerifiedGuard implements CanActivate {
+export class UserVerificationGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC, [
-      context.getHandler(),
-      context.getClass()
-    ]);
+    console.log('USER VERIFICATION GUARD');
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC, [context.getHandler(), context.getClass()]);
 
     if (isPublic) {
       return true;
