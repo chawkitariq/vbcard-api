@@ -25,11 +25,8 @@ import { UserVerificationModule } from './user-verification/user-verification.mo
 
 @Module({
   imports: [
-    EventEmitterModule.forRoot({ global: true }),
-    {
-      global: true,
-      module: ConstraintModule
-    },
+    EventEmitterModule.forRoot(),
+    ConstraintModule,
     DatabaseModule,
     UserModule,
     AuthModule,
