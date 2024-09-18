@@ -1,12 +1,12 @@
 import { Exclude } from 'class-transformer';
 import { Contact } from 'src/contact/entities/contact.entity';
-import { Tag } from 'src/tag/entities/tag.entity';
+import { ContactTag } from 'src/contact-tag/entities/contact-tag.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation, Unique } from 'typeorm';
 
 @Entity({ name: 'contacts_taggings' })
 @Unique(['contact', 'user', 'tag'])
-export class ContactTagging {
+export class ContactContactTagging {
   @Exclude()
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -22,7 +22,7 @@ export class ContactTagging {
   user: Relation<User>;
 
   @Index()
-  @ManyToOne(() => Tag)
+  @ManyToOne(() => ContactTag)
   @JoinColumn({ name: 'tag_id' })
-  tag: Relation<Tag>;
+  tag: Relation<ContactTag>;
 }

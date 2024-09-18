@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ContactTaggingController } from './contact-tagging.controller';
-import { ContactTaggingService } from './contact-tagging.service';
+import { ContactContactTaggingController } from './contact-tagging.controller';
+import { ContactContactTaggingService } from './contact-tagging.service';
 
-describe('ContactTaggingController', () => {
-  let controller: ContactTaggingController;
+describe('ContactContactTaggingController', () => {
+  let controller: ContactContactTaggingController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ContactTaggingController],
-      providers: [ContactTaggingService],
+      controllers: [ContactContactTaggingController],
+      providers: [ContactContactTaggingService],
     }).compile();
 
-    controller = module.get<ContactTaggingController>(ContactTaggingController);
+    controller = module.get<ContactContactTaggingController>(ContactContactTaggingController);
   });
 
   it('should be defined', () => {

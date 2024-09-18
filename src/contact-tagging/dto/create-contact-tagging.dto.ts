@@ -1,9 +1,9 @@
 import { Contact } from 'src/contact/entities/contact.entity';
-import { Tag } from 'src/tag/entities/tag.entity';
+import { ContactTag } from 'src/contact-tag/entities/contact-tag.entity';
 import { User } from 'src/user/entities/user.entity';
 
-export class CreateContactTaggingDto {
+export class CreateContactContactTaggingDto {
   contact: Contact;
   user: User;
-  tag: Tag;
+  tag: ContactTag;
 }

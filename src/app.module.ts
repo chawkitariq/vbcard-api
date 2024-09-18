@@ -10,12 +10,12 @@ import { S3Module } from './s3/s3.module';
 import { FileManagerModule } from './file-manager/file-manager.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConstraintModule } from './constraint/constraint.module';
-import { TagModule } from './tag/tag.module';
+import { ContactTagModule } from './contact-tag/contact-tag.module';
 import { NotificationModule } from './notification/notification.module';
 import { UserModule } from './user/user.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactFollowerModule } from './contact-follower/contact-follower.module';
-import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
+import { ContactContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { SettingModule } from './setting/setting.module';
 import { StoryModule } from './story/story.module';
@@ -40,8 +40,8 @@ import { OrganizationCollaboratorModule } from './organization-collaborator/orga
     S3Module,
     FileManagerModule,
     ContactFollowerModule,
-    TagModule,
-    ContactTaggingModule,
+    ContactTagModule,
+    ContactContactTaggingModule,
     NotificationModule,
     ContactStatisticModule,
     UserVerificationModule,

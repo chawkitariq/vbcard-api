@@ -1,26 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { CreateContactTaggingDto } from './dto/create-contact-tagging.dto';
-import { ContactTagging } from './entities/contact-tagging.entity';
+import { CreateContactContactTaggingDto } from './dto/create-contact-tagging.dto';
+import { ContactContactTagging } from './entities/contact-tagging.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class ContactTaggingService {
+export class ContactContactTaggingService {
   constructor(
-    @InjectRepository(ContactTagging)
-    private readonly contactTaggingRepository: Repository<ContactTagging>
+    @InjectRepository(ContactContactTagging)
+    private readonly contactContactTaggingRepository: Repository<ContactContactTagging>
   ) {}
 
-  create(createContactTaggingDto: CreateContactTaggingDto) {
-    const tag = this.contactTaggingRepository.create(createContactTaggingDto);
-    return this.contactTaggingRepository.save(tag);
+  create(createContactContactTaggingDto: CreateContactContactTaggingDto) {
+    const tag = this.contactContactTaggingRepository.create(createContactContactTaggingDto);
+    return this.contactContactTaggingRepository.save(tag);
   }
 
-  remove(userId: string, contactId: string, tagId: string) {
-    return this.contactTaggingRepository.delete({
+  remove(userId: string, contactId: string, contactTagId: string) {
+    return this.contactContactTaggingRepository.delete({
       user: { id: userId },
       contact: { id: contactId },
-      tag: { id: tagId }
+      tag: { id: contactTagId }
     });
   }
 }

@@ -1,6 +1,6 @@
 import { IsDefined, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateTagDto {
+export class CreateContactTagDto {
   @IsDefined()
   @IsString()
   @IsNotEmpty()
