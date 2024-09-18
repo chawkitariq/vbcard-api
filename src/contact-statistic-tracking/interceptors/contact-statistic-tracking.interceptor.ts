@@ -25,8 +25,14 @@ export class ContactStatisticTrackingInterceptor implements NestInterceptor {
 
     let contactStatisticTracking: ContactStatisticTracking | null;
 
+    const field = path.split('/').at(-1) as ContactStatisticTracking.Field;
+
     try {
-      contactStatisticTracking = await this.contactStatisticTrackingService.findOneByUserAndContact(user.id, contactId);
+      contactStatisticTracking = await this.contactStatisticTrackingService.findOneBy({
+        userId: user.id,
+        contactId,
+        field
+      });
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
@@ -34,8 +40,6 @@ export class ContactStatisticTrackingInterceptor implements NestInterceptor {
     if (contactStatisticTracking) {
       throw new ForbiddenException('Action already performed');
     }
-
-    const field = path.split('/').at(-1) as ContactStatisticTracking.Field;
 
     return next.handle().pipe(
       tap((contact: Contact) => {

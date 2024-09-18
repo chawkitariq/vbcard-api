@@ -26,10 +26,19 @@ export class ContactStatisticTrackingService {
     });
   }
 
-  findOneByUserAndContact(userId: string, contactId: string) {
+  findOneBy({
+    userId = undefined,
+    contactId = undefined,
+    field = undefined
+  }: {
+    userId?: string;
+    contactId?: string;
+    field?: ContactStatisticTracking.Field;
+  }) {
     return this.contactStatisticTrackingRepository.findOneBy({
       user: { id: userId },
-      contact: { id: contactId }
+      contact: { id: contactId },
+      field
     });
   }
 }
