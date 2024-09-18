@@ -3,8 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthJwtGuard } from './auth/guards/jwt.guard';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HashModule } from './hash/hash.module';
 import { FileModule } from './file/file.module';
 import { S3Module } from './s3/s3.module';
@@ -14,23 +13,21 @@ import { ConstraintModule } from './constraint/constraint.module';
 import { TagModule } from './tag/tag.module';
 import { NotificationModule } from './notification/notification.module';
 import { UserModule } from './user/user.module';
-import { UserVerificationModule } from './user-verification/user-verification.module';
 import { ContactModule } from './contact/contact.module';
-import { ContactFollowingModule } from './contact-following/contact-following.module';
+import { ContactFollowerModule } from './contact-follower/contact-follower.module';
 import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { SettingModule } from './setting/setting.module';
 import { StoryModule } from './story/story.module';
 import { BillingModule } from './billing/billing.module';
 import { ActivityModule } from './activity/activity.module';
+import { UserVerificationModule } from './user-verification/user-verification.module';
+import { ContactStatisticTrackingModule } from './contact-statistic-tracking/contact-statistic-tracking.module';
 
 @Module({
   imports: [
-    EventEmitterModule.forRoot({ global: true }),
-    {
-      global: true,
-      module: ConstraintModule
-    },
+    EventEmitterModule.forRoot(),
+    ConstraintModule,
     DatabaseModule,
     UserModule,
     AuthModule,
@@ -39,7 +36,7 @@ import { ActivityModule } from './activity/activity.module';
     FileModule,
     S3Module,
     FileManagerModule,
-    ContactFollowingModule,
+    ContactFollowerModule,
     TagModule,
     ContactTaggingModule,
     NotificationModule,
@@ -48,15 +45,12 @@ import { ActivityModule } from './activity/activity.module';
     SettingModule,
     StoryModule,
     BillingModule,
-    ActivityModule
+    ActivityModule,
+    ContactStatisticTrackingModule
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthJwtGuard
-    },
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor

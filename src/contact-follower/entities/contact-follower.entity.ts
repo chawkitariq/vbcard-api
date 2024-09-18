@@ -14,8 +14,8 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 
-@Entity({ name: 'contacts_followings' })
-export class ContactFollowing {
+@Entity({ name: 'contacts_followers' })
+export class ContactFollower {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

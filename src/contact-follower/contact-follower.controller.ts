@@ -9,29 +9,29 @@ import {
   InternalServerErrorException,
   BadRequestException
 } from '@nestjs/common';
-import { ContactFollowingService } from './contact-following.service';
-import { GetUser } from 'src/decorator/get-user.decorator';
+import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { CreateContactFollowingDto } from './dto/create-contact-following.dto';
-import { UpdateContactFollowingDto } from './dto/update-contact-following.dto';
+import { CreateContactFollowerDto } from './dto/create-contact-follower.dto';
+import { UpdateContactFollowerDto } from './dto/update-contact-follower.dto';
 import { ContactService } from 'src/contact/contact.service';
-import { ContactFollowing } from './entities/contact-following.entity';
+import { ContactFollower } from './entities/contact-follower.entity';
 import { UpdateResult } from 'typeorm';
 import { ContactIdDto } from 'src/dto/contact-id.dto';
+import { ContactFollowerService } from './contact-follower.service';
 
 @Controller()
-export class ContactFollowingController {
+export class ContactFollowerController {
   constructor(
-    private readonly followingService: ContactFollowingService,
+    private readonly contactFollowerService: ContactFollowerService,
     private readonly contactService: ContactService
   ) {}
 
   @Post('users/me/followings/:contactId')
-  async follow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateContactFollowingDto) {
-    let following: ContactFollowing | null;
+  async follow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateContactFollowerDto) {
+    let following: ContactFollower | null;
 
     try {
-      following = await this.followingService.findOneByUserAndContact(user.id, contactId);
+      following = await this.contactFollowerService.findOneByUserAndContact(user.id, contactId);
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
@@ -42,7 +42,7 @@ export class ContactFollowingController {
 
     try {
       const contact = await this.contactService.findOne(contactId);
-      return this.followingService.create({ ...body, user, contact });
+      return this.contactFollowerService.create({ ...body, user, contact });
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
@@ -52,18 +52,18 @@ export class ContactFollowingController {
   async updateFollow(
     @GetUser() user: User,
     @Param() { contactId }: ContactIdDto,
-    @Body() body: UpdateContactFollowingDto
+    @Body() body: UpdateContactFollowerDto
   ) {
     let updateResult: UpdateResult | undefined;
 
     try {
-      updateResult = await this.followingService.update(user.id, contactId, body);
+      updateResult = await this.contactFollowerService.update(user.id, contactId, body);
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
 
     if (!updateResult.affected) {
-      throw new BadRequestException('ContactFollowing does not exist');
+      throw new BadRequestException('ContactFollower does not exist');
     }
   }
 
@@ -72,23 +72,23 @@ export class ContactFollowingController {
     let updateResult: UpdateResult | undefined;
 
     try {
-      updateResult = await this.followingService.unfollow(user.id, contactId);
+      updateResult = await this.contactFollowerService.unfollow(user.id, contactId);
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
 
     if (!updateResult.affected) {
-      throw new BadRequestException('ContactFollowing does not exist');
+      throw new BadRequestException('ContactFollower does not exist');
     }
   }
 
   @Get('users/me/followings')
-  findOneUserContactFollowings(@GetUser() user: User) {
-    return this.followingService.findOneUserContactFollowings(user.id);
+  findUserMeFollowings(@GetUser() user: User) {
+    return this.contactFollowerService.findUserFollowings(user.id);
   }
 
   @Get('contacts/:contactId/followers')
-  async findOneContactFollowers(@Param() { contactId }: ContactIdDto) {
-    return this.followingService.findOneContactFollowers(contactId);
+  async findContactFollowers(@Param() { contactId }: ContactIdDto) {
+    return this.contactFollowerService.findContactFollowers(contactId);
   }
 }

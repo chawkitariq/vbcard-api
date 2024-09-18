@@ -1,18 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_SKIP_VERIFICATION } from '../decorators/skip-verification.decorator';
+import { IS_PUBLIC } from 'src/decorators/public.decorator';
 
 @Injectable()
-export class AuthVerifiedGuard implements CanActivate {
+export class UserVerificationGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext) {
-    const isSkipVerification = this.reflector.getAllAndOverride<boolean>(IS_SKIP_VERIFICATION, [
-      context.getHandler(),
-      context.getClass()
-    ]);
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC, [context.getHandler(), context.getClass()]);
 
-    if (isSkipVerification) {
+    if (isPublic) {
       return true;
     }
 

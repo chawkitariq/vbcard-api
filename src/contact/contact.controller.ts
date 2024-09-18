@@ -14,7 +14,7 @@ import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { UpdateResult } from 'typeorm';
 import { FileService } from 'src/file/file.service';
-import { GetUser } from 'src/decorator/get-user.decorator';
+import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 
 @Controller('contacts')

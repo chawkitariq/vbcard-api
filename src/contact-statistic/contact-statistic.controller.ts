@@ -1,7 +1,9 @@
-import { Controller, Param, Patch } from '@nestjs/common';
+import { Controller, Param, Patch, UseInterceptors } from '@nestjs/common';
 import { ContactStatisticService } from './contact-statistic.service';
 import { ContactIdDto } from 'src/dto/contact-id.dto';
+import { ContactStatisticTrackingInterceptor } from 'src/contact-statistic-tracking/interceptors/contact-statistic-tracking.interceptor';
 
+@UseInterceptors(ContactStatisticTrackingInterceptor)
 @Controller('contacts/:contactId/statistics')
 export class ContactStatisticController {
   constructor(private readonly contactStatisticService: ContactStatisticService) {}
