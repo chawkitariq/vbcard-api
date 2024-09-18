@@ -20,9 +20,16 @@ export class ContactStatisticTrackingService {
     return this.contactStatisticTrackingRepository.find();
   }
 
-  async findOne(id: string) {
-    return this.contactStatisticTrackingRepository.findOne({
-      where: { id }
+  findOne(id: string) {
+    return this.contactStatisticTrackingRepository.findOneBy({
+      id
+    });
+  }
+
+  findOneByUserAndContact(userId: string, contactId: string) {
+    return this.contactStatisticTrackingRepository.findOneBy({
+      user: { id: userId },
+      contact: { id: contactId }
     });
   }
 }

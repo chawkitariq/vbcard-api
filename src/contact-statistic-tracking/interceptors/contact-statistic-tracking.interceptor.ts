@@ -1,4 +1,11 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NestInterceptor
+} from '@nestjs/common';
 import { Request } from 'express';
 import { tap } from 'rxjs';
 import { ContactStatisticTrackingService } from '../contact-statistic-tracking.service';
@@ -11,10 +18,24 @@ export class ContactStatisticTrackingInterceptor implements NestInterceptor {
   constructor(private readonly contactStatisticTrackingService: ContactStatisticTrackingService) {}
 
   async intercept(context: ExecutionContext, next: CallHandler<any>) {
-    const { ip, path, ...request } = context.switchToHttp().getRequest<Request>();
+    const { ip, path, params, query, body, ...request } = context.switchToHttp().getRequest<Request>();
+
+    const user = request.user as User;
+    const { contactId } = { ...params, ...query, ...body } as { contactId: string };
+
+    let contactStatisticTracking: ContactStatisticTracking | null;
+
+    try {
+      contactStatisticTracking = await this.contactStatisticTrackingService.findOneByUserAndContact(user.id, contactId);
+    } catch (error) {
+      throw new InternalServerErrorException('Something wrong');
+    }
+
+    if (contactStatisticTracking) {
+      throw new ForbiddenException('Action already performed');
+    }
 
     const field = path.split('/').at(-1) as ContactStatisticTracking.Field;
-    const user = request.user as User;
 
     return next.handle().pipe(
       tap((contact: Contact) => {
