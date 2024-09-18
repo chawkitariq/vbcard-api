@@ -25,6 +25,7 @@ import { UserVerificationModule } from './user-verification/user-verification.mo
 import { ContactStatisticTrackingModule } from './contact-statistic-tracking/contact-statistic-tracking.module';
 import { OrganizationModule } from './organization/organization.module';
 import { OrganizationMemberModule } from './organization-member/organization-member.module';
+import { OrganizationCollaboratorModule } from './organization-collaborator/organization-collaborator.module';
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { OrganizationMemberModule } from './organization-member/organization-mem
     ActivityModule,
     ContactStatisticTrackingModule,
     OrganizationModule,
-    OrganizationMemberModule
+    OrganizationMemberModule,
+    OrganizationCollaboratorModule
   ],
   controllers: [AppController],
   providers: [
