@@ -24,6 +24,7 @@ import { ActivityModule } from './activity/activity.module';
 import { UserVerificationModule } from './user-verification/user-verification.module';
 import { ContactStatisticTrackingModule } from './contact-statistic-tracking/contact-statistic-tracking.module';
 import { OrganizationModule } from './organization/organization.module';
+import { OrganizationMemberModule } from './organization-member/organization-member.module';
 
 @Module({
   imports: [
@@ -48,7 +49,8 @@ import { OrganizationModule } from './organization/organization.module';
     BillingModule,
     ActivityModule,
     ContactStatisticTrackingModule,
-    OrganizationModule
+    OrganizationModule,
+    OrganizationMemberModule
   ],
   controllers: [AppController],
   providers: [
