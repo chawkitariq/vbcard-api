@@ -22,6 +22,7 @@ import { StoryModule } from './story/story.module';
 import { BillingModule } from './billing/billing.module';
 import { ActivityModule } from './activity/activity.module';
 import { UserVerificationModule } from './user-verification/user-verification.module';
+import { ContactStatisticTrackingModule } from './contact-statistic-tracking/contact-statistic-tracking.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { UserVerificationModule } from './user-verification/user-verification.mo
     SettingModule,
     StoryModule,
     BillingModule,
-    ActivityModule
+    ActivityModule,
+    ContactStatisticTrackingModule
   ],
   controllers: [AppController],
   providers: [
