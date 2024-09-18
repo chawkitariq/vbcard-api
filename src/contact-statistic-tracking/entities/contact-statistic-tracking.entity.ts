@@ -19,16 +19,10 @@ export class ContactStatisticTracking {
   id: string;
 
   @Column({ type: 'text', nullable: true })
-  field?: 'viewed' | 'shared' | 'scanned';
+  field?: ContactStatisticTracking.Field;
 
   @Column({ nullable: true })
   ip?: string;
-
-  @Column({ nullable: true })
-  longitude?: string;
-
-  @Column({ nullable: true })
-  latitude?: string;
 
   @Index()
   @ManyToOne(() => Contact)
@@ -42,4 +36,8 @@ export class ContactStatisticTracking {
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
+}
+
+export namespace ContactStatisticTracking {
+  export type Field = 'viewed' | 'shared' | 'scanned';
 }
