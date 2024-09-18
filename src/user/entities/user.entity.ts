@@ -32,6 +32,14 @@ export class User {
   verificationTokenExpirationAt?: Date;
 
   @Exclude()
+  @Column({ name: 'premium_end_at', type: 'timestamptz', nullable: true })
+  premiumEndAt?: Date;
+
+  @Exclude()
+  @Column({ name: 'business_end_at', type: 'timestamptz', nullable: true })
+  businessEndAt?: Date;
+
+  @Exclude()
   @Column({ name: 'verified_at', type: 'timestamptz', nullable: true })
   verifiedAt?: Date;
 
