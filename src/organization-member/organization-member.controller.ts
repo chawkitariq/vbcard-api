@@ -3,7 +3,7 @@ import { OrganizationMemberService } from './organization-member.service';
 import { CreateOrganizationMemberDto } from './dto/create-organization-member.dto';
 import { UpdateOrganizationMemberDto } from './dto/update-organization-member.dto';
 
-@Controller('organization-member')
+@Controller('organizations/members')
 export class OrganizationMemberController {
   constructor(private readonly organizationMemberService: OrganizationMemberService) {}
 

@@ -17,7 +17,7 @@ import { UserService } from 'src/user/user.service';
 import { UpdateResult } from 'typeorm';
 import { Notification } from './entities/notification.entity';
 
-@Controller('notification')
+@Controller('notifications')
 export class NotificationController {
   constructor(
     private readonly notificationService: NotificationService,
