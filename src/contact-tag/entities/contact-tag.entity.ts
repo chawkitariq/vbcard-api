@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity({ name: 'tags' })
+@Entity({ name: 'contacts_tags' })
 export class ContactTag {
   @PrimaryGeneratedColumn('uuid')
   id: string;

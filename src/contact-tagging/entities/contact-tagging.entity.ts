@@ -1,15 +1,23 @@
-import { Exclude } from 'class-transformer';
 import { Contact } from 'src/contact/entities/contact.entity';
 import { ContactTag } from 'src/contact-tag/entities/contact-tag.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation, Unique } from 'typeorm';
+import { Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, Relation, Unique } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'contacts_taggings' })
 @Unique(['contact', 'user', 'tag'])
 export class ContactContactTagging {
   @Exclude()
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn({ name: 'contact_id' })
+  contactId: string;
+
+  @Exclude()
+  @PrimaryColumn({ name: 'user_id' })
+  userId: string;
+
+  @Exclude()
+  @PrimaryColumn({ name: 'tag_id' })
+  tagId: string;
 
   @Index()
   @ManyToOne(() => Contact)
