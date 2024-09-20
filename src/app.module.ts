@@ -26,6 +26,7 @@ import { ContactStatisticTrackingModule } from './contact-statistic-tracking/con
 import { OrganizationModule } from './organization/organization.module';
 import { OrganizationMemberModule } from './organization-member/organization-member.module';
 import { OrganizationCollaboratorModule } from './organization-collaborator/organization-collaborator.module';
+import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module';
 
 @Module({
   imports: [
@@ -52,7 +53,8 @@ import { OrganizationCollaboratorModule } from './organization-collaborator/orga
     ContactStatisticTrackingModule,
     OrganizationModule,
     OrganizationMemberModule,
-    OrganizationCollaboratorModule
+    OrganizationCollaboratorModule,
+    TwoFactorAuthModule
   ],
   controllers: [AppController],
   providers: [
