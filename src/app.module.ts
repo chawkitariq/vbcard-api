@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HashModule } from './hash/hash.module';
 import { FileModule } from './file/file.module';
-import { S3Module } from './s3/s3.module';
+import { AwsS3Module } from './aws-s3/aws-s3.module';
 import { FileManagerModule } from './file-manager/file-manager.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConstraintModule } from './constraint/constraint.module';
@@ -38,7 +38,7 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
     HashModule,
     ContactModule,
     FileModule,
-    S3Module,
+    AwsS3Module,
     FileManagerModule,
     ContactFollowerModule,
     ContactTagModule,
