@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ContactContactTaggingService } from './contact-tagging.service';
-import { ContactContactTaggingController } from './contact-tagging.controller';
-import { ContactContactTagging } from './entities/contact-tagging.entity';
+import { ContactTaggingService } from './contact-tagging.service';
+import { ContactTaggingController } from './contact-tagging.controller';
+import { ContactTagging } from './entities/contact-tagging.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContactModule } from 'src/contact/contact.module';
 import { ContactTagModule } from 'src/contact-tag/contact-tag.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ContactContactTagging]), ContactModule, ContactTagModule],
-  controllers: [ContactContactTaggingController],
-  providers: [ContactContactTaggingService]
+  imports: [TypeOrmModule.forFeature([ContactTagging]), ContactModule, ContactTagModule],
+  controllers: [ContactTaggingController],
+  providers: [ContactTaggingService]
 })
-export class ContactContactTaggingModule {}
+export class ContactTaggingModule {}

@@ -15,7 +15,7 @@ import { NotificationModule } from './notification/notification.module';
 import { UserModule } from './user/user.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactFollowerModule } from './contact-follower/contact-follower.module';
-import { ContactContactTaggingModule } from './contact-tagging/contact-tagging.module';
+import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
 import { SettingModule } from './setting/setting.module';
 import { StoryModule } from './story/story.module';
@@ -42,7 +42,7 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
     FileManagerModule,
     ContactFollowerModule,
     ContactTagModule,
-    ContactContactTaggingModule,
+    ContactTaggingModule,
     NotificationModule,
     ContactStatisticModule,
     UserVerificationModule,

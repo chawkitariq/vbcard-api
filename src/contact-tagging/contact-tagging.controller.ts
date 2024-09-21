@@ -7,7 +7,7 @@ import {
   InternalServerErrorException,
   BadRequestException
 } from '@nestjs/common';
-import { ContactContactTaggingService } from './contact-tagging.service';
+import { ContactTaggingService } from './contact-tagging.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { ContactService } from 'src/contact/contact.service';
@@ -18,9 +18,9 @@ import { ContactTagIdDto } from 'src/dto/contact-tag-id.dto';
 import { DeleteResult } from 'typeorm';
 
 @Controller()
-export class ContactContactTaggingController {
+export class ContactTaggingController {
   constructor(
-    private readonly taggingService: ContactContactTaggingService,
+    private readonly contactTaggingService: ContactTaggingService,
     private readonly contactService: ContactService,
     private readonly contactTagService: ContactTagService
   ) {}
@@ -30,7 +30,7 @@ export class ContactContactTaggingController {
     try {
       const tag = await this.contactTagService.create(body);
       const contact = await this.contactService.findOne(contactId);
-      return this.taggingService.create({
+      return this.contactTaggingService.create({
         user,
         contact,
         tag
@@ -45,7 +45,7 @@ export class ContactContactTaggingController {
     let deleteResult: DeleteResult | undefined;
 
     try {
-      deleteResult = await this.taggingService.remove(user.id, contactId, contactTagId);
+      deleteResult = await this.contactTaggingService.remove(user.id, contactId, contactTagId);
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }

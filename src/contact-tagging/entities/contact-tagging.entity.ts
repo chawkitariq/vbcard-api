@@ -6,7 +6,7 @@ import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'contacts_taggings' })
 @Unique(['contact', 'user', 'tag'])
-export class ContactContactTagging {
+export class ContactTagging {
   @Exclude()
   @PrimaryColumn({ name: 'contact_id' })
   contactId: string;
