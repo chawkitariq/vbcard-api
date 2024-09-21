@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToOne,
@@ -16,21 +17,24 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'organizations' })
-@Unique(['photo'])
+@Unique(['name', 'owner'])
 export class Organization {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index()
   @Column({ type: 'text', nullable: true })
   name?: string;
 
   @Column({ default: 'private' })
   visibility: Organization.Visibility;
 
+  @Index()
   @ManyToOne(() => User)
   @JoinColumn({ name: 'owner_id' })
   owner: Relation<User>;
 
+  @Index()
   @OneToOne(() => File, { nullable: true })
   @JoinColumn({ name: 'photo_id' })
   photo?: Relation<File>;

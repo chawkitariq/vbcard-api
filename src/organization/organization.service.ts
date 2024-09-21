@@ -27,6 +27,14 @@ export class OrganizationService {
     });
   }
 
+  findOneBy(where: Parameters<typeof this.organizationRepository.findOneBy>['0']) {
+    return this.organizationRepository.findOneBy(where);
+  }
+
+  isExistBy(where: Parameters<typeof this.organizationRepository.existsBy>['0']) {
+    return this.organizationRepository.existsBy(where);
+  }
+
   update(id: string, updateOrganizationDto: UpdateOrganizationDto) {
     return this.organizationRepository.update(id, updateOrganizationDto);
   }
