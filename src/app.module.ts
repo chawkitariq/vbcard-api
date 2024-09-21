@@ -27,6 +27,7 @@ import { OrganizationModule } from './organization/organization.module';
 import { OrganizationMemberModule } from './organization-member/organization-member.module';
 import { OrganizationCollaboratorModule } from './organization-collaborator/organization-collaborator.module';
 import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-factor-authentication.module';
+import { OrganizationInvitationModule } from './organization-invitation/organization-invitation.module';
 
 @Module({
   imports: [
@@ -54,7 +55,8 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
     ContactStatisticTrackingModule,
     OrganizationModule,
     OrganizationMemberModule,
-    OrganizationCollaboratorModule
+    OrganizationCollaboratorModule,
+    OrganizationInvitationModule
   ],
   controllers: [AppController],
   providers: [
