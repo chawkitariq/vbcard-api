@@ -1,18 +1,11 @@
-import {
-  Body,
-  ConflictException,
-  Controller,
-  InternalServerErrorException,
-  Post,
-  Request,
-  UseGuards
-} from '@nestjs/common';
+import { Body, ConflictException, Controller, Post, UseGuards } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import { AuthenticationLocalGuard } from './guards/local.guard';
 import { AuthenticationService } from './authentication.service';
 import { Public } from '../decorators/public.decorator';
 import { AuthenticationRegisterDto } from './dto/authentication-register.dto';
 import { UserService } from 'src/user/user.service';
+import { GetUser } from 'src/decorators/get-user.decorator';
 
 @Controller('auth')
 export class AuthenticationController {
@@ -26,31 +19,19 @@ export class AuthenticationController {
   async register(@Body() { email, password }: AuthenticationRegisterDto) {
     let user: User | undefined;
 
-    try {
-      user = await this.userService.findOneByEmail(email);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    user = await this.userService.findOneByEmail(email);
 
     if (user) {
       throw new ConflictException('User already exists');
     }
 
-    try {
-      await this.authenticationService.register({ email, password });
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    await this.authenticationService.register({ email, password });
   }
 
   @Public()
   @Post('login')
   @UseGuards(AuthenticationLocalGuard)
-  async login(@Request() { user }: { user: User }) {
-    try {
-      return this.authenticationService.login(user);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+  async login(@GetUser() user: User) {
+    return this.authenticationService.login(user);
   }
 }
