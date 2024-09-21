@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class TwoFactorAuthService {
+export class TwoFactorAuthenticationService {
   async enabled() {}
 
   async generate() {}

@@ -24,6 +24,11 @@ export class User {
 
   @Exclude()
   @Index()
+  @Column({ name: 'two_factor_authentication', nullable: true })
+  twoFactorAuthenticationentication?: string;
+
+  @Exclude()
+  @Index()
   @Column({ name: 'verification_token', nullable: true })
   verificationToken?: string;
 
