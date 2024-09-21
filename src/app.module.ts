@@ -2,7 +2,7 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HashModule } from './hash/hash.module';
 import { FileModule } from './file/file.module';
@@ -34,7 +34,7 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
     ConstraintModule,
     DatabaseModule,
     UserModule,
-    AuthModule,
+    AuthenticationModule,
     HashModule,
     ContactModule,
     FileModule,

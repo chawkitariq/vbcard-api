@@ -8,22 +8,22 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
-import { AuthLocalGuard } from './guards/local.guard';
-import { AuthService } from './auth.service';
+import { AuthenticationLocalGuard } from './guards/local.guard';
+import { AuthenticationService } from './authentication.service';
 import { Public } from '../decorators/public.decorator';
-import { AuthRegisterDto } from './dto/auth-register.dto';
+import { AuthenticationRegisterDto } from './dto/authentication-register.dto';
 import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
-export class AuthController {
+export class AuthenticationController {
   constructor(
-    private readonly authService: AuthService,
+    private readonly authenticationService: AuthenticationService,
     private readonly userService: UserService
   ) {}
 
   @Public()
   @Post('register')
-  async register(@Body() { email, password }: AuthRegisterDto) {
+  async register(@Body() { email, password }: AuthenticationRegisterDto) {
     let user: User | undefined;
 
     try {
@@ -37,7 +37,7 @@ export class AuthController {
     }
 
     try {
-      await this.authService.register({ email, password });
+      await this.authenticationService.register({ email, password });
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }
@@ -45,10 +45,10 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  @UseGuards(AuthLocalGuard)
+  @UseGuards(AuthenticationLocalGuard)
   async login(@Request() { user }: { user: User }) {
     try {
-      return this.authService.login(user);
+      return this.authenticationService.login(user);
     } catch (error) {
       throw new InternalServerErrorException('Something wrong');
     }

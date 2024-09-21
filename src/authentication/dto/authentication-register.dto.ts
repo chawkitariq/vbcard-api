@@ -1,6 +1,6 @@
 import { IsDefined, IsEmail, IsNotEmpty, IsString, IsStrongPassword } from 'class-validator';
 
-export class AuthRegisterDto {
+export class AuthenticationRegisterDto {
   @IsDefined()
   @IsString()
   @IsNotEmpty()

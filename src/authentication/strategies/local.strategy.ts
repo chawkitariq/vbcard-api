@@ -5,7 +5,7 @@ import { UserService } from 'src/user/user.service';
 import { HashService } from 'src/hash/hash.service';
 
 @Injectable()
-export class AuthLocalStrategy extends PassportStrategy(Strategy) {
+export class AuthenticationLocalStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly userService: UserService,
     private readonly hashService: HashService

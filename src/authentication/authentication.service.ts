@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { AuthRegisterDto } from './dto/auth-register.dto';
+import { AuthenticationRegisterDto } from './dto/authentication-register.dto';
 import { HashService } from 'src/hash/hash.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AuthRegisterEvent } from './events/auth-register.event';
+import { AuthenticationRegisterEvent } from './events/authentication-register.event';
 
 @Injectable()
-export class AuthService {
+export class AuthenticationService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -16,7 +16,7 @@ export class AuthService {
     private readonly eventEmitter: EventEmitter2
   ) {}
 
-  async register({ email, password }: AuthRegisterDto) {
+  async register({ email, password }: AuthenticationRegisterDto) {
     const hashedPassword = await this.hashService.hash(password);
 
     const user = await this.userService.create({
@@ -24,7 +24,7 @@ export class AuthService {
       password: hashedPassword
     });
 
-    this.eventEmitter.emit(AuthRegisterEvent.name, new AuthRegisterEvent(user.id));
+    this.eventEmitter.emit(AuthenticationRegisterEvent.name, new AuthenticationRegisterEvent(user.id));
 
     return user;
   }
