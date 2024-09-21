@@ -35,6 +35,8 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
     DatabaseModule,
     UserModule,
     AuthenticationModule,
+    UserVerificationModule,
+    TwoFactorAuthenticationModule,
     HashModule,
     ContactModule,
     FileModule,
@@ -45,7 +47,6 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
     ContactTaggingModule,
     NotificationModule,
     ContactStatisticModule,
-    UserVerificationModule,
     SettingModule,
     StoryModule,
     BillingModule,
@@ -53,8 +54,7 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
     ContactStatisticTrackingModule,
     OrganizationModule,
     OrganizationMemberModule,
-    OrganizationCollaboratorModule,
-    TwoFactorAuthenticationModule
+    OrganizationCollaboratorModule
   ],
   controllers: [AppController],
   providers: [
