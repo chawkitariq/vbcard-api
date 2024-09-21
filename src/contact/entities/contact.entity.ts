@@ -37,8 +37,8 @@ export class Contact {
   visibility: Contact.Visibility;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'author_id' })
-  author?: Relation<User>;
+  @JoinColumn({ name: 'owner_id' })
+  owner?: Relation<User>;
 
   @OneToOne(() => File, { nullable: true })
   @JoinColumn({ name: 'photo_id' })
