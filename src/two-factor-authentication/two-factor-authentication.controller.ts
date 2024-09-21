@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Post } from '@nestjs/common';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -14,6 +14,10 @@ export class TwoFactorAuthenticationController {
 
   @Post('enable')
   async enable(@GetUser() user: User) {
+    if (user.twoFactorAuthenticationEnabledAt) {
+      throw new ConflictException('2FA already enabled');
+    }
+
     const twoFactorAuthenticationSecret = this.twoFactorAuthenticationService.generateRandomBase32(20);
 
     await this.userService.update(user.id, {

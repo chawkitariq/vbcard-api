@@ -21,8 +21,8 @@ export class TwoFactorAuthenticationService {
     return url;
   }
 
-  verifyTotp(token: string, secret: string, options?: any): boolean {
-    const { otp } = TOTP.generate(secret, options);
+  verifyTotp(token: string, secret: string): boolean {
+    const { otp } = TOTP.generate(secret);
     return token === otp;
   }
 }
