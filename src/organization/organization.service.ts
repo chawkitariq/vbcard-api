@@ -17,14 +17,12 @@ export class OrganizationService {
     return this.organizationRepository.save(organization);
   }
 
-  findAll() {
-    return this.organizationRepository.find();
+  findAllBy(where: Parameters<typeof this.organizationRepository.findBy>['0']) {
+    return this.organizationRepository.findBy(where);
   }
 
   findOne(id: string) {
-    return this.organizationRepository.findOne({
-      where: { id }
-    });
+    return this.organizationRepository.findOneBy({ id });
   }
 
   findOneBy(where: Parameters<typeof this.organizationRepository.findOneBy>['0']) {
@@ -35,14 +33,15 @@ export class OrganizationService {
     return this.organizationRepository.existsBy(where);
   }
 
-  update(id: string, updateOrganizationDto: UpdateOrganizationDto) {
-    return this.organizationRepository.update(id, updateOrganizationDto);
+  update(
+    criteria: Parameters<typeof this.organizationRepository.update>['0'],
+    updateOrganizationDto: UpdateOrganizationDto
+  ) {
+    return this.organizationRepository.update(criteria, updateOrganizationDto);
   }
 
-  remove(id: string) {
-    return this.organizationRepository.softDelete({
-      id,
-      deletedAt: IsNull()
-    });
+  remove(criteria: Parameters<typeof this.organizationRepository.softDelete>['0']) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.organizationRepository.softDelete(mergedCriteria);
   }
 }

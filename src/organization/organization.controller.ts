@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ConflictException,
+  NotFoundException,
+  BadRequestException
+} from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import { IdDto } from 'src/dto/id.dto';
 import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/decorators/get-user.decorator';
 
@@ -22,22 +32,54 @@ export class OrganizationController {
   }
 
   @Get()
-  findAll() {
-    return this.organizationService.findAll();
+  findAll(@GetUser() owner: User) {
+    return this.organizationService.findAllBy({ owner: { id: owner.id } });
   }
 
   @Get(':id')
-  findOne(@Param('id') { id }: IdDto) {
-    return this.organizationService.findOne(id);
+  async findOne(@GetUser() owner: User, @Param('id') id: string) {
+    const organization = await this.organizationService.findOneBy({ id, owner: { id: owner.id } });
+
+    if (!organization) {
+      throw new NotFoundException('Organization Not found');
+    }
+
+    return organization;
   }
 
   @Patch(':id')
-  update(@Param('id') { id }: IdDto, @Body() updateOrganizationDto: UpdateOrganizationDto) {
-    return this.organizationService.update(id, updateOrganizationDto);
+  async update(
+    @GetUser() owner: User,
+    @Param('id') id: string,
+    @Body() { name, ...updateOrganizationDto }: UpdateOrganizationDto
+  ) {
+    if (name) {
+      const isNameAlreadyExist = await this.organizationService.isExistBy({ name, owner: { id: owner.id } });
+
+      if (isNameAlreadyExist) {
+        throw new ConflictException('Already exists');
+      }
+    }
+
+    const { affected } = await this.organizationService.update(
+      {
+        id,
+        owner: { id: owner.id }
+      },
+      { ...updateOrganizationDto, name }
+    );
+
+    if (!affected) {
+      throw new BadRequestException('Organization not found');
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') { id }: IdDto) {
-    return this.organizationService.remove(id);
+  async remove(@GetUser() owner: User, @Param('id') id: string) {
+    const { affected } = await this.organizationService.remove({ id, owner: { id: owner.id } });
+
+    if (!affected) {
+      throw new NotFoundException('Organization Not found');
+    }
   }
 }
