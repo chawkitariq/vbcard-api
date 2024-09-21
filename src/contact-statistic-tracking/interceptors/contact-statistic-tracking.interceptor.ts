@@ -1,11 +1,4 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NestInterceptor
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, ForbiddenException, Injectable, NestInterceptor } from '@nestjs/common';
 import { Request } from 'express';
 import { tap } from 'rxjs';
 import { ContactStatisticTrackingService } from '../contact-statistic-tracking.service';
@@ -21,21 +14,16 @@ export class ContactStatisticTrackingInterceptor implements NestInterceptor {
     const { ip, path, params, query, body, ...request } = context.switchToHttp().getRequest<Request>();
 
     const user = request.user as User;
-    const { contactId } = { ...params, ...query, ...body } as { contactId: string };
 
-    let contactStatisticTracking: ContactStatisticTracking | null;
+    const { contactId } = { ...params, ...query, ...body } as { contactId: string };
 
     const field = path.split('/').at(-1) as ContactStatisticTracking.Field;
 
-    try {
-      contactStatisticTracking = await this.contactStatisticTrackingService.findOneBy({
-        userId: user.id,
-        contactId,
-        field
-      });
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const contactStatisticTracking = await this.contactStatisticTrackingService.findOneBy({
+      userId: user.id,
+      contactId,
+      field
+    });
 
     if (contactStatisticTracking) {
       throw new ForbiddenException('Action already performed');

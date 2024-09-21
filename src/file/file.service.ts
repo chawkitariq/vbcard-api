@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFileDto } from './dto/create.dto';
 import { UpdateFileDto } from './dto/update.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -39,13 +39,7 @@ export class FileService {
   }
 
   async findOneOrHttpFail(id: string) {
-    let file: File | null;
-
-    try {
-      file = await this.findOne(id);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const file = await this.findOne(id);
 
     if (!file) {
       throw new NotFoundException('File not found');

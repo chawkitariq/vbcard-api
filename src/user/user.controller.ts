@@ -1,57 +1,38 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
-  InternalServerErrorException
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UpdateResult } from 'typeorm';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  // @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    try {
-      return this.userService.create(createUserDto);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    return this.userService.create(createUserDto);
   }
 
   @Get()
   findAll() {
-    try {
-      return this.userService.findAll();
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    return this.userService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.userService.findOneOrHttpFail(id);
+    const user = await this.userService.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    let result: UpdateResult | undefined;
+    const { affected } = await this.userService.update(id, updateUserDto);
 
-    try {
-      result = await this.userService.update(id, updateUserDto);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (result.affected <= 0) {
+    if (!affected) {
       throw new NotFoundException('User not found');
     }
 
@@ -60,15 +41,9 @@ export class UserController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    let result: UpdateResult | undefined;
+    const { affected } = await this.userService.remove(id);
 
-    try {
-      result = await this.userService.remove(id);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (result.affected <= 0) {
+    if (!affected) {
       throw new NotFoundException('User not found');
     }
   }

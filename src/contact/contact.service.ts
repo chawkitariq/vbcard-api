@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,9 +22,7 @@ export class ContactService {
   }
 
   findOne(id: string) {
-    return this.contactRepository.findOne({
-      where: { id }
-    });
+    return this.contactRepository.findOneBy({ id });
   }
 
   update(id: string, updateContactDto: UpdateContactDto) {
@@ -36,21 +34,5 @@ export class ContactService {
       id,
       deletedAt: IsNull()
     });
-  }
-
-  async findOneOrHttpFail(id: string) {
-    let contact: Contact | null;
-
-    try {
-      contact = await this.findOne(id);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (!contact) {
-      throw new NotFoundException('Contact not found');
-    }
-
-    return contact;
   }
 }

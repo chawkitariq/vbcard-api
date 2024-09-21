@@ -1,13 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  ConflictException,
-  Controller,
-  InternalServerErrorException,
-  Post,
-  Query
-} from '@nestjs/common';
-import { User } from 'src/user/entities/user.entity';
+import { BadRequestException, Body, ConflictException, Controller, Post, Query } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { Public } from 'src/decorators/public.decorator';
 import { UserVerifyDto } from './dto/user-verify.dto';
@@ -24,13 +15,7 @@ export class UserVerificationController {
   @Public()
   @Post('/verify')
   async verify(@Body() { token }: UserVerifyDto) {
-    let user: User | null;
-
-    try {
-      user = await this.userService.findOneByVerificationToken(token);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const user = await this.userService.findOneByVerificationToken(token);
 
     if (!user) {
       throw new BadRequestException('Invalid token');
@@ -46,13 +31,7 @@ export class UserVerificationController {
   @Public()
   @Post('/verify/resend')
   async verifyRefresh(@Query() { email }: UserVerifyResendDto) {
-    let user: User | null;
-
-    try {
-      user = await this.userService.findOneByEmail(email);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const user = await this.userService.findOneByEmail(email);
 
     if (user.isVerified()) {
       throw new ConflictException('User already verified');

@@ -6,16 +6,16 @@ import {
   Param,
   Body,
   Patch,
-  InternalServerErrorException,
-  BadRequestException
+  BadRequestException,
+  HttpCode,
+  HttpStatus,
+  ConflictException
 } from '@nestjs/common';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { CreateContactFollowerDto } from './dto/create-contact-follower.dto';
 import { UpdateContactFollowerDto } from './dto/update-contact-follower.dto';
 import { ContactService } from 'src/contact/contact.service';
-import { ContactFollower } from './entities/contact-follower.entity';
-import { UpdateResult } from 'typeorm';
 import { ContactIdDto } from 'src/dto/contact-id.dto';
 import { ContactFollowerService } from './contact-follower.service';
 
@@ -28,24 +28,15 @@ export class ContactFollowerController {
 
   @Post('users/me/followings/:contactId')
   async follow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateContactFollowerDto) {
-    let following: ContactFollower | null;
-
-    try {
-      following = await this.contactFollowerService.findOneByUserAndContact(user.id, contactId);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const following = await this.contactFollowerService.findOneByUserAndContact(user.id, contactId);
 
     if (following) {
-      throw new BadRequestException('Already exists');
+      throw new ConflictException('Already exists');
     }
 
-    try {
-      const contact = await this.contactService.findOne(contactId);
-      return this.contactFollowerService.create({ ...body, user, contact });
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const contact = await this.contactService.findOne(contactId);
+
+    return this.contactFollowerService.create({ ...body, user, contact });
   }
 
   @Patch('users/me/followings/:contactId')
@@ -54,30 +45,19 @@ export class ContactFollowerController {
     @Param() { contactId }: ContactIdDto,
     @Body() body: UpdateContactFollowerDto
   ) {
-    let updateResult: UpdateResult | undefined;
+    const { affected } = await this.contactFollowerService.update(user.id, contactId, body);
 
-    try {
-      updateResult = await this.contactFollowerService.update(user.id, contactId, body);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (!updateResult.affected) {
+    if (!affected) {
       throw new BadRequestException('ContactFollower does not exist');
     }
   }
 
   @Delete('users/me/followings/:contactId')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async unfollow(@GetUser() user: User, @Param() { contactId }: ContactIdDto) {
-    let updateResult: UpdateResult | undefined;
+    const { affected } = await this.contactFollowerService.unfollow(user.id, contactId);
 
-    try {
-      updateResult = await this.contactFollowerService.unfollow(user.id, contactId);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (!updateResult.affected) {
+    if (!affected) {
       throw new BadRequestException('ContactFollower does not exist');
     }
   }

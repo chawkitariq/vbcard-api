@@ -1,21 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  InternalServerErrorException,
-  NotFoundException
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { UpdateResult } from 'typeorm';
-import { Notification } from './entities/notification.entity';
 
 @Controller('notifications')
 export class NotificationController {
@@ -26,13 +13,7 @@ export class NotificationController {
 
   @Post()
   async create(@Body() { recipientId, ...createNotificationDto }: CreateNotificationDto) {
-    let recipient: User | null;
-
-    try {
-      recipient = await this.userService.findOne(recipientId);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const recipient = await this.userService.findOne(recipientId);
 
     return this.notificationService.create({
       recipient,
@@ -42,22 +23,12 @@ export class NotificationController {
 
   @Get()
   findAll() {
-    try {
-      return this.notificationService.findAll();
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    return this.notificationService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    let notification: Notification | null;
-
-    try {
-      notification = await this.notificationService.findOne(id);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
+    const notification = await this.notificationService.findOne(id);
 
     if (!notification) {
       throw new NotFoundException('User not found');
@@ -68,19 +39,13 @@ export class NotificationController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() { recipientId, ...updateNotificationDto }: UpdateNotificationDto) {
-    let result: UpdateResult | undefined;
-
-    try {
-      if (recipientId) {
-        updateNotificationDto.recipient = await this.userService.findOne(recipientId);
-      }
-
-      result = await this.notificationService.update(id, updateNotificationDto);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
+    if (recipientId) {
+      updateNotificationDto.recipient = await this.userService.findOne(recipientId);
     }
 
-    if (result.affected <= 0) {
+    const { affected } = await this.notificationService.update(id, updateNotificationDto);
+
+    if (!affected) {
       throw new NotFoundException('Notification not found');
     }
 
@@ -89,15 +54,9 @@ export class NotificationController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    let result: UpdateResult | undefined;
+    const { affected } = await this.notificationService.remove(id);
 
-    try {
-      result = await this.notificationService.remove(id);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (!result.affected) {
+    if (!affected) {
       throw new NotFoundException('Contact not found');
     }
   }

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsNull, Repository } from 'typeorm';
@@ -50,21 +50,5 @@ export class UserService {
       id,
       deletedAt: IsNull()
     });
-  }
-
-  async findOneOrHttpFail(id: string) {
-    let user: User | null;
-
-    try {
-      user = await this.findOne(id);
-    } catch (error) {
-      throw new InternalServerErrorException('Something wrong');
-    }
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
   }
 }
