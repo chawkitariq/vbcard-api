@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 import { IsExist } from 'src/constraint/is-exist.constraint';
 import { IsVcard } from 'src/constraint/is-vcard.constraint';
@@ -16,6 +17,9 @@ export class CreateContactDto {
   @IsExist(File, (id: string) => ({ where: { id } }))
   photoId?: string;
 
+  @Exclude()
   photo?: File;
+
+  @Exclude()
   author?: User;
 }

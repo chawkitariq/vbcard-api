@@ -8,7 +8,7 @@ import { FileModule } from 'src/file/file.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Contact]), FileModule],
   controllers: [ContactController],
-  providers: [ContactService],
-  exports: [ContactService]
+  providers: [ContactService, ContactController],
+  exports: [ContactService, ContactController]
 })
 export class ContactModule {}

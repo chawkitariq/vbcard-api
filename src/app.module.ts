@@ -28,6 +28,7 @@ import { OrganizationMemberModule } from './organization-member/organization-mem
 import { OrganizationCollaboratorModule } from './organization-collaborator/organization-collaborator.module';
 import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-factor-authentication.module';
 import { OrganizationInvitationModule } from './organization-invitation/organization-invitation.module';
+import { OrganizationContactModule } from './organization-contact/organization-contact.module';
 
 @Module({
   imports: [
@@ -56,7 +57,8 @@ import { OrganizationInvitationModule } from './organization-invitation/organiza
     OrganizationModule,
     OrganizationMemberModule,
     OrganizationCollaboratorModule,
-    OrganizationInvitationModule
+    OrganizationInvitationModule,
+    OrganizationContactModule
   ],
   controllers: [AppController],
   providers: [
