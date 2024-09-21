@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Param, NotFoundException, Body, BadRequestException } from '@nestjs/common';
 import { OrganizationContactService } from './organization-contact.service';
 import { OrganizationService } from 'src/organization/organization.service';
-import { IdDto } from 'src/dto/id.dto';
 import { CreateContactDto } from 'src/contact/dto/create-contact.dto';
 import { ContactController } from 'src/contact/contact.controller';
 import { User } from 'src/user/entities/user.entity';
@@ -34,7 +33,7 @@ export class OrganizationContactController {
   }
 
   @Get()
-  async findAll(@Param('id') { id }: IdDto) {
+  async findAll(@Param('id') id: string) {
     const organization = await this.organizationService.findOne(id);
 
     if (!organization) {

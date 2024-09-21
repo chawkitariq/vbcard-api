@@ -16,9 +16,14 @@ export class OrganizationContactService {
     return this.organizationContactRepository.save(organizationContact);
   }
 
-  findAll(organizationId: string) {
-    return this.organizationContactRepository.findBy({
-      organization: { id: organizationId }
+  async findAll(organizationId: string) {
+    const contacts = await this.organizationContactRepository.find({
+      where: {
+        organization: { id: organizationId }
+      },
+      relations: ['contact']
     });
+
+    return contacts.map(({ contact }) => contact);
   }
 }
