@@ -2,6 +2,7 @@ import { Controller, Get, Body, Patch, Param, Delete, NotFoundException } from '
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { IdDto } from 'src/dto/id.dto';
 
 @Controller('users')
 export class UserController {
@@ -18,7 +19,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') { id }: IdDto) {
     const user = await this.userService.findOne(id);
 
     if (!user) {
@@ -29,18 +30,18 @@ export class UserController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') { id }: IdDto, @Body() updateUserDto: UpdateUserDto) {
     const { affected } = await this.userService.update(id, updateUserDto);
 
     if (!affected) {
       throw new NotFoundException('User not found');
     }
 
-    return this.findOne(id);
+    return this.userService.findOne(id);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') { id }: IdDto) {
     const { affected } = await this.userService.remove(id);
 
     if (!affected) {

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { OrganizationMemberService } from './organization-member.service';
 import { CreateOrganizationMemberDto } from './dto/create-organization-member.dto';
 import { UpdateOrganizationMemberDto } from './dto/update-organization-member.dto';
+import { IdDto } from 'src/dto/id.dto';
 
 @Controller('organizations/members')
 export class OrganizationMemberController {
@@ -18,17 +19,17 @@ export class OrganizationMemberController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') { id }: IdDto) {
     return this.organizationMemberService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto) {
+  update(@Param('id') { id }: IdDto, @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto) {
     return this.organizationMemberService.update(id, updateOrganizationMemberDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') { id }: IdDto) {
     return this.organizationMemberService.remove(id);
   }
 }

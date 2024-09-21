@@ -19,6 +19,7 @@ import { FileManagerService } from 'src/file-manager/file-manager.service';
 import { DataSource } from 'typeorm';
 import sizeOf from 'image-size';
 import { File } from './entities/file.entity';
+import { IdDto } from 'src/dto/id.dto';
 
 @Controller('files')
 export class FileController {
@@ -65,14 +66,14 @@ export class FileController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') { id }: IdDto) {
     return this.fileService.findOneOrHttpFail(id);
   }
 
   @Patch(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
-    @Param('id') id: string,
+    @Param('id') { id }: IdDto,
     @Body() updateFileDto: UpdateFileDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -114,7 +115,7 @@ export class FileController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') { id }: IdDto) {
     const { extension } = await this.fileService.findOneOrHttpFail(id);
 
     const queryRunner = this.dataSource.createQueryRunner();

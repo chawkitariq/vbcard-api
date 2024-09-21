@@ -16,6 +16,7 @@ import { UpdateContactDto } from './dto/update-contact.dto';
 import { FileService } from 'src/file/file.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { IdDto } from 'src/dto/id.dto';
 
 @Controller('contacts')
 export class ContactController {
@@ -43,7 +44,7 @@ export class ContactController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') { id }: IdDto) {
     const contact = await this.contactService.findOne(id);
 
     if (!contact) {
@@ -54,19 +55,19 @@ export class ContactController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto) {
+  async update(@Param('id') { id }: IdDto, @Body() updateContactDto: UpdateContactDto) {
     const { affected } = await this.contactService.update(id, updateContactDto);
 
     if (!affected) {
       throw new NotFoundException('Contact not found');
     }
 
-    return this.findOne(id);
+    return this.contactService.findOne(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') { id }: IdDto) {
     const { affected } = await this.contactService.remove(id);
 
     if (!affected) {
