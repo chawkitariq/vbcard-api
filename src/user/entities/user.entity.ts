@@ -29,7 +29,11 @@ export class User {
 
   @Exclude()
   @Column({ name: 'two_factor_authentication_enabled_at', type: 'timestamptz', nullable: true })
-  twoFactorAuthenticationEnabledAt: Date;
+  twoFactorAuthenticationEnabledAt?: Date;
+
+  @Exclude()
+  @Column({ name: 'two_factor_authentication_verified_at', type: 'timestamptz', nullable: true })
+  twoFactorAuthenticationVerifiedAt?: Date;
 
   @Exclude()
   @Index()
