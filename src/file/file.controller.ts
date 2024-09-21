@@ -54,7 +54,7 @@ export class FileController {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Something wrong');
+      throw new InternalServerErrorException('Failed to create file');
     } finally {
       await queryRunner.release();
     }
@@ -108,7 +108,7 @@ export class FileController {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Something wrong');
+      throw new InternalServerErrorException('Failed to update file');
     } finally {
       await queryRunner.release();
     }
@@ -132,7 +132,7 @@ export class FileController {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Something wrong');
+      throw new InternalServerErrorException('Failed to delete file');
     } finally {
       await queryRunner.release();
     }
