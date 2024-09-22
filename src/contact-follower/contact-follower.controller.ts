@@ -47,7 +47,9 @@ export class ContactFollowerController {
       owner: { id: Not(user.id) }
     });
 
-    if (!contact) {
+    const isContactOwner = !contact;
+
+    if (isContactOwner) {
       throw new BadRequestException('You are owner');
     }
 
@@ -98,7 +100,10 @@ export class ContactFollowerController {
   }
 
   @Get('contacts/:contactId/followers')
-  async findContactFollowers(@GetUser() user: User, @Param() { contactId }: ContactIdDto) {
+  async findContactFollowers(
+    @GetUser() user: User,
+    @Param() { contactId }: ContactIdDto
+  ) {
     return this.contactFollowerService.findBy({
       contact: { id: contactId, owner: { id: user.id } }
     });
