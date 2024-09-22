@@ -4,36 +4,67 @@ import { UpdateOrganizationInvitationDto } from './dto/update-organization-invit
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { OrganizationInvitation } from './entities/organization-invitation.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { OrganizationInvitationCreatedEvent } from './events/organization-invitation-created.event';
 
 @Injectable()
 export class OrganizationInvitationService {
   constructor(
     @InjectRepository(OrganizationInvitation)
-    private readonly organizationInvitationRepository: Repository<OrganizationInvitation>
+    private readonly organizationInvitationRepository: Repository<OrganizationInvitation>,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
-  create(createOrganizationInvitationDto: CreateOrganizationInvitationDto) {
-    const organizationInvitation = this.organizationInvitationRepository.create(createOrganizationInvitationDto);
-    return this.organizationInvitationRepository.save(organizationInvitation);
+  async create(
+    createOrganizationInvitationDto: CreateOrganizationInvitationDto
+  ) {
+    const organizationInvitation = this.organizationInvitationRepository.create(
+      createOrganizationInvitationDto
+    );
+
+    const newOrganizationInvitation =
+      await this.organizationInvitationRepository.save(organizationInvitation);
+
+    this.eventEmitter.emit(
+      OrganizationInvitationCreatedEvent.name,
+      new OrganizationInvitationCreatedEvent(organizationInvitation.id)
+    );
+
+    return newOrganizationInvitation;
   }
 
-  findAll() {
-    return this.organizationInvitationRepository.find();
+  findBy(
+    where: Parameters<typeof this.organizationInvitationRepository.findBy>['0']
+  ) {
+    return this.organizationInvitationRepository.findBy(where);
   }
 
-  findOne(id: string) {
-    return this.organizationInvitationRepository.findOne({
-      where: { id }
-    });
+  findOneBy(
+    where: Parameters<
+      typeof this.organizationInvitationRepository.findOneBy
+    >['0']
+  ) {
+    return this.organizationInvitationRepository.findOneBy(where);
   }
 
-  update(id: string, updateOrganizationInvitationDto: UpdateOrganizationInvitationDto) {
-    return this.organizationInvitationRepository.update(id, updateOrganizationInvitationDto);
+  update(
+    criteria: Parameters<
+      typeof this.organizationInvitationRepository.update
+    >['0'],
+    updateOrganizationInvitationDto: UpdateOrganizationInvitationDto
+  ) {
+    return this.organizationInvitationRepository.update(
+      criteria,
+      updateOrganizationInvitationDto
+    );
   }
 
-  remove(id: string) {
-    return this.organizationInvitationRepository.delete({
-      id
-    });
+  remove(
+    criteria: Parameters<
+      typeof this.organizationInvitationRepository.softDelete
+    >['0']
+  ) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.organizationInvitationRepository.softDelete(mergedCriteria);
   }
 }

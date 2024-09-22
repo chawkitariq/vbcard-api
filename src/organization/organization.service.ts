@@ -13,7 +13,9 @@ export class OrganizationService {
   ) {}
 
   create(createOrganizationDto: CreateOrganizationDto) {
-    const organization = this.organizationRepository.create(createOrganizationDto);
+    const organization = this.organizationRepository.create(
+      createOrganizationDto
+    );
     return this.organizationRepository.save(organization);
   }
 
@@ -25,11 +27,15 @@ export class OrganizationService {
     return this.organizationRepository.findOneBy({ id });
   }
 
-  findOneBy(where: Parameters<typeof this.organizationRepository.findOneBy>['0']) {
+  findOneBy(
+    where: Parameters<typeof this.organizationRepository.findOneBy>['0']
+  ) {
     return this.organizationRepository.findOneBy(where);
   }
 
-  isExistBy(where: Parameters<typeof this.organizationRepository.existsBy>['0']) {
+  isExistBy(
+    where: Parameters<typeof this.organizationRepository.existsBy>['0']
+  ) {
     return this.organizationRepository.existsBy(where);
   }
 
@@ -40,7 +46,9 @@ export class OrganizationService {
     return this.organizationRepository.update(criteria, updateOrganizationDto);
   }
 
-  remove(criteria: Parameters<typeof this.organizationRepository.softDelete>['0']) {
+  remove(
+    criteria: Parameters<typeof this.organizationRepository.softDelete>['0']
+  ) {
     const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
     return this.organizationRepository.softDelete(mergedCriteria);
   }

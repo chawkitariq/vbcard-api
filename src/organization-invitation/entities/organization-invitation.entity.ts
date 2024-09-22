@@ -1,21 +1,18 @@
-import { Exclude } from 'class-transformer';
 import { Organization } from 'src/organization/entities/organization.entity';
-import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   Relation,
-  Unique,
   UpdateDateColumn
 } from 'typeorm';
 
 @Entity({ name: 'organizations_invitations' })
-@Unique(['email', 'organization', 'recipient'])
 export class OrganizationInvitation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -27,32 +24,22 @@ export class OrganizationInvitation {
   @Column({ type: 'text', default: 'pending' })
   status: OrganizationInvitation.Status;
 
-  @Index()
-  @Column({ nullable: true })
+  @Column({ default: 'member' })
   role?: string;
-
-  @Exclude()
-  @Column({ name: 'accepted_at', type: 'timestamptz', nullable: true })
-  acceptedAt?: Date;
-
-  @Exclude()
-  @Column({ name: 'rejected_at', type: 'timestamptz', nullable: true })
-  rejectedAt?: Date;
 
   @Index()
   @ManyToOne(() => Organization)
   @JoinColumn({ name: 'organization_id' })
   organization: Relation<Organization>;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'recipient_id' })
-  recipient?: Relation<User>;
-
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz' })
+  deletedAt: Date;
 }
 
 export namespace OrganizationInvitation {

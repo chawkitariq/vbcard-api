@@ -1,35 +1,83 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  BadRequestException
+} from '@nestjs/common';
 import { OrganizationInvitationService } from './organization-invitation.service';
 import { CreateOrganizationInvitationDto } from './dto/create-organization-invitation.dto';
-import { UpdateOrganizationInvitationDto } from './dto/update-organization-invitation.dto';
 import { IdDto } from 'src/dto/id.dto';
+import { OrganizationService } from 'src/organization/organization.service';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
-@Controller('organizations/invitations')
+@Controller('organizations/:id/invitations')
 export class OrganizationInvitationController {
-  constructor(private readonly organizationInvitationService: OrganizationInvitationService) {}
+  constructor(
+    private readonly organizationInvitationService: OrganizationInvitationService,
+    private readonly organizationService: OrganizationService
+  ) {}
 
   @Post()
-  create(@Body() createOrganizationInvitationDto: CreateOrganizationInvitationDto) {
-    return this.organizationInvitationService.create(createOrganizationInvitationDto);
+  async create(
+    @GetUser() user: User,
+    @Param() { id }: IdDto,
+    @Body() { email }: CreateOrganizationInvitationDto
+  ) {
+    const organization = await this.organizationService.findOneBy({
+      id,
+      owner: { id: user.id }
+    });
+
+    if (!organization) {
+      throw new BadRequestException('Organization not found');
+    }
+
+    return this.organizationInvitationService.create({ email, organization });
   }
 
   @Get()
-  findAll() {
-    return this.organizationInvitationService.findAll();
+  findAll(@GetUser() user: User, @Param() { id }: IdDto) {
+    return this.organizationInvitationService.findBy({
+      organization: { id, owner: { id: user.id } }
+    });
   }
 
-  @Get(':id')
-  findOne(@Param() { id }: IdDto) {
-    return this.organizationInvitationService.findOne(id);
+  @Get(':invitationId')
+  async findOne(
+    @GetUser() user: User,
+    @Param() { id: organizationId }: IdDto,
+    @Param() invitationId: string
+  ) {
+    const organizationInvitation =
+      await this.organizationInvitationService.findOneBy({
+        id: invitationId,
+        organization: { id: organizationId, owner: { id: user.id } }
+      });
+
+    if (!organizationInvitation) {
+      throw new BadRequestException('Organization not found');
+    }
+
+    return organizationInvitation;
   }
 
-  @Patch(':id')
-  update(@Param() { id }: IdDto, @Body() updateOrganizationInvitationDto: UpdateOrganizationInvitationDto) {
-    return this.organizationInvitationService.update(id, updateOrganizationInvitationDto);
-  }
+  @Delete(':invitationId')
+  async remove(
+    @GetUser() user: User,
+    @Param() { id: organizationId }: IdDto,
+    @Param() invitationId: string
+  ) {
+    const { affected } = await this.organizationInvitationService.remove({
+      id: invitationId,
+      organization: { id: organizationId, owner: { id: user.id } }
+    });
 
-  @Delete(':id')
-  remove(@Param() { id }: IdDto) {
-    return this.organizationInvitationService.remove(id);
+    if (!affected) {
+      throw new BadRequestException('Organization not found');
+    }
   }
 }
