@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { OrganizationInvitationService } from './organization-invitation.service';
 import { CreateOrganizationInvitationDto } from './dto/create-organization-invitation.dto';
 import { UpdateOrganizationInvitationDto } from './dto/update-organization-invitation.dto';
+import { IdDto } from 'src/dto/id.dto';
 
 @Controller('organizations/invitations')
 export class OrganizationInvitationController {
@@ -18,17 +19,17 @@ export class OrganizationInvitationController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param() { id }: IdDto) {
     return this.organizationInvitationService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrganizationInvitationDto: UpdateOrganizationInvitationDto) {
+  update(@Param() { id }: IdDto, @Body() updateOrganizationInvitationDto: UpdateOrganizationInvitationDto) {
     return this.organizationInvitationService.update(id, updateOrganizationInvitationDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param() { id }: IdDto) {
     return this.organizationInvitationService.remove(id);
   }
 }
