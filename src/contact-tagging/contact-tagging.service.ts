@@ -3,6 +3,7 @@ import { CreateContactTaggingDto } from './dto/create-contact-tagging.dto';
 import { ContactTagging } from './entities/contact-tagging.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UpdateContactTaggingDto } from './dto/update-contact-tagging.dto';
 
 @Injectable()
 export class ContactTaggingService {
@@ -16,11 +17,19 @@ export class ContactTaggingService {
     return this.contactTaggingRepository.save(tag);
   }
 
-  remove(userId: string, contactId: string, contactTagId: string) {
-    return this.contactTaggingRepository.delete({
-      user: { id: userId },
-      contact: { id: contactId },
-      tag: { id: contactTagId }
-    });
+  findBy(where: Parameters<typeof this.contactTaggingRepository.findBy>['0']) {
+    return this.contactTaggingRepository.findBy(where);
+  }
+
+  existsBy(
+    where: Parameters<typeof this.contactTaggingRepository.existsBy>['0']
+  ) {
+    return this.contactTaggingRepository.existsBy(where);
+  }
+
+  remove(
+    criteria: Parameters<typeof this.contactTaggingRepository.delete>['0']
+  ) {
+    return this.contactTaggingRepository.delete(criteria);
   }
 }

@@ -1,14 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete
+} from '@nestjs/common';
 import { ContactTagService } from './contact-tag.service';
 import { CreateContactTagDto } from './dto/create-contact-tag.dto';
 import { UpdateContactTagDto } from './dto/update-contact-tag.dto';
 import { IdDto } from 'src/dto/id.dto';
 
-@Controller('tags')
+@Controller('contacts-tags')
 export class ContactTagController {
   constructor(private readonly contactTagService: ContactTagService) {}
 
-  @Post()
+  // @Post()
   create(@Body() createContactTagDto: CreateContactTagDto) {
     return this.contactTagService.create(createContactTagDto);
   }
@@ -24,7 +32,10 @@ export class ContactTagController {
   }
 
   @Patch(':id')
-  update(@Param() { id }: IdDto, @Body() updateContactTagDto: UpdateContactTagDto) {
+  update(
+    @Param() { id }: IdDto,
+    @Body() updateContactTagDto: UpdateContactTagDto
+  ) {
     return this.contactTagService.update(id, updateContactTagDto);
   }
 

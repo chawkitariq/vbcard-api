@@ -6,7 +6,9 @@ import { ContactStatisticTrackingInterceptor } from 'src/contact-statistic-track
 @UseInterceptors(ContactStatisticTrackingInterceptor)
 @Controller('contacts/:contactId/statistics')
 export class ContactStatisticController {
-  constructor(private readonly contactStatisticService: ContactStatisticService) {}
+  constructor(
+    private readonly contactStatisticService: ContactStatisticService
+  ) {}
 
   @Patch('viewed')
   async incrementViewed(@Param() { contactId }: ContactIdDto) {
