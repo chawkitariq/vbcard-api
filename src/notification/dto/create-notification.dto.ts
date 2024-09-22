@@ -1,4 +1,11 @@
-import { IsDefined, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Exclude } from 'class-transformer';
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID
+} from 'class-validator';
 import { IsExist } from 'src/constraint/is-exist.constraint';
 import { User } from 'src/user/entities/user.entity';
 
@@ -17,5 +24,9 @@ export class CreateNotificationDto {
   @IsString()
   message: string;
 
+  @Exclude()
+  sender?: User;
+
+  @Exclude()
   recipient: User;
 }

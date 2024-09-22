@@ -17,7 +17,7 @@ export class OrganizationService {
     return this.organizationRepository.save(organization);
   }
 
-  findAllBy(where: Parameters<typeof this.organizationRepository.findBy>['0']) {
+  findBy(where: Parameters<typeof this.organizationRepository.findBy>['0']) {
     return this.organizationRepository.findBy(where);
   }
 

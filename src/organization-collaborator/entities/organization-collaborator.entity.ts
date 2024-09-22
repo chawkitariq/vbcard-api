@@ -2,6 +2,7 @@ import { Exclude } from 'class-transformer';
 import { Organization } from 'src/organization/entities/organization.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -19,6 +20,10 @@ import {
 export class OrganizationCollaborator {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Index()
+  @Column({ nullable: true })
+  role?: string;
 
   @Index()
   @ManyToOne(() => Organization)

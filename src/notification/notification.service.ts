@@ -21,20 +21,33 @@ export class NotificationService {
     return this.notificationRepository.find();
   }
 
+  findBy(where: Parameters<typeof this.notificationRepository.findBy>['0']) {
+    return this.notificationRepository.findBy(where);
+  }
+
   findOne(id: string) {
     return this.notificationRepository.findOne({
       where: { id }
     });
   }
 
-  update(id: string, updateNotificationDto: UpdateNotificationDto) {
-    return this.notificationRepository.update(id, updateNotificationDto);
+  findOneBy(
+    where: Parameters<typeof this.notificationRepository.findOneBy>['0']
+  ) {
+    return this.notificationRepository.findOneBy(where);
   }
 
-  remove(id: string) {
-    return this.notificationRepository.softDelete({
-      id,
-      deletedAt: IsNull()
-    });
+  update(
+    criteria: Parameters<typeof this.notificationRepository.update>['0'],
+    updateNotificationDto: UpdateNotificationDto
+  ) {
+    return this.notificationRepository.update(criteria, updateNotificationDto);
+  }
+
+  remove(
+    criteria: Parameters<typeof this.notificationRepository.softDelete>['0']
+  ) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.notificationRepository.softDelete(mergedCriteria);
   }
 }

@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Organization } from 'src/organization/entities/organization.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -25,6 +26,18 @@ export class OrganizationInvitation {
 
   @Column({ type: 'text', default: 'pending' })
   status: OrganizationInvitation.Status;
+
+  @Index()
+  @Column({ nullable: true })
+  role?: string;
+
+  @Exclude()
+  @Column({ name: 'accepted_at', type: 'timestamptz', nullable: true })
+  acceptedAt?: Date;
+
+  @Exclude()
+  @Column({ name: 'rejected_at', type: 'timestamptz', nullable: true })
+  rejectedAt?: Date;
 
   @Index()
   @ManyToOne(() => Organization)

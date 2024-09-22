@@ -34,7 +34,7 @@ export class OrganizationController {
 
   @Get()
   findAll(@GetUser() owner: User) {
-    return this.organizationService.findAllBy({ owner: { id: owner.id } });
+    return this.organizationService.findBy({ owner: { id: owner.id } });
   }
 
   @Get(':id')
