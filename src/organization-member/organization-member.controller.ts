@@ -1,12 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException
+} from '@nestjs/common';
 import { OrganizationMemberService } from './organization-member.service';
 import { CreateOrganizationMemberDto } from './dto/create-organization-member.dto';
 import { UpdateOrganizationMemberDto } from './dto/update-organization-member.dto';
 import { IdDto } from 'src/dto/id.dto';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
-@Controller('organizations/members')
+@Controller('organizations/:id/members')
 export class OrganizationMemberController {
-  constructor(private readonly organizationMemberService: OrganizationMemberService) {}
+  constructor(
+    private readonly organizationMemberService: OrganizationMemberService
+  ) {}
 
   @Post()
   create(@Body() createOrganizationMemberDto: CreateOrganizationMemberDto) {
@@ -14,22 +27,48 @@ export class OrganizationMemberController {
   }
 
   @Get()
-  findAll() {
-    return this.organizationMemberService.findAll();
+  findAll(@GetUser() user: User, @Param() { id }: IdDto) {
+    return this.organizationMemberService.findBy({
+      organization: { id, owner: { id: user.id } }
+    });
   }
 
-  @Get(':id')
-  findOne(@Param() { id }: IdDto) {
-    return this.organizationMemberService.findOne(id);
+  @Get(':memberId')
+  findOne(
+    @GetUser() user: User,
+    @Param() { id: organizationId }: IdDto,
+    @Param('memberId') memberId: string
+  ) {
+    return this.organizationMemberService.findOneBy({
+      id: memberId,
+      organization: { id: organizationId, owner: { id: user.id } }
+    });
   }
 
   @Patch(':id')
-  update(@Param() { id }: IdDto, @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto) {
-    return this.organizationMemberService.update(id, updateOrganizationMemberDto);
+  update(
+    @Param() { id }: IdDto,
+    @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto
+  ) {
+    return this.organizationMemberService.update(
+      id,
+      updateOrganizationMemberDto
+    );
   }
 
-  @Delete(':id')
-  remove(@Param() { id }: IdDto) {
-    return this.organizationMemberService.remove(id);
+  @Delete(':memberId')
+  async remove(
+    @GetUser() user: User,
+    @Param() { id: organizationId }: IdDto,
+    @Param('memberId') memberId: string
+  ) {
+    const { affected } = await this.organizationMemberService.remove({
+      id: memberId,
+      organization: { id: organizationId, owner: { id: user.id } }
+    });
+
+    if (!affected) {
+      throw new BadRequestException('Member not found');
+    }
   }
 }

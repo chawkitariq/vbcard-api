@@ -13,28 +13,41 @@ export class OrganizationMemberService {
   ) {}
 
   create(CreateOrganizationMemberDto: CreateOrganizationMemberDto) {
-    const organizationMember = this.organizationMemberRepository.create(CreateOrganizationMemberDto);
+    const organizationMember = this.organizationMemberRepository.create(
+      CreateOrganizationMemberDto
+    );
     return this.organizationMemberRepository.save(organizationMember);
   }
 
-  findAll() {
-    return this.organizationMemberRepository.find();
+  findBy(
+    where: Parameters<typeof this.organizationMemberRepository.findBy>['0']
+  ) {
+    return this.organizationMemberRepository.findBy(where);
   }
 
   findOne(id: string) {
-    return this.organizationMemberRepository.findOne({
-      where: { id }
-    });
+    return this.organizationMemberRepository.findOneBy({ id });
+  }
+
+  findOneBy(
+    where: Parameters<typeof this.organizationMemberRepository.findOneBy>['0']
+  ) {
+    return this.organizationMemberRepository.findOneBy(where);
   }
 
   update(id: string, updateOrganizationMemberDto: UpdateOrganizationMemberDto) {
-    return this.organizationMemberRepository.update(id, updateOrganizationMemberDto);
+    return this.organizationMemberRepository.update(
+      id,
+      updateOrganizationMemberDto
+    );
   }
 
-  remove(id: string) {
-    return this.organizationMemberRepository.softDelete({
-      id,
-      deletedAt: IsNull()
-    });
+  remove(
+    criteria: Parameters<
+      typeof this.organizationMemberRepository.softDelete
+    >['0']
+  ) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.organizationMemberRepository.softDelete(mergedCriteria);
   }
 }
