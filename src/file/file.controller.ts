@@ -66,14 +66,14 @@ export class FileController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') { id }: IdDto) {
+  async findOne(@Param() { id }: IdDto) {
     return this.fileService.findOneOrHttpFail(id);
   }
 
   @Patch(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
-    @Param('id') { id }: IdDto,
+    @Param() { id }: IdDto,
     @Body() updateFileDto: UpdateFileDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -115,7 +115,7 @@ export class FileController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') { id }: IdDto) {
+  async remove(@Param() { id }: IdDto) {
     const { extension } = await this.fileService.findOneOrHttpFail(id);
 
     const queryRunner = this.dataSource.createQueryRunner();

@@ -28,7 +28,7 @@ export class NotificationController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') { id }: IdDto) {
+  async findOne(@Param() { id }: IdDto) {
     const notification = await this.notificationService.findOne(id);
 
     if (!notification) {
@@ -39,7 +39,7 @@ export class NotificationController {
   }
 
   @Patch(':id')
-  async update(@Param('id') { id }: IdDto, @Body() { recipientId, ...updateNotificationDto }: UpdateNotificationDto) {
+  async update(@Param() { id }: IdDto, @Body() { recipientId, ...updateNotificationDto }: UpdateNotificationDto) {
     if (recipientId) {
       updateNotificationDto.recipient = await this.userService.findOne(recipientId);
     }
@@ -54,7 +54,7 @@ export class NotificationController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') { id }: IdDto) {
+  async remove(@Param() { id }: IdDto) {
     const { affected } = await this.notificationService.remove(id);
 
     if (!affected) {

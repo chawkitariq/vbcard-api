@@ -19,17 +19,17 @@ export class ContactTagController {
   }
 
   @Get(':id')
-  findOne(@Param('id') { id }: IdDto) {
+  findOne(@Param() { id }: IdDto) {
     return this.contactTagService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') { id }: IdDto, @Body() updateContactTagDto: UpdateContactTagDto) {
+  update(@Param() { id }: IdDto, @Body() updateContactTagDto: UpdateContactTagDto) {
     return this.contactTagService.update(id, updateContactTagDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') { id }: IdDto) {
+  remove(@Param() { id }: IdDto) {
     return this.contactTagService.remove(id);
   }
 }

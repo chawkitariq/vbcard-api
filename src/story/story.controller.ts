@@ -19,17 +19,17 @@ export class StoryController {
   }
 
   @Get(':id')
-  findOne(@Param('id') { id }: IdDto) {
+  findOne(@Param() { id }: IdDto) {
     return this.storyService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') { id }: IdDto, @Body() updateStoryDto: UpdateStoryDto) {
+  update(@Param() { id }: IdDto, @Body() updateStoryDto: UpdateStoryDto) {
     return this.storyService.update(id, updateStoryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') { id }: IdDto) {
+  remove(@Param() { id }: IdDto) {
     return this.storyService.remove(id);
   }
 }

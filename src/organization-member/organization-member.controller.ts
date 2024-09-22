@@ -19,17 +19,17 @@ export class OrganizationMemberController {
   }
 
   @Get(':id')
-  findOne(@Param('id') { id }: IdDto) {
+  findOne(@Param() { id }: IdDto) {
     return this.organizationMemberService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') { id }: IdDto, @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto) {
+  update(@Param() { id }: IdDto, @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto) {
     return this.organizationMemberService.update(id, updateOrganizationMemberDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') { id }: IdDto) {
+  remove(@Param() { id }: IdDto) {
     return this.organizationMemberService.remove(id);
   }
 }

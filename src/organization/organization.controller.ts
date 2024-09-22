@@ -15,6 +15,7 @@ import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/decorators/get-user.decorator';
+import { IdDto } from 'src/dto/id.dto';
 
 @Controller('organizations')
 export class OrganizationController {
@@ -37,7 +38,7 @@ export class OrganizationController {
   }
 
   @Get(':id')
-  async findOne(@GetUser() owner: User, @Param('id') id: string) {
+  async findOne(@GetUser() owner: User, @Param() { id }: IdDto) {
     const organization = await this.organizationService.findOneBy({ id, owner: { id: owner.id } });
 
     if (!organization) {
@@ -50,7 +51,7 @@ export class OrganizationController {
   @Patch(':id')
   async update(
     @GetUser() owner: User,
-    @Param('id') id: string,
+    @Param() { id }: IdDto,
     @Body() { name, ...updateOrganizationDto }: UpdateOrganizationDto
   ) {
     if (name) {
@@ -75,7 +76,7 @@ export class OrganizationController {
   }
 
   @Delete(':id')
-  async remove(@GetUser() owner: User, @Param('id') id: string) {
+  async remove(@GetUser() owner: User, @Param() { id }: IdDto) {
     const { affected } = await this.organizationService.remove({ id, owner: { id: owner.id } });
 
     if (!affected) {
