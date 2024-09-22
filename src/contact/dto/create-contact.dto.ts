@@ -21,5 +21,5 @@ export class CreateContactDto {
   photo?: File;
 
   @Exclude()
-  author?: User;
+  owner?: User;
 }

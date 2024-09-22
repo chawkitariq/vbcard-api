@@ -16,17 +16,22 @@ import { UpdateContactDto } from './dto/update-contact.dto';
 import { FileService } from 'src/file/file.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Contact } from './entities/contact.entity';
+import { IsNull, Repository } from 'typeorm';
 import { IdDto } from 'src/dto/id.dto';
 
 @Controller('contacts')
 export class ContactController {
   constructor(
+    @InjectRepository(Contact)
+    private readonly contactRepository: Repository<Contact>,
     private readonly contactService: ContactService,
     private readonly fileService: FileService
   ) {}
 
   @Post()
-  async create(@GetUser() user: User, @Body() { photoId, ...createContactDto }: CreateContactDto) {
+  async create(@GetUser() owner: User, @Body() { photoId, ...createContactDto }: CreateContactDto) {
     if (photoId) {
       const photo = await this.fileService.findOne(photoId);
       createContactDto.photo = photo;
@@ -34,18 +39,23 @@ export class ContactController {
 
     return this.contactService.create({
       ...createContactDto,
-      author: user
+      owner
     });
   }
 
   @Get()
-  async findAll() {
-    return this.contactService.findAll();
+  async findAll(@GetUser() owner: User) {
+    return this.contactRepository.findBy({
+      owner: { id: owner.id }
+    });
   }
 
   @Get(':id')
-  async findOne(@Param('id') { id }: IdDto) {
-    const contact = await this.contactService.findOne(id);
+  async findOne(@GetUser() owner: User, @Param() { id }: IdDto) {
+    const contact = await this.contactRepository.findOneBy({
+      id,
+      owner: { id: owner.id }
+    });
 
     if (!contact) {
       throw new NotFoundException('Contact not found');
@@ -55,20 +65,28 @@ export class ContactController {
   }
 
   @Patch(':id')
-  async update(@Param('id') { id }: IdDto, @Body() updateContactDto: UpdateContactDto) {
-    const { affected } = await this.contactService.update(id, updateContactDto);
+  async update(@GetUser() owner: User, @Param() { id }: IdDto, @Body() updateContactDto: UpdateContactDto) {
+    const { affected } = await this.contactRepository.update(
+      {
+        id,
+        owner: { id: owner.id }
+      },
+      updateContactDto
+    );
 
     if (!affected) {
       throw new NotFoundException('Contact not found');
     }
-
-    return this.contactService.findOne(id);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') { id }: IdDto) {
-    const { affected } = await this.contactService.remove(id);
+  async remove(@GetUser() owner: User, @Param() { id }: IdDto) {
+    const { affected } = await this.contactRepository.softDelete({
+      id,
+      owner: { id: owner.id },
+      deletedAt: IsNull()
+    });
 
     if (!affected) {
       throw new NotFoundException('Contact not found');
