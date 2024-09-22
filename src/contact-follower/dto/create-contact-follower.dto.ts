@@ -17,6 +17,6 @@ export class CreateContactFollowerDto {
   @IsLatitude()
   latitude?: string;
 
-  contact: Contact
-  user: User
+  contact: Contact;
+  follower: User;
 }

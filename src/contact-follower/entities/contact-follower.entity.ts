@@ -11,10 +11,12 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Relation,
+  Unique,
   UpdateDateColumn
 } from 'typeorm';
 
 @Entity({ name: 'contacts_followers' })
+@Unique(['contact', 'follower'])
 export class ContactFollower {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -26,8 +28,8 @@ export class ContactFollower {
 
   @Index()
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: Relation<User>;
+  @JoinColumn({ name: 'follower_id' })
+  follower: Relation<User>;
 
   @Column({ type: 'text', nullable: true })
   note?: string;

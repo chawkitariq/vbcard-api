@@ -17,41 +17,21 @@ export class ContactFollowerService {
     return this.contactFollowerRepository.save(following);
   }
 
-  findOneByUserAndContact(userId: string, contactId: string) {
-    return this.contactFollowerRepository.findOneBy({
-      user: { id: userId },
-      contact: { id: contactId }
-    });
+  findOneBy(where: Parameters<typeof this.contactFollowerRepository.findOneBy>['0']) {
+    return this.contactFollowerRepository.findOneBy(where);
   }
 
-  findUserFollowings(userId: string) {
-    return this.contactFollowerRepository.findBy({
-      user: { id: userId }
-    });
+  findBy(where: Parameters<typeof this.contactFollowerRepository.findBy>['0']) {
+    return this.contactFollowerRepository.findBy(where);
   }
 
-  findContactFollowers(contactId: string) {
-    return this.contactFollowerRepository.findBy({
-      contact: { id: contactId }
-    });
+  update(criteria: Parameters<typeof this.contactFollowerRepository.findBy>['0'], body: UpdateContactFollowerDto) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.contactFollowerRepository.update(mergedCriteria, body);
   }
 
-  update(userId: string, contactId: string, body: UpdateContactFollowerDto) {
-    return this.contactFollowerRepository.update(
-      {
-        user: { id: userId },
-        contact: { id: contactId },
-        deletedAt: IsNull()
-      },
-      body
-    );
-  }
-
-  unfollow(userId: string, contactId: string) {
-    return this.contactFollowerRepository.softDelete({
-      user: { id: userId },
-      contact: { id: contactId },
-      deletedAt: IsNull()
-    });
+  delete(criteria: Parameters<typeof this.contactFollowerRepository.softDelete>['0']) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.contactFollowerRepository.softDelete(mergedCriteria);
   }
 }
