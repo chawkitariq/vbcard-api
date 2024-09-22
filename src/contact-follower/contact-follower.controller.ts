@@ -18,6 +18,7 @@ import { UpdateContactFollowerDto } from './dto/update-contact-follower.dto';
 import { ContactService } from 'src/contact/contact.service';
 import { ContactIdDto } from 'src/dto/contact-id.dto';
 import { ContactFollowerService } from './contact-follower.service';
+import { Not } from 'typeorm';
 
 @Controller()
 export class ContactFollowerController {
@@ -26,42 +27,57 @@ export class ContactFollowerController {
     private readonly contactService: ContactService
   ) {}
 
-  @Post('users/me/followings/:contactId')
-  async follow(@GetUser() user: User, @Param() { contactId }: ContactIdDto, @Body() body: CreateContactFollowerDto) {
-    const following = await this.contactFollowerService.findOneBy({
+  @Post('contacts/:contactId/followings')
+  async follow(
+    @GetUser() user: User,
+    @Param() { contactId }: ContactIdDto,
+    @Body() createContactFollowerDto: CreateContactFollowerDto
+  ) {
+    const isAlreadyFollowing = await this.contactFollowerService.findOneBy({
       follower: { id: user.id },
       contact: { id: contactId }
     });
 
-    if (following) {
-      throw new ConflictException('Already exists');
+    if (isAlreadyFollowing) {
+      throw new ConflictException('Already followed');
     }
 
-    const contact = await this.contactService.findOne(contactId);
+    const contact = await this.contactService.findOneBy({
+      id: contactId,
+      owner: { id: Not(user.id) }
+    });
 
-    return this.contactFollowerService.create({ ...body, follower: user, contact });
+    if (!contact) {
+      throw new BadRequestException('You are owner');
+    }
+
+    return this.contactFollowerService.create({
+      ...createContactFollowerDto,
+      follower: user,
+      contact
+    });
   }
 
-  @Patch('users/me/followings/:contactId')
+  @Patch('contacts/:contactId/followings')
   async updateFollow(
     @GetUser() user: User,
     @Param() { contactId }: ContactIdDto,
-    @Body() body: UpdateContactFollowerDto
+    @Body() updateContactFollowerDto: UpdateContactFollowerDto
   ) {
     const { affected } = await this.contactFollowerService.update(
       {
         follower: { id: user.id },
         contact: { id: contactId }
       },
-      body
+      updateContactFollowerDto
     );
 
     if (!affected) {
-      throw new BadRequestException('ContactFollower does not exist');
+      throw new BadRequestException('Following not found');
     }
   }
 
-  @Delete('users/me/followings/:contactId')
+  @Delete('contacts/:contactId/followings')
   @HttpCode(HttpStatus.NO_CONTENT)
   async unfollow(@GetUser() user: User, @Param() { contactId }: ContactIdDto) {
     const { affected } = await this.contactFollowerService.delete({
@@ -70,7 +86,7 @@ export class ContactFollowerController {
     });
 
     if (!affected) {
-      throw new BadRequestException('ContactFollower does not exist');
+      throw new BadRequestException('Following not found');
     }
   }
 
@@ -82,9 +98,9 @@ export class ContactFollowerController {
   }
 
   @Get('contacts/:contactId/followers')
-  async findContactFollowers(@Param() { contactId }: ContactIdDto) {
+  async findContactFollowers(@GetUser() user: User, @Param() { contactId }: ContactIdDto) {
     return this.contactFollowerService.findBy({
-      contact: { id: contactId }
+      contact: { id: contactId, owner: { id: user.id } }
     });
   }
 }

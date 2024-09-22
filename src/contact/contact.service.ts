@@ -25,6 +25,14 @@ export class ContactService {
     return this.contactRepository.findOneBy({ id });
   }
 
+  findOneBy(where: Parameters<typeof this.contactRepository.findOneBy>['0']) {
+    return this.contactRepository.findOneBy(where);
+  }
+
+  existBy(where: Parameters<typeof this.contactRepository.existsBy>['0']) {
+    return this.contactRepository.existsBy(where);
+  }
+
   update(id: string, updateContactDto: UpdateContactDto) {
     return this.contactRepository.update(id, updateContactDto);
   }
