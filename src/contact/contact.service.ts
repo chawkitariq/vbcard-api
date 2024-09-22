@@ -21,6 +21,10 @@ export class ContactService {
     return this.contactRepository.find();
   }
 
+  findBy(where?: Parameters<typeof this.contactRepository.findBy>['0']) {
+    return this.contactRepository.findBy(where);
+  }
+
   findOne(id: string) {
     return this.contactRepository.findOneBy({ id });
   }
@@ -33,14 +37,15 @@ export class ContactService {
     return this.contactRepository.existsBy(where);
   }
 
-  update(id: string, updateContactDto: UpdateContactDto) {
-    return this.contactRepository.update(id, updateContactDto);
+  update(
+    criteria: Parameters<typeof this.contactRepository.softDelete>['0'],
+    updateContactDto: UpdateContactDto
+  ) {
+    return this.contactRepository.update(criteria, updateContactDto);
   }
 
-  remove(id: string) {
-    return this.contactRepository.softDelete({
-      id,
-      deletedAt: IsNull()
-    });
+  remove(criteria: Parameters<typeof this.contactRepository.softDelete>['0']) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.contactRepository.softDelete(mergedCriteria);
   }
 }

@@ -16,22 +16,20 @@ import { UpdateContactDto } from './dto/update-contact.dto';
 import { FileService } from 'src/file/file.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Contact } from './entities/contact.entity';
-import { IsNull, Repository } from 'typeorm';
 import { IdDto } from 'src/dto/id.dto';
 
 @Controller('contacts')
 export class ContactController {
   constructor(
-    @InjectRepository(Contact)
-    private readonly contactRepository: Repository<Contact>,
     private readonly contactService: ContactService,
     private readonly fileService: FileService
   ) {}
 
   @Post()
-  async create(@GetUser() owner: User, @Body() { photoId, ...createContactDto }: CreateContactDto) {
+  async create(
+    @GetUser() owner: User,
+    @Body() { photoId, ...createContactDto }: CreateContactDto
+  ) {
     if (photoId) {
       const photo = await this.fileService.findOne(photoId);
       createContactDto.photo = photo;
@@ -45,14 +43,14 @@ export class ContactController {
 
   @Get()
   async findAll(@GetUser() owner: User) {
-    return this.contactRepository.findBy({
+    return this.contactService.findBy({
       owner: { id: owner.id }
     });
   }
 
   @Get(':id')
   async findOne(@GetUser() owner: User, @Param() { id }: IdDto) {
-    const contact = await this.contactRepository.findOneBy({
+    const contact = await this.contactService.findOneBy({
       id,
       owner: { id: owner.id }
     });
@@ -65,8 +63,12 @@ export class ContactController {
   }
 
   @Patch(':id')
-  async update(@GetUser() owner: User, @Param() { id }: IdDto, @Body() updateContactDto: UpdateContactDto) {
-    const { affected } = await this.contactRepository.update(
+  async update(
+    @GetUser() owner: User,
+    @Param() { id }: IdDto,
+    @Body() updateContactDto: UpdateContactDto
+  ) {
+    const { affected } = await this.contactService.update(
       {
         id,
         owner: { id: owner.id }
@@ -82,10 +84,9 @@ export class ContactController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@GetUser() owner: User, @Param() { id }: IdDto) {
-    const { affected } = await this.contactRepository.softDelete({
+    const { affected } = await this.contactService.remove({
       id,
-      owner: { id: owner.id },
-      deletedAt: IsNull()
+      owner: { id: owner.id }
     });
 
     if (!affected) {
