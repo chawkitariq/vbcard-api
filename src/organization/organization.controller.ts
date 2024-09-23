@@ -22,8 +22,14 @@ export class OrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
 
   @Post()
-  async create(@GetUser() owner: User, @Body() { name }: CreateOrganizationDto) {
-    const isAlreadyExist = await this.organizationService.existsBy({ name, owner: { id: owner.id } });
+  async create(
+    @GetUser() owner: User,
+    @Body() { name }: CreateOrganizationDto
+  ) {
+    const isAlreadyExist = await this.organizationService.existsBy({
+      name,
+      owner: { id: owner.id }
+    });
 
     if (isAlreadyExist) {
       throw new ConflictException('Already exists');
@@ -39,13 +45,10 @@ export class OrganizationController {
 
   @Get(':id')
   async findOne(@GetUser() owner: User, @Id() id: string) {
-    const organization = await this.organizationService.findOneBy({ id, owner: { id: owner.id } });
-
-    if (!organization) {
-      throw new NotFoundException('Organization Not found');
-    }
-
-    return organization;
+    return this.organizationService.findOneBy({
+      id,
+      owner: { id: owner.id }
+    });
   }
 
   @Patch(':id')
@@ -55,7 +58,10 @@ export class OrganizationController {
     @Body() { name, ...updateOrganizationDto }: UpdateOrganizationDto
   ) {
     if (name) {
-      const isNameAlreadyExist = await this.organizationService.existsBy({ name, owner: { id: owner.id } });
+      const isNameAlreadyExist = await this.organizationService.existsBy({
+        name,
+        owner: { id: owner.id }
+      });
 
       if (isNameAlreadyExist) {
         throw new ConflictException('Already exists');
@@ -77,7 +83,10 @@ export class OrganizationController {
 
   @Delete(':id')
   async remove(@GetUser() owner: User, @Id() id: string) {
-    const { affected } = await this.organizationService.remove({ id, owner: { id: owner.id } });
+    const { affected } = await this.organizationService.remove({
+      id,
+      owner: { id: owner.id }
+    });
 
     if (!affected) {
       throw new NotFoundException('Organization Not found');

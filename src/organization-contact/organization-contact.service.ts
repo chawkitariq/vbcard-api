@@ -12,18 +12,27 @@ export class OrganizationContactService {
   ) {}
 
   create(createOrganizationContactDto: CreateOrganizationContactDto) {
-    const organizationContact = this.organizationContactRepository.create(createOrganizationContactDto);
+    const organizationContact = this.organizationContactRepository.create(
+      createOrganizationContactDto
+    );
     return this.organizationContactRepository.save(organizationContact);
   }
 
-  async findAll(organizationId: string) {
-    const contacts = await this.organizationContactRepository.find({
-      where: {
-        organization: { id: organizationId }
-      },
+  findOne(
+    where: Parameters<typeof this.organizationContactRepository.findOneBy>['0']
+  ) {
+    return this.organizationContactRepository.findOne({
+      where,
       relations: ['contact']
     });
+  }
 
-    return contacts.map(({ contact }) => contact);
+  async findAll(
+    where: Parameters<typeof this.organizationContactRepository.findBy>['0']
+  ) {
+    return this.organizationContactRepository.find({
+      where,
+      relations: ['contact']
+    });
   }
 }

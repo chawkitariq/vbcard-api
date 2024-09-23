@@ -11,7 +11,7 @@ export const Id = createParamDecorator((name = 'id', ctx: ExecutionContext) => {
 
   const id = params[name];
 
-  if (!isUUID(id)) {
+  if (!isUUID(id, '4')) {
     throw new BadRequestException(`Param ${name} must be UUID`);
   }
 

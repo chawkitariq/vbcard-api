@@ -1,4 +1,10 @@
-import { Controller, Get, Post, Param, NotFoundException, Body, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  BadRequestException
+} from '@nestjs/common';
 import { OrganizationContactService } from './organization-contact.service';
 import { OrganizationService } from 'src/organization/organization.service';
 import { CreateContactDto } from 'src/contact/dto/create-contact.dto';
@@ -7,7 +13,7 @@ import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { Id } from 'src/decorators/id.decorator';
 
-@Controller('organizations/:id/contacts')
+@Controller()
 export class OrganizationContactController {
   constructor(
     private readonly organizationContactService: OrganizationContactService,
@@ -15,9 +21,13 @@ export class OrganizationContactController {
     private readonly contactController: ContactController
   ) {}
 
-  @Post()
-  async create(@GetUser() user: User, @Id() id: string, @Body() createContactDto: CreateContactDto) {
-    const organization = await this.organizationService.findOne(id);
+  @Post('organizations/:id/contacts')
+  async create(
+    @GetUser() user: User,
+    @Id() organizationId: string,
+    @Body() createContactDto: CreateContactDto
+  ) {
+    const organization = await this.organizationService.findOne(organizationId);
 
     if (!organization) {
       throw new BadRequestException('Organization not found');
@@ -33,14 +43,25 @@ export class OrganizationContactController {
     return contact;
   }
 
-  @Get()
-  async findAll(@Id() id: string) {
-    const organization = await this.organizationService.findOne(id);
+  @Get('organizations/:id/contacts')
+  async findAll(@GetUser('id') userId: string, @Id() organizationId: string) {
+    const organizationContact = await this.organizationContactService.findAll({
+      organization: { id: organizationId, owner: { id: userId } }
+    });
 
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
+    return organizationContact.map(({ contact }) => contact);
+  }
 
-    return this.organizationContactService.findAll(organization.id);
+  @Get('contacts/:id/organization')
+  async findContactOrganization(
+    @GetUser('id') userId: string,
+    @Id() contactId: string
+  ) {
+    const organizationContact = await this.organizationContactService.findOne({
+      contact: { id: contactId },
+      organization: { owner: { id: userId } }
+    });
+
+    return organizationContact;
   }
 }
