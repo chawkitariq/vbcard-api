@@ -1,35 +1,84 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException
+} from '@nestjs/common';
 import { OrganizationCollaboratorService } from './organization-collaborator.service';
 import { CreateOrganizationCollaboratorDto } from './dto/create-organization-collaborator.dto';
 import { UpdateOrganizationCollaboratorDto } from './dto/update-organization-collaborator.dto';
 import { IdDto } from 'src/dto/id.dto';
+import { User } from 'src/user/entities/user.entity';
+import { GetUser } from 'src/decorators/get-user.decorator';
 
-@Controller('organizations/collaborators')
+@Controller()
 export class OrganizationCollaboratorController {
-  constructor(private readonly organizationCollaboratorService: OrganizationCollaboratorService) {}
+  constructor(
+    private readonly organizationCollaboratorService: OrganizationCollaboratorService
+  ) {}
 
-  @Post()
-  create(@Body() createOrganizationCollaboratorDto: CreateOrganizationCollaboratorDto) {
-    return this.organizationCollaboratorService.create(createOrganizationCollaboratorDto);
+  // @Post('organizations/:id/collaborators')
+  create(
+    @Body() createOrganizationCollaboratorDto: CreateOrganizationCollaboratorDto
+  ) {
+    return this.organizationCollaboratorService.create(
+      createOrganizationCollaboratorDto
+    );
   }
 
-  @Get()
+  @Get('organizations/:id/collaborators')
   findAll() {
     return this.organizationCollaboratorService.findAll();
   }
 
-  @Get(':id')
+  @Get('organizations/:id/collaborators/:id')
   findOne(@Param() { id }: IdDto) {
     return this.organizationCollaboratorService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param() { id }: IdDto, @Body() updateOrganizationCollaboratorDto: UpdateOrganizationCollaboratorDto) {
-    return this.organizationCollaboratorService.update(id, updateOrganizationCollaboratorDto);
+  // @Patch('organizations/:id/collaborators/:id')
+  update(
+    @Param() { id }: IdDto,
+    @Body() updateOrganizationCollaboratorDto: UpdateOrganizationCollaboratorDto
+  ) {
+    return this.organizationCollaboratorService.update(
+      id,
+      updateOrganizationCollaboratorDto
+    );
   }
 
-  @Delete(':id')
-  remove(@Param() { id }: IdDto) {
-    return this.organizationCollaboratorService.remove(id);
+  @Delete('organizations/:id/collaborators/:collaboratorId')
+  async remove(
+    @GetUser() user: User,
+    @Param() { id: organizationId }: IdDto,
+    @Param('collaboratorId') collaboratorId: string
+  ) {
+    const { affected } = await this.organizationCollaboratorService.remove({
+      id: collaboratorId,
+      organization: { id: organizationId, owner: { id: user.id } }
+    });
+
+    if (!affected) {
+      throw new BadRequestException('Member not found');
+    }
+  }
+
+  @Delete('organizations/:id/collaborators/me')
+  async leaveUserOrganization(
+    @GetUser() user: User,
+    @Param('collaboratorId') collaboratorId: string
+  ) {
+    const { affected } = await this.organizationCollaboratorService.remove({
+      id: collaboratorId,
+      collaborator: { id: user.id }
+    });
+
+    if (!affected) {
+      throw new BadRequestException('Organization not found');
+    }
   }
 }

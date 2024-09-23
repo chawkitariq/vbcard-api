@@ -13,25 +13,25 @@ import { IdDto } from 'src/dto/id.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 
-@Controller('organizations/:id/members')
+@Controller()
 export class OrganizationMemberController {
   constructor(
     private readonly organizationMemberService: OrganizationMemberService
   ) {}
 
-  // @Post()
+  // @Post('organizations/:id/members')
   create(@Body() createOrganizationMemberDto: CreateOrganizationMemberDto) {
     return this.organizationMemberService.create(createOrganizationMemberDto);
   }
 
-  @Get()
+  @Get('organizations/:id/members')
   findAll(@GetUser() user: User, @Param() { id }: IdDto) {
     return this.organizationMemberService.findBy({
       organization: { id, owner: { id: user.id } }
     });
   }
 
-  @Get(':memberId')
+  @Get('organizations/:id/members/:memberId')
   findOne(
     @GetUser() user: User,
     @Param() { id: organizationId }: IdDto,
@@ -43,7 +43,7 @@ export class OrganizationMemberController {
     });
   }
 
-  // @Patch(':id')
+  // @Patch('organizations/:id/members/:id')
   update(
     @Param() { id }: IdDto,
     @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto
@@ -54,7 +54,7 @@ export class OrganizationMemberController {
     );
   }
 
-  @Delete(':memberId')
+  @Delete('organizations/:id/members/:memberId')
   async remove(
     @GetUser() user: User,
     @Param() { id: organizationId }: IdDto,
@@ -67,6 +67,21 @@ export class OrganizationMemberController {
 
     if (!affected) {
       throw new BadRequestException('Member not found');
+    }
+  }
+
+  @Delete('organizations/:id/members/me')
+  async leaveUserOrganization(
+    @GetUser() user: User,
+    @Param('collaboratorId') collaboratorId: string
+  ) {
+    const { affected } = await this.organizationMemberService.remove({
+      id: collaboratorId,
+      member: { id: user.id }
+    });
+
+    if (!affected) {
+      throw new BadRequestException('Organization not found');
     }
   }
 }

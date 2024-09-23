@@ -13,8 +13,13 @@ export class OrganizationCollaboratorService {
   ) {}
 
   create(createOrganizationCollaboratorDto: CreateOrganizationCollaboratorDto) {
-    const organizationCollaborator = this.organizationCollaboratorRepository.create(createOrganizationCollaboratorDto);
-    return this.organizationCollaboratorRepository.save(organizationCollaborator);
+    const organizationCollaborator =
+      this.organizationCollaboratorRepository.create(
+        createOrganizationCollaboratorDto
+      );
+    return this.organizationCollaboratorRepository.save(
+      organizationCollaborator
+    );
   }
 
   findAll() {
@@ -27,14 +32,22 @@ export class OrganizationCollaboratorService {
     });
   }
 
-  update(id: string, updateOrganizationCollaboratorDto: UpdateOrganizationCollaboratorDto) {
-    return this.organizationCollaboratorRepository.update(id, updateOrganizationCollaboratorDto);
+  update(
+    id: string,
+    updateOrganizationCollaboratorDto: UpdateOrganizationCollaboratorDto
+  ) {
+    return this.organizationCollaboratorRepository.update(
+      id,
+      updateOrganizationCollaboratorDto
+    );
   }
 
-  remove(id: string) {
-    return this.organizationCollaboratorRepository.softDelete({
-      id,
-      deletedAt: IsNull()
-    });
+  remove(
+    criteria: Parameters<
+      typeof this.organizationCollaboratorRepository.softDelete
+    >['0']
+  ) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.organizationCollaboratorRepository.softDelete(mergedCriteria);
   }
 }
