@@ -22,7 +22,7 @@ export class AuthenticationController {
     user = await this.userService.findOneByEmail(email);
 
     if (user) {
-      throw new ConflictException('User already exists');
+      throw new ConflictException('Already exists');
     }
 
     await this.authenticationService.register({ email, password });
