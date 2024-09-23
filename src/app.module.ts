@@ -17,10 +17,7 @@ import { ContactModule } from './contact/contact.module';
 import { ContactFollowerModule } from './contact-follower/contact-follower.module';
 import { ContactTaggingModule } from './contact-tagging/contact-tagging.module';
 import { ContactStatisticModule } from './contact-statistic/contact-statistic.module';
-import { SettingModule } from './setting/setting.module';
 import { StoryModule } from './story/story.module';
-import { BillingModule } from './billing/billing.module';
-import { ActivityModule } from './activity/activity.module';
 import { UserVerificationModule } from './user-verification/user-verification.module';
 import { ContactStatisticTrackingModule } from './contact-statistic-tracking/contact-statistic-tracking.module';
 import { OrganizationModule } from './organization/organization.module';
@@ -49,10 +46,7 @@ import { OrganizationContactModule } from './organization-contact/organization-c
     ContactTaggingModule,
     NotificationModule,
     ContactStatisticModule,
-    SettingModule,
     StoryModule,
-    BillingModule,
-    ActivityModule,
     ContactStatisticTrackingModule,
     OrganizationModule,
     OrganizationMemberModule,
