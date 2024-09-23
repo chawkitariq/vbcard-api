@@ -15,6 +15,7 @@ import { UserService } from 'src/user/user.service';
 import { IdDto } from 'src/dto/id.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('notifications')
 export class NotificationController {
@@ -45,7 +46,7 @@ export class NotificationController {
   }
 
   @Get(':id')
-  async findOne(@GetUser() user: User, @Param() { id }: IdDto) {
+  async findOne(@GetUser() user: User, @Id() id: string) {
     const notification = await this.notificationService.findOneBy({
       id,
       sender: { id: user.id }
@@ -61,7 +62,7 @@ export class NotificationController {
   @Patch(':id')
   async update(
     @GetUser() user: User,
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() { recipientId, ...updateNotificationDto }: UpdateNotificationDto
   ) {
     if (recipientId) {
@@ -85,7 +86,7 @@ export class NotificationController {
   }
 
   @Delete(':id')
-  async remove(@GetUser() user: User, @Param() { id }: IdDto) {
+  async remove(@GetUser() user: User, @Id() id: string) {
     const { affected } = await this.notificationService.remove({
       id,
       sender: { id: user.id }

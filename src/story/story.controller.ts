@@ -3,6 +3,7 @@ import { StoryService } from './story.service';
 import { CreateStoryDto } from './dto/create-story.dto';
 import { UpdateStoryDto } from './dto/update-story.dto';
 import { IdDto } from 'src/dto/id.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('stories')
 export class StoryController {
@@ -19,17 +20,17 @@ export class StoryController {
   }
 
   @Get(':id')
-  findOne(@Param() { id }: IdDto) {
+  findOne(@Id() id: string) {
     return this.storyService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param() { id }: IdDto, @Body() updateStoryDto: UpdateStoryDto) {
+  update(@Id() id: string, @Body() updateStoryDto: UpdateStoryDto) {
     return this.storyService.update(id, updateStoryDto);
   }
 
   @Delete(':id')
-  remove(@Param() { id }: IdDto) {
+  remove(@Id() id: string) {
     return this.storyService.remove(id);
   }
 }

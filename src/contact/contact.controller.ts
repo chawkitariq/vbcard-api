@@ -17,6 +17,7 @@ import { FileService } from 'src/file/file.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { IdDto } from 'src/dto/id.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('contacts')
 export class ContactController {
@@ -49,7 +50,7 @@ export class ContactController {
   }
 
   @Get(':id')
-  async findOne(@GetUser() owner: User, @Param() { id }: IdDto) {
+  async findOne(@GetUser() owner: User, @Id() id: string) {
     const contact = await this.contactService.findOneBy({
       id,
       owner: { id: owner.id }
@@ -65,7 +66,7 @@ export class ContactController {
   @Patch(':id')
   async update(
     @GetUser() owner: User,
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() updateContactDto: UpdateContactDto
   ) {
     const { affected } = await this.contactService.update(
@@ -83,7 +84,7 @@ export class ContactController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@GetUser() owner: User, @Param() { id }: IdDto) {
+  async remove(@GetUser() owner: User, @Id() id: string) {
     const { affected } = await this.contactService.remove({
       id,
       owner: { id: owner.id }

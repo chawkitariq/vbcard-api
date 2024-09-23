@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IdDto } from 'src/dto/id.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('users')
 export class UserController {
@@ -19,7 +20,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param() { id }: IdDto) {
+  async findOne(@Id() id: string) {
     const user = await this.userService.findOne(id);
 
     if (!user) {
@@ -30,7 +31,7 @@ export class UserController {
   }
 
   @Patch(':id')
-  async update(@Param() { id }: IdDto, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Id() id: string, @Body() updateUserDto: UpdateUserDto) {
     const { affected } = await this.userService.update(id, updateUserDto);
 
     if (!affected) {
@@ -41,7 +42,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  async remove(@Param() { id }: IdDto) {
+  async remove(@Id() id: string) {
     const { affected } = await this.userService.remove(id);
 
     if (!affected) {

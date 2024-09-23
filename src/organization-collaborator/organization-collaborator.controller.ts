@@ -14,6 +14,7 @@ import { UpdateOrganizationCollaboratorDto } from './dto/update-organization-col
 import { IdDto } from 'src/dto/id.dto';
 import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/decorators/get-user.decorator';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller()
 export class OrganizationCollaboratorController {
@@ -36,13 +37,13 @@ export class OrganizationCollaboratorController {
   }
 
   @Get('organizations/:id/collaborators/:id')
-  findOne(@Param() { id }: IdDto) {
+  findOne(@Id() id: string) {
     return this.organizationCollaboratorService.findOne(id);
   }
 
   // @Patch('organizations/:id/collaborators/:id')
   update(
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() updateOrganizationCollaboratorDto: UpdateOrganizationCollaboratorDto
   ) {
     return this.organizationCollaboratorService.update(

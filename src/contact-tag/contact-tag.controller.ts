@@ -11,6 +11,7 @@ import { ContactTagService } from './contact-tag.service';
 import { CreateContactTagDto } from './dto/create-contact-tag.dto';
 import { UpdateContactTagDto } from './dto/update-contact-tag.dto';
 import { IdDto } from 'src/dto/id.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('contacts-tags')
 export class ContactTagController {
@@ -27,20 +28,20 @@ export class ContactTagController {
   }
 
   @Get(':id')
-  findOne(@Param() { id }: IdDto) {
+  findOne(@Id() id: string) {
     return this.contactTagService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() updateContactTagDto: UpdateContactTagDto
   ) {
     return this.contactTagService.update(id, updateContactTagDto);
   }
 
   @Delete(':id')
-  remove(@Param() { id }: IdDto) {
+  remove(@Id() id: string) {
     return this.contactTagService.remove(id);
   }
 }

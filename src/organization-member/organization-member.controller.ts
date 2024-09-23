@@ -12,6 +12,7 @@ import { UpdateOrganizationMemberDto } from './dto/update-organization-member.dt
 import { IdDto } from 'src/dto/id.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller()
 export class OrganizationMemberController {
@@ -25,7 +26,7 @@ export class OrganizationMemberController {
   }
 
   @Get('organizations/:id/members')
-  findAll(@GetUser() user: User, @Param() { id }: IdDto) {
+  findAll(@GetUser() user: User, @Id() id: string) {
     return this.organizationMemberService.findBy({
       organization: { id, owner: { id: user.id } }
     });
@@ -45,7 +46,7 @@ export class OrganizationMemberController {
 
   // @Patch('organizations/:id/members/:id')
   update(
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto
   ) {
     return this.organizationMemberService.update(

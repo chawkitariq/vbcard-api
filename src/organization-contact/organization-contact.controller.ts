@@ -6,6 +6,7 @@ import { ContactController } from 'src/contact/contact.controller';
 import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { IdDto } from 'src/dto/id.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('organizations/:id/contacts')
 export class OrganizationContactController {
@@ -16,7 +17,7 @@ export class OrganizationContactController {
   ) {}
 
   @Post()
-  async create(@GetUser() user: User, @Param() { id }: IdDto, @Body() createContactDto: CreateContactDto) {
+  async create(@GetUser() user: User, @Id() id: string, @Body() createContactDto: CreateContactDto) {
     const organization = await this.organizationService.findOne(id);
 
     if (!organization) {
@@ -34,7 +35,7 @@ export class OrganizationContactController {
   }
 
   @Get()
-  async findAll(@Param() { id }: IdDto) {
+  async findAll(@Id() id: string) {
     const organization = await this.organizationService.findOne(id);
 
     if (!organization) {

@@ -15,6 +15,7 @@ import { OrganizationService } from 'src/organization/organization.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { UpdateOrganizationInvitationDto } from './dto/update-organization-invitation.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('organizations/:id/invitations')
 export class OrganizationInvitationController {
@@ -26,7 +27,7 @@ export class OrganizationInvitationController {
   @Post()
   async create(
     @GetUser() user: User,
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() { email }: CreateOrganizationInvitationDto
   ) {
     const organization = await this.organizationService.findOneBy({
@@ -42,7 +43,7 @@ export class OrganizationInvitationController {
   }
 
   @Get()
-  async findAll(@GetUser() user: User, @Param() { id }: IdDto) {
+  async findAll(@GetUser() user: User, @Id() id: string) {
     const invitations = await this.organizationInvitationService.findBy({
       organization: { id, owner: { id: user.id } }
     });
@@ -74,7 +75,7 @@ export class OrganizationInvitationController {
   @Patch('organizations/:id/members/:id')
   async update(
     @GetUser() user: User,
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() updateOrganizationInvitationDto: UpdateOrganizationInvitationDto
   ) {
     const { affected } = await this.organizationInvitationService.update(

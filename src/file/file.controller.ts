@@ -20,6 +20,7 @@ import { DataSource } from 'typeorm';
 import sizeOf from 'image-size';
 import { File } from './entities/file.entity';
 import { IdDto } from 'src/dto/id.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller('files')
 export class FileController {
@@ -66,14 +67,14 @@ export class FileController {
   }
 
   @Get(':id')
-  async findOne(@Param() { id }: IdDto) {
+  async findOne(@Id() id: string) {
     return this.fileService.findOneOrHttpFail(id);
   }
 
   @Patch(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
-    @Param() { id }: IdDto,
+    @Id() id: string,
     @Body() updateFileDto: UpdateFileDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -115,7 +116,7 @@ export class FileController {
   }
 
   @Delete(':id')
-  async remove(@Param() { id }: IdDto) {
+  async remove(@Id() id: string) {
     const { extension } = await this.fileService.findOneOrHttpFail(id);
 
     const queryRunner = this.dataSource.createQueryRunner();
