@@ -5,7 +5,8 @@ import {
   Body,
   Param,
   Delete,
-  BadRequestException
+  BadRequestException,
+  Patch
 } from '@nestjs/common';
 import { OrganizationInvitationService } from './organization-invitation.service';
 import { CreateOrganizationInvitationDto } from './dto/create-organization-invitation.dto';
@@ -13,6 +14,7 @@ import { IdDto } from 'src/dto/id.dto';
 import { OrganizationService } from 'src/organization/organization.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { UpdateOrganizationInvitationDto } from './dto/update-organization-invitation.dto';
 
 @Controller('organizations/:id/invitations')
 export class OrganizationInvitationController {
@@ -40,10 +42,14 @@ export class OrganizationInvitationController {
   }
 
   @Get()
-  findAll(@GetUser() user: User, @Param() { id }: IdDto) {
-    return this.organizationInvitationService.findBy({
+  async findAll(@GetUser() user: User, @Param() { id }: IdDto) {
+    const invitations = await this.organizationInvitationService.findBy({
       organization: { id, owner: { id: user.id } }
     });
+
+    if (!invitations.length) {
+      throw new BadRequestException('Organization not found');
+    }
   }
 
   @Get(':invitationId')
@@ -59,10 +65,29 @@ export class OrganizationInvitationController {
       });
 
     if (!organizationInvitation) {
-      throw new BadRequestException('Organization not found');
+      throw new BadRequestException('Invitation not found');
     }
 
     return organizationInvitation;
+  }
+
+  @Patch('organizations/:id/members/:id')
+  async update(
+    @GetUser() user: User,
+    @Param() { id }: IdDto,
+    @Body() updateOrganizationInvitationDto: UpdateOrganizationInvitationDto
+  ) {
+    const { affected } = await this.organizationInvitationService.update(
+      {
+        id,
+        organization: { id, owner: { id: user.id } }
+      },
+      updateOrganizationInvitationDto
+    );
+
+    if (!affected) {
+      throw new BadRequestException('Invitation not found');
+    }
   }
 
   @Delete(':invitationId')
@@ -77,7 +102,7 @@ export class OrganizationInvitationController {
     });
 
     if (!affected) {
-      throw new BadRequestException('Organization not found');
+      throw new BadRequestException('Invitation not found');
     }
   }
 }

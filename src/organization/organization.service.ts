@@ -33,7 +33,7 @@ export class OrganizationService {
     return this.organizationRepository.findOneBy(where);
   }
 
-  isExistBy(
+  existsBy(
     where: Parameters<typeof this.organizationRepository.existsBy>['0']
   ) {
     return this.organizationRepository.existsBy(where);

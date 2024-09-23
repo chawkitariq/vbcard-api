@@ -61,10 +61,9 @@ export class OrganizationInvitationService {
 
   remove(
     criteria: Parameters<
-      typeof this.organizationInvitationRepository.softDelete
+      typeof this.organizationInvitationRepository.delete
     >['0']
   ) {
-    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
-    return this.organizationInvitationRepository.softDelete(mergedCriteria);
+    return this.organizationInvitationRepository.delete(criteria);
   }
 }

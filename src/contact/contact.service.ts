@@ -33,7 +33,7 @@ export class ContactService {
     return this.contactRepository.findOneBy(where);
   }
 
-  existBy(where: Parameters<typeof this.contactRepository.existsBy>['0']) {
+  existsBy(where: Parameters<typeof this.contactRepository.existsBy>['0']) {
     return this.contactRepository.existsBy(where);
   }
 

@@ -2,7 +2,6 @@ import { Organization } from 'src/organization/entities/organization.entity';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
@@ -37,15 +36,12 @@ export class OrganizationInvitation {
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz' })
-  deletedAt: Date;
 }
 
 export namespace OrganizationInvitation {
   export enum Status {
     Pending = 'pending',
     Accepted = 'accepted',
-    Declined = 'declined'
+    Rejected = 'rejected'
   }
 }

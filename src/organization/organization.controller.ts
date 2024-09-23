@@ -23,7 +23,7 @@ export class OrganizationController {
 
   @Post()
   async create(@GetUser() owner: User, @Body() { name }: CreateOrganizationDto) {
-    const isAlreadyExist = await this.organizationService.isExistBy({ name, owner: { id: owner.id } });
+    const isAlreadyExist = await this.organizationService.existsBy({ name, owner: { id: owner.id } });
 
     if (isAlreadyExist) {
       throw new ConflictException('Already exists');
@@ -55,7 +55,7 @@ export class OrganizationController {
     @Body() { name, ...updateOrganizationDto }: UpdateOrganizationDto
   ) {
     if (name) {
-      const isNameAlreadyExist = await this.organizationService.isExistBy({ name, owner: { id: owner.id } });
+      const isNameAlreadyExist = await this.organizationService.existsBy({ name, owner: { id: owner.id } });
 
       if (isNameAlreadyExist) {
         throw new ConflictException('Already exists');
