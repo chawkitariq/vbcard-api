@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { StoryService } from './story.service';
 import { CreateStoryDto } from './dto/create-story.dto';
 import { UpdateStoryDto } from './dto/update-story.dto';
-import { IdDto } from 'src/dto/id.dto';
 import { Id } from 'src/decorators/id.decorator';
 
 @Controller('stories')

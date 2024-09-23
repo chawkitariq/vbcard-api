@@ -5,7 +5,6 @@ import { CreateContactDto } from 'src/contact/dto/create-contact.dto';
 import { ContactController } from 'src/contact/contact.controller';
 import { User } from 'src/user/entities/user.entity';
 import { GetUser } from 'src/decorators/get-user.decorator';
-import { IdDto } from 'src/dto/id.dto';
 import { Id } from 'src/decorators/id.decorator';
 
 @Controller('organizations/:id/contacts')

@@ -2,7 +2,6 @@ import { Controller, Get, Body, Patch, Param, Delete, NotFoundException } from '
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { IdDto } from 'src/dto/id.dto';
 import { Id } from 'src/decorators/id.decorator';
 
 @Controller('users')

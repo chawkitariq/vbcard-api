@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { OrganizationInvitationService } from './organization-invitation.service';
 import { CreateOrganizationInvitationDto } from './dto/create-organization-invitation.dto';
-import { IdDto } from 'src/dto/id.dto';
 import { OrganizationService } from 'src/organization/organization.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
@@ -56,7 +55,7 @@ export class OrganizationInvitationController {
   @Get(':invitationId')
   async findOne(
     @GetUser() user: User,
-    @Param() { id: organizationId }: IdDto,
+    @Id('organizationId') organizationId: string,
     @Param() invitationId: string
   ) {
     const organizationInvitation =
@@ -94,7 +93,7 @@ export class OrganizationInvitationController {
   @Delete(':invitationId')
   async remove(
     @GetUser() user: User,
-    @Param() { id: organizationId }: IdDto,
+    @Id('organizationId') organizationId: string,
     @Param() invitationId: string
   ) {
     const { affected } = await this.organizationInvitationService.remove({

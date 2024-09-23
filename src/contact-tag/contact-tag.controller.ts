@@ -10,7 +10,6 @@ import {
 import { ContactTagService } from './contact-tag.service';
 import { CreateContactTagDto } from './dto/create-contact-tag.dto';
 import { UpdateContactTagDto } from './dto/update-contact-tag.dto';
-import { IdDto } from 'src/dto/id.dto';
 import { Id } from 'src/decorators/id.decorator';
 
 @Controller('contacts-tags')

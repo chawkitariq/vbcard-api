@@ -19,7 +19,6 @@ import { FileManagerService } from 'src/file-manager/file-manager.service';
 import { DataSource } from 'typeorm';
 import sizeOf from 'image-size';
 import { File } from './entities/file.entity';
-import { IdDto } from 'src/dto/id.dto';
 import { Id } from 'src/decorators/id.decorator';
 
 @Controller('files')

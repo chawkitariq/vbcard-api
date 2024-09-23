@@ -12,7 +12,6 @@ import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { UserService } from 'src/user/user.service';
-import { IdDto } from 'src/dto/id.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { Id } from 'src/decorators/id.decorator';

@@ -16,7 +16,6 @@ import { UpdateContactDto } from './dto/update-contact.dto';
 import { FileService } from 'src/file/file.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { IdDto } from 'src/dto/id.dto';
 import { Id } from 'src/decorators/id.decorator';
 
 @Controller('contacts')

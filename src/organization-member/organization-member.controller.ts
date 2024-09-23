@@ -9,7 +9,6 @@ import {
 import { OrganizationMemberService } from './organization-member.service';
 import { CreateOrganizationMemberDto } from './dto/create-organization-member.dto';
 import { UpdateOrganizationMemberDto } from './dto/update-organization-member.dto';
-import { IdDto } from 'src/dto/id.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { Id } from 'src/decorators/id.decorator';
@@ -35,7 +34,7 @@ export class OrganizationMemberController {
   @Get('organizations/:id/members/:memberId')
   findOne(
     @GetUser() user: User,
-    @Param() { id: organizationId }: IdDto,
+    @Id('organizationId') organizationId: string,
     @Param('memberId') memberId: string
   ) {
     return this.organizationMemberService.findOneBy({
@@ -58,7 +57,7 @@ export class OrganizationMemberController {
   @Delete('organizations/:id/members/:memberId')
   async remove(
     @GetUser() user: User,
-    @Param() { id: organizationId }: IdDto,
+    @Id('organizationId') organizationId: string,
     @Param('memberId') memberId: string
   ) {
     const { affected } = await this.organizationMemberService.remove({
@@ -74,7 +73,7 @@ export class OrganizationMemberController {
   @Delete('organizations/:id/members/me')
   async leaveUserOrganization(
     @GetUser() user: User,
-    @Param('collaboratorId') collaboratorId: string
+    @Id('collaboratorId') collaboratorId: string
   ) {
     const { affected } = await this.organizationMemberService.remove({
       id: collaboratorId,
