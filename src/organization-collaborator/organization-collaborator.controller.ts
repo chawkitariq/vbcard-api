@@ -18,7 +18,7 @@ export class OrganizationCollaboratorController {
     private readonly organizationCollaboratorService: OrganizationCollaboratorService
   ) {}
 
-  // @Post('organizations/:id/collaborators')
+  // @Post('organizations/:organizationId/collaborators')
   create(
     @Body() createOrganizationCollaboratorDto: CreateOrganizationCollaboratorDto
   ) {
@@ -27,17 +27,26 @@ export class OrganizationCollaboratorController {
     );
   }
 
-  @Get('organizations/:id/collaborators')
-  findAll() {
-    return this.organizationCollaboratorService.findAll();
+  @Get('organizations/:organizationId/collaborators')
+  findAll(@GetUser() user: User, @Id('organizationId') organizationId: string) {
+    return this.organizationCollaboratorService.findBy({
+      organization: { id: organizationId, owner: { id: user.id } }
+    });
   }
 
-  @Get('organizations/:id/collaborators/:id')
-  findOne(@Id() id: string) {
-    return this.organizationCollaboratorService.findOne(id);
+  @Get('organizations/:organizationId/collaborators/:organizationId')
+  findOne(
+    @GetUser() user: User,
+    @Id('organizationId') organizationId: string,
+    @Id('collaboratorId') collaboratorId: string
+  ) {
+    return this.organizationCollaboratorService.findOneBy({
+      id: collaboratorId,
+      organization: { id: organizationId, owner: { id: user.id } }
+    });
   }
 
-  // @Patch('organizations/:id/collaborators/:id')
+  // @Patch('organizations/:organizationId/collaborators/:organizationId')
   update(
     @Id() id: string,
     @Body() updateOrganizationCollaboratorDto: UpdateOrganizationCollaboratorDto
@@ -48,7 +57,7 @@ export class OrganizationCollaboratorController {
     );
   }
 
-  @Delete('organizations/:id/collaborators/:collaboratorId')
+  @Delete('organizations/:organizationId/collaborators/:collaboratorId')
   async remove(
     @GetUser() user: User,
     @Id('organizationId') organizationId: string,
@@ -64,7 +73,7 @@ export class OrganizationCollaboratorController {
     }
   }
 
-  @Delete('organizations/:id/collaborators/me')
+  @Delete('organizations/:organizationId/collaborators/me')
   async leaveUserOrganization(
     @GetUser() user: User,
     @Id('collaboratorId') collaboratorId: string

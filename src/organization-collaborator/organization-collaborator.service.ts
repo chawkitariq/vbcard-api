@@ -22,14 +22,20 @@ export class OrganizationCollaboratorService {
     );
   }
 
-  findAll() {
-    return this.organizationCollaboratorRepository.find();
+  findBy(
+    where: Parameters<
+      typeof this.organizationCollaboratorRepository.findBy
+    >['0']
+  ) {
+    return this.organizationCollaboratorRepository.findBy(where);
   }
 
-  findOne(id: string) {
-    return this.organizationCollaboratorRepository.findOne({
-      where: { id }
-    });
+  findOneBy(
+    where: Parameters<
+      typeof this.organizationCollaboratorRepository.findOneBy
+    >['0']
+  ) {
+    return this.organizationCollaboratorRepository.findOneBy(where);
   }
 
   update(
