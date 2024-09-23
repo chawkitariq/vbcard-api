@@ -13,8 +13,7 @@ import { User } from 'src/user/entities/user.entity';
 import { ContactService } from 'src/contact/contact.service';
 import { CreateContactTagDto } from 'src/contact-tag/dto/create-contact-tag.dto';
 import { ContactTagService } from 'src/contact-tag/contact-tag.service';
-import { ContactIdDto } from 'src/dto/contact-id.dto';
-import { ContactTagIdDto } from 'src/dto/contact-tag-id.dto';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller()
 export class ContactTaggingController {
@@ -27,7 +26,7 @@ export class ContactTaggingController {
   @Post('contacts/:contactId/tags')
   async create(
     @GetUser() user: User,
-    @Param() { contactId }: ContactIdDto,
+    @Id('contactId') contactId: string,
     @Body() { name }: CreateContactTagDto
   ) {
     const isNameAlreadyExist = await this.contactTaggingService.existsBy({
@@ -51,7 +50,7 @@ export class ContactTaggingController {
   }
 
   @Post('contacts/:contactId/tags')
-  async findAll(@GetUser() user: User, @Param() { contactId }: ContactIdDto) {
+  async findAll(@GetUser() user: User, @Id('contactId') contactId: string) {
     return this.contactTaggingService.findBy({
       user: { id: user.id },
       contact: { id: contactId }
@@ -61,8 +60,8 @@ export class ContactTaggingController {
   @Post('contacts/:contactId/tags/:contactTagId')
   async update(
     @GetUser() user: User,
-    @Param() { contactId }: ContactIdDto,
-    @Param() { contactTagId }: ContactTagIdDto
+    @Id('contactId') contactId: string,
+    @Id('contactTagId') contactTagId: string
   ) {
     const tag = await this.contactTagService.findOne(contactTagId);
     const contact = await this.contactService.findOne(contactId);
@@ -87,8 +86,8 @@ export class ContactTaggingController {
   @Delete('contacts/:contactId/tags/:contactTagId')
   async remove(
     @GetUser() user: User,
-    @Param() { contactId }: ContactIdDto,
-    @Param() { contactTagId }: ContactTagIdDto
+    @Id('contactId') contactId: string,
+    @Id('contactTagId') contactTagId: string
   ) {
     const { affected } = await this.contactTaggingService.remove({
       user: { id: user.id },

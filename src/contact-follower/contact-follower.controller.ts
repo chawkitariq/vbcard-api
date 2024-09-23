@@ -16,9 +16,9 @@ import { User } from 'src/user/entities/user.entity';
 import { CreateContactFollowerDto } from './dto/create-contact-follower.dto';
 import { UpdateContactFollowerDto } from './dto/update-contact-follower.dto';
 import { ContactService } from 'src/contact/contact.service';
-import { ContactIdDto } from 'src/dto/contact-id.dto';
 import { ContactFollowerService } from './contact-follower.service';
 import { Not } from 'typeorm';
+import { Id } from 'src/decorators/id.decorator';
 
 @Controller()
 export class ContactFollowerController {
@@ -30,7 +30,7 @@ export class ContactFollowerController {
   @Post('contacts/:contactId/followings')
   async follow(
     @GetUser() user: User,
-    @Param() { contactId }: ContactIdDto,
+    @Id('contactId') contactId: string,
     @Body() createContactFollowerDto: CreateContactFollowerDto
   ) {
     const isAlreadyFollowing = await this.contactFollowerService.findOneBy({
@@ -63,7 +63,7 @@ export class ContactFollowerController {
   @Patch('contacts/:contactId/followings')
   async updateFollow(
     @GetUser() user: User,
-    @Param() { contactId }: ContactIdDto,
+    @Id('contactId') contactId: string,
     @Body() updateContactFollowerDto: UpdateContactFollowerDto
   ) {
     const { affected } = await this.contactFollowerService.update(
@@ -81,7 +81,7 @@ export class ContactFollowerController {
 
   @Delete('contacts/:contactId/followings')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async unfollow(@GetUser() user: User, @Param() { contactId }: ContactIdDto) {
+  async unfollow(@GetUser() user: User, @Id('contactId') contactId: string) {
     const { affected } = await this.contactFollowerService.delete({
       follower: { id: user.id },
       contact: { id: contactId }
@@ -102,7 +102,7 @@ export class ContactFollowerController {
   @Get('contacts/:contactId/followers')
   async findContactFollowers(
     @GetUser() user: User,
-    @Param() { contactId }: ContactIdDto
+    @Id('contactId') contactId: string
   ) {
     return this.contactFollowerService.findBy({
       contact: { id: contactId, owner: { id: user.id } }
