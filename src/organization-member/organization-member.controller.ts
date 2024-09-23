@@ -1,9 +1,7 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
-  Patch,
   Param,
   Delete,
   BadRequestException
@@ -21,7 +19,7 @@ export class OrganizationMemberController {
     private readonly organizationMemberService: OrganizationMemberService
   ) {}
 
-  @Post()
+  // @Post()
   create(@Body() createOrganizationMemberDto: CreateOrganizationMemberDto) {
     return this.organizationMemberService.create(createOrganizationMemberDto);
   }
@@ -45,7 +43,7 @@ export class OrganizationMemberController {
     });
   }
 
-  @Patch(':id')
+  // @Patch(':id')
   update(
     @Param() { id }: IdDto,
     @Body() updateOrganizationMemberDto: UpdateOrganizationMemberDto
