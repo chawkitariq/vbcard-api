@@ -19,30 +19,32 @@ export class OrganizationMemberController {
     private readonly organizationMemberService: OrganizationMemberService
   ) {}
 
+  // DO NOT UNCOMMENT
   // @Post('organizations/:id/members')
   create(@Body() createOrganizationMemberDto: CreateOrganizationMemberDto) {
     return this.organizationMemberService.create(createOrganizationMemberDto);
   }
 
   @Get('organizations/:id/members')
-  findAll(@GetUser() user: User, @Id() id: string) {
+  findAll(@GetUser('id') userId: string, @Id() id: string) {
     return this.organizationMemberService.findBy({
-      organization: { id, owner: { id: user.id } }
+      organization: { id, owner: { id: userId } }
     });
   }
 
   @Get('organizations/:id/members/:memberId')
   findOne(
-    @GetUser() user: User,
+    @GetUser('id') userId: string,
     @Id('organizationId') organizationId: string,
     @Param('memberId') memberId: string
   ) {
     return this.organizationMemberService.findOneBy({
       id: memberId,
-      organization: { id: organizationId, owner: { id: user.id } }
+      organization: { id: organizationId, owner: { id: userId } }
     });
   }
 
+  // DO NOT UNCOMMENT
   // @Patch('organizations/:id/members/:id')
   update(
     @Id() id: string,
@@ -56,13 +58,13 @@ export class OrganizationMemberController {
 
   @Delete('organizations/:id/members/:memberId')
   async remove(
-    @GetUser() user: User,
+    @GetUser('id') userId: string,
     @Id('organizationId') organizationId: string,
     @Param('memberId') memberId: string
   ) {
     const { affected } = await this.organizationMemberService.remove({
       id: memberId,
-      organization: { id: organizationId, owner: { id: user.id } }
+      organization: { id: organizationId, owner: { id: userId } }
     });
 
     if (!affected) {
@@ -72,12 +74,12 @@ export class OrganizationMemberController {
 
   @Delete('organizations/:id/members/me')
   async leaveUserOrganization(
-    @GetUser() user: User,
+    @GetUser('id') userId: string,
     @Id('collaboratorId') collaboratorId: string
   ) {
     const { affected } = await this.organizationMemberService.remove({
       id: collaboratorId,
-      member: { id: user.id }
+      member: { id: userId }
     });
 
     if (!affected) {

@@ -58,7 +58,7 @@ export class OrganizationCollaboratorController {
   }
 
   @Delete('organizations/:organizationId/collaborators/:collaboratorId')
-  async remove(
+  async removeCollaborator(
     @GetUser() user: User,
     @Id('organizationId') organizationId: string,
     @Id('collaboratorId') collaboratorId: string
