@@ -29,7 +29,19 @@ export class ContactTaggingController {
     @Id('contactId') contactId: string,
     @Body() { name }: CreateContactTagDto
   ) {
-    const isNameAlreadyExist = await this.contactTaggingService.existsBy({
+    const contact = await this.contactService.findOne(contactId);
+
+    if (!contact) {
+      throw new ConflictException('Contact not found');
+    }
+
+    const tag = await this.contactTagService.create({ name });
+
+    if (!tag) {
+      throw new ConflictException('Tag not found');
+    }
+
+    const isNameAlreadyExist = await this.contactTaggingService.exists({
       user: { id: user.id },
       contact: { id: contactId },
       tag: { name }
@@ -38,9 +50,6 @@ export class ContactTaggingController {
     if (isNameAlreadyExist) {
       throw new ConflictException('Contact already has the tag');
     }
-
-    const tag = await this.contactTagService.create({ name });
-    const contact = await this.contactService.findOne(contactId);
 
     return this.contactTaggingService.create({
       user,
@@ -63,10 +72,19 @@ export class ContactTaggingController {
     @Id('contactId') contactId: string,
     @Id('contactTagId') contactTagId: string
   ) {
-    const tag = await this.contactTagService.findOne(contactTagId);
     const contact = await this.contactService.findOne(contactId);
 
-    const isAlreadyExist = await this.contactTaggingService.existsBy({
+    if (!contact) {
+      throw new BadRequestException('Contact not found');
+    }
+
+    const tag = await this.contactTagService.findOne(contactTagId);
+
+    if (!tag) {
+      throw new BadRequestException('Tag not found');
+    }
+
+    const isAlreadyExist = await this.contactTaggingService.exists({
       user: { id: user.id },
       contact: { id: contactId },
       tag: { id: contactTagId }

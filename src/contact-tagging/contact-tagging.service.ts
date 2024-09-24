@@ -21,7 +21,7 @@ export class ContactTaggingService {
     return this.contactTaggingRepository.findBy(where);
   }
 
-  existsBy(
+  exists(
     where: Parameters<typeof this.contactTaggingRepository.existsBy>['0']
   ) {
     return this.contactTaggingRepository.existsBy(where);
