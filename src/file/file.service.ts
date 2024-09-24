@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateFileDto } from './dto/create.dto';
 import { UpdateFileDto } from './dto/update.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,17 +17,19 @@ export class FileService {
     return this.fileRepository.save(contact);
   }
 
-  findAll() {
-    return this.fileRepository.find();
+  findAll(where: Parameters<typeof this.fileRepository.findBy>['0']) {
+    return this.fileRepository.findBy(where);
   }
 
-  findOne(id: string) {
-    return this.fileRepository.findOne({
-      where: { id }
-    });
+  findOne(where: Parameters<typeof this.fileRepository.findOneBy>['0']) {
+    return this.fileRepository.findOneBy(where);
   }
 
-  async update(id: string, updateFileDto: UpdateFileDto) {
+  exists(where: Parameters<typeof this.fileRepository.existsBy>['0']) {
+    return this.fileRepository.existsBy(where);
+  }
+
+  update(id: string, updateFileDto: UpdateFileDto) {
     return this.fileRepository.update(id, updateFileDto);
   }
 
@@ -36,15 +38,5 @@ export class FileService {
       id,
       deletedAt: IsNull()
     });
-  }
-
-  async findOneOrHttpFail(id: string) {
-    const file = await this.findOne(id);
-
-    if (!file) {
-      throw new NotFoundException('File not found');
-    }
-
-    return file;
   }
 }

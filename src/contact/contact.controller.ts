@@ -31,7 +31,7 @@ export class ContactController {
     @Body() { photoId, ...createContactDto }: CreateContactDto
   ) {
     if (photoId) {
-      const photo = await this.fileService.findOne(photoId);
+      const photo = await this.fileService.findOne({ id: photoId });
       createContactDto.photo = photo;
     }
 

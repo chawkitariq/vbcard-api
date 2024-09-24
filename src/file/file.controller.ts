@@ -9,7 +9,8 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseFilePipe,
-  InternalServerErrorException
+  InternalServerErrorException,
+  BadRequestException
 } from '@nestjs/common';
 import { FileService } from './file.service';
 import { CreateFileDto } from './dto/create.dto';
@@ -20,6 +21,8 @@ import { DataSource } from 'typeorm';
 import sizeOf from 'image-size';
 import { File } from './entities/file.entity';
 import { Id } from 'src/decorators/id.decorator';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller('files')
 export class FileController {
@@ -32,7 +35,9 @@ export class FileController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
-    @UploadedFile(new ParseFilePipe({ fileIsRequired: true })) file: Express.Multer.File,
+    @GetUser() owner: User,
+    @UploadedFile(new ParseFilePipe({ fileIsRequired: true }))
+    file: Express.Multer.File,
     @Body() createFileDto: CreateFileDto
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -42,7 +47,12 @@ export class FileController {
     try {
       const metadata = this.getFileMetadata(file);
 
-      const { id } = await queryRunner.manager.save(File, { ...createFileDto, ...metadata });
+      const { id } = await queryRunner.manager.save(File, {
+        ...createFileDto,
+        ...metadata,
+        owner
+      });
+
       await queryRunner.manager.update(File, id, { alias: `${id}` });
 
       const path = `${id}.${metadata.extension}`;
@@ -50,29 +60,35 @@ export class FileController {
 
       await queryRunner.commitTransaction();
 
-      return this.fileService.findOne(id);
+      return this.fileService.findOne({ id });
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Failed to create file');
+      throw new InternalServerErrorException();
     } finally {
       await queryRunner.release();
     }
   }
 
   @Get()
-  findAll() {
-    return this.fileService.findAll();
+  findAll(@GetUser('id') ownerId: string) {
+    return this.fileService.findAll({
+      owner: { id: ownerId }
+    });
   }
 
   @Get(':id')
-  async findOne(@Id() id: string) {
-    return this.fileService.findOneOrHttpFail(id);
+  async findOne(@GetUser('id') ownerId: string, @Id() id: string) {
+    return this.fileService.findOne({
+      id,
+      owner: { id: ownerId }
+    });
   }
 
   @Patch(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
+    @GetUser('id') ownerId: string,
     @Id() id: string,
     @Body() updateFileDto: UpdateFileDto,
     @UploadedFile(
@@ -82,7 +98,14 @@ export class FileController {
     )
     file?: Express.Multer.File
   ) {
-    await this.fileService.findOneOrHttpFail(id);
+    const isFileExists = await this.fileService.exists({
+      id,
+      owner: { id: ownerId }
+    });
+
+    if (!isFileExists) {
+      throw new BadRequestException('File not found');
+    }
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -95,7 +118,10 @@ export class FileController {
         metadata = this.getFileMetadata(file);
       }
 
-      await queryRunner.manager.update(File, id, { ...updateFileDto, ...metadata });
+      await queryRunner.manager.update(File, id, {
+        ...updateFileDto,
+        ...metadata
+      });
 
       if (file) {
         const path = `${id}.${metadata['extension']}`;
@@ -104,19 +130,26 @@ export class FileController {
 
       await queryRunner.commitTransaction();
 
-      return this.fileService.findOne(id);
+      return this.fileService.findOne({ id });
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Failed to update file');
+      throw new InternalServerErrorException();
     } finally {
       await queryRunner.release();
     }
   }
 
   @Delete(':id')
-  async remove(@Id() id: string) {
-    const { extension } = await this.fileService.findOneOrHttpFail(id);
+  async remove(@GetUser('id') ownerId: string, @Id() id: string) {
+    const file = await this.fileService.findOne({
+      id,
+      owner: { id: ownerId }
+    });
+
+    if (!file) {
+      throw new BadRequestException('File not found');
+    }
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -125,14 +158,14 @@ export class FileController {
     try {
       await queryRunner.manager.softDelete(File, id);
 
-      const path = `${id}.${extension}`;
+      const path = `${id}.${file.extension}`;
       await this.fileManagerService.delete(path);
 
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      throw new InternalServerErrorException('Failed to delete file');
+      throw new InternalServerErrorException();
     } finally {
       await queryRunner.release();
     }
