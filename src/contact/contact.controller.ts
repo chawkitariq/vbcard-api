@@ -43,14 +43,14 @@ export class ContactController {
 
   @Get()
   async findAll(@GetUser() owner: User) {
-    return this.contactService.findBy({
+    return this.contactService.findAll({
       owner: { id: owner.id }
     });
   }
 
   @Get(':id')
   async findOne(@GetUser() owner: User, @Id() id: string) {
-    const contact = await this.contactService.findOneBy({
+    const contact = await this.contactService.findOne({
       id,
       owner: { id: owner.id }
     });

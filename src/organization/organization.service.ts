@@ -19,23 +19,17 @@ export class OrganizationService {
     return this.organizationRepository.save(organization);
   }
 
-  findBy(where: Parameters<typeof this.organizationRepository.findBy>['0']) {
+  findAll(where?: Parameters<typeof this.organizationRepository.findBy>['0']) {
     return this.organizationRepository.findBy(where);
   }
 
-  findOne(id: string) {
-    return this.organizationRepository.findOneBy({ id });
-  }
-
-  findOneBy(
+  findOne(
     where: Parameters<typeof this.organizationRepository.findOneBy>['0']
   ) {
     return this.organizationRepository.findOneBy(where);
   }
 
-  existsBy(
-    where: Parameters<typeof this.organizationRepository.existsBy>['0']
-  ) {
+  exists(where: Parameters<typeof this.organizationRepository.existsBy>['0']) {
     return this.organizationRepository.existsBy(where);
   }
 

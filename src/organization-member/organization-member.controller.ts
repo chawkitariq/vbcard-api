@@ -27,7 +27,7 @@ export class OrganizationMemberController {
 
   @Get('organizations/:id/members')
   findAll(@GetUser('id') userId: string, @Id() id: string) {
-    return this.organizationMemberService.findBy({
+    return this.organizationMemberService.findAll({
       organization: { id, owner: { id: userId } }
     });
   }
@@ -38,7 +38,7 @@ export class OrganizationMemberController {
     @Id('organizationId') organizationId: string,
     @Param('memberId') memberId: string
   ) {
-    return this.organizationMemberService.findOneBy({
+    return this.organizationMemberService.findOne({
       id: memberId,
       organization: { id: organizationId, owner: { id: userId } }
     });

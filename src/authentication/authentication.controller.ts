@@ -1,4 +1,10 @@
-import { Body, ConflictException, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  ConflictException,
+  Controller,
+  Post,
+  UseGuards
+} from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import { AuthenticationLocalGuard } from './guards/local.guard';
 import { AuthenticationService } from './authentication.service';
@@ -19,7 +25,7 @@ export class AuthenticationController {
   async register(@Body() { email, password }: AuthenticationRegisterDto) {
     let user: User | undefined;
 
-    user = await this.userService.findOneByEmail(email);
+    user = await this.userService.findOne({ email });
 
     if (user) {
       throw new ConflictException('Already exists');

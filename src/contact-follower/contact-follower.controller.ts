@@ -33,7 +33,7 @@ export class ContactFollowerController {
     @Id('contactId') contactId: string,
     @Body() createContactFollowerDto: CreateContactFollowerDto
   ) {
-    const isAlreadyFollowing = await this.contactFollowerService.findOneBy({
+    const isAlreadyFollowing = await this.contactFollowerService.findOne({
       follower: { id: user.id },
       contact: { id: contactId }
     });
@@ -42,7 +42,7 @@ export class ContactFollowerController {
       throw new ConflictException('Already followed');
     }
 
-    const contact = await this.contactService.findOneBy({
+    const contact = await this.contactService.findOne({
       id: contactId,
       owner: { id: Not(user.id) }
     });
@@ -94,7 +94,7 @@ export class ContactFollowerController {
 
   @Get('users/me/followings')
   findUserMeFollowings(@GetUser() user: User) {
-    return this.contactFollowerService.findBy({
+    return this.contactFollowerService.findAll({
       follower: { id: user.id }
     });
   }
@@ -104,7 +104,7 @@ export class ContactFollowerController {
     @GetUser() user: User,
     @Id('contactId') contactId: string
   ) {
-    return this.contactFollowerService.findBy({
+    return this.contactFollowerService.findAll({
       contact: { id: contactId, owner: { id: user.id } }
     });
   }

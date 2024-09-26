@@ -1,4 +1,10 @@
-import { CallHandler, ExecutionContext, ForbiddenException, Injectable, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+  NestInterceptor
+} from '@nestjs/common';
 import { Request } from 'express';
 import { tap } from 'rxjs';
 import { ContactStatisticTrackingService } from '../contact-statistic-tracking.service';
@@ -8,22 +14,29 @@ import { ContactStatisticTracking } from '../entities/contact-statistic-tracking
 
 @Injectable()
 export class ContactStatisticTrackingInterceptor implements NestInterceptor {
-  constructor(private readonly contactStatisticTrackingService: ContactStatisticTrackingService) {}
+  constructor(
+    private readonly contactStatisticTrackingService: ContactStatisticTrackingService
+  ) {}
 
   async intercept(context: ExecutionContext, next: CallHandler<any>) {
-    const { ip, path, params, query, body, ...request } = context.switchToHttp().getRequest<Request>();
+    const { ip, path, params, query, body, ...request } = context
+      .switchToHttp()
+      .getRequest<Request>();
 
     const user = request.user as User;
 
-    const { contactId } = { ...params, ...query, ...body } as { contactId: string };
+    const { contactId } = { ...params, ...query, ...body } as {
+      contactId: string;
+    };
 
     const field = path.split('/').at(-1) as ContactStatisticTracking.Field;
 
-    const contactStatisticTracking = await this.contactStatisticTrackingService.findOneBy({
-      userId: user.id,
-      contactId,
-      field
-    });
+    const contactStatisticTracking =
+      await this.contactStatisticTrackingService.findOne({
+        id: user.id,
+        contact: { id: contactId },
+        field
+      });
 
     if (contactStatisticTracking) {
       throw new ForbiddenException('Action already performed');

@@ -17,7 +17,7 @@ export class FileService {
     return this.fileRepository.save(contact);
   }
 
-  findAll(where: Parameters<typeof this.fileRepository.findBy>['0']) {
+  findAll(where?: Parameters<typeof this.fileRepository.findBy>['0']) {
     return this.fileRepository.findBy(where);
   }
 
@@ -29,14 +29,15 @@ export class FileService {
     return this.fileRepository.existsBy(where);
   }
 
-  update(id: string, updateFileDto: UpdateFileDto) {
-    return this.fileRepository.update(id, updateFileDto);
+  update(
+    criteria: Parameters<typeof this.fileRepository.update>['0'],
+    updateFileDto: UpdateFileDto
+  ) {
+    return this.fileRepository.update(criteria, updateFileDto);
   }
 
-  remove(id: string) {
-    return this.fileRepository.softDelete({
-      id,
-      deletedAt: IsNull()
-    });
+  remove(criteria: Parameters<typeof this.fileRepository.softDelete>['0']) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.fileRepository.softDelete(mergedCriteria);
   }
 }

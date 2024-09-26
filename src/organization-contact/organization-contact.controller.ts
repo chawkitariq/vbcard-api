@@ -27,7 +27,9 @@ export class OrganizationContactController {
     @Id() organizationId: string,
     @Body() createContactDto: CreateContactDto
   ) {
-    const organization = await this.organizationService.findOne(organizationId);
+    const organization = await this.organizationService.findOne({
+      id: organizationId
+    });
 
     if (!organization) {
       throw new BadRequestException('Organization not found');

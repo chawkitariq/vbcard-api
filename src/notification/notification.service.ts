@@ -17,21 +17,11 @@ export class NotificationService {
     return this.notificationRepository.save(user);
   }
 
-  findAll() {
-    return this.notificationRepository.find();
-  }
-
-  findBy(where: Parameters<typeof this.notificationRepository.findBy>['0']) {
+  findAll(where?: Parameters<typeof this.notificationRepository.findBy>['0']) {
     return this.notificationRepository.findBy(where);
   }
 
-  findOne(id: string) {
-    return this.notificationRepository.findOne({
-      where: { id }
-    });
-  }
-
-  findOneBy(
+  findOne(
     where: Parameters<typeof this.notificationRepository.findOneBy>['0']
   ) {
     return this.notificationRepository.findOneBy(where);

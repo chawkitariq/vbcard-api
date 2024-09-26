@@ -13,24 +13,35 @@ export class ContactFollowerService {
   ) {}
 
   create(createContactFollowerDto: CreateContactFollowerDto) {
-    const following = this.contactFollowerRepository.create(createContactFollowerDto);
+    const following = this.contactFollowerRepository.create(
+      createContactFollowerDto
+    );
     return this.contactFollowerRepository.save(following);
   }
 
-  findOneBy(where: Parameters<typeof this.contactFollowerRepository.findOneBy>['0']) {
+  findOne(
+    where: Parameters<typeof this.contactFollowerRepository.findOneBy>['0']
+  ) {
     return this.contactFollowerRepository.findOneBy(where);
   }
 
-  findBy(where: Parameters<typeof this.contactFollowerRepository.findBy>['0']) {
+  findAll(
+    where?: Parameters<typeof this.contactFollowerRepository.findBy>['0']
+  ) {
     return this.contactFollowerRepository.findBy(where);
   }
 
-  update(criteria: Parameters<typeof this.contactFollowerRepository.findBy>['0'], body: UpdateContactFollowerDto) {
+  update(
+    criteria: Parameters<typeof this.contactFollowerRepository.findBy>['0'],
+    body: UpdateContactFollowerDto
+  ) {
     const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
     return this.contactFollowerRepository.update(mergedCriteria, body);
   }
 
-  delete(criteria: Parameters<typeof this.contactFollowerRepository.softDelete>['0']) {
+  delete(
+    criteria: Parameters<typeof this.contactFollowerRepository.softDelete>['0']
+  ) {
     const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
     return this.contactFollowerRepository.softDelete(mergedCriteria);
   }

@@ -17,7 +17,9 @@ export class ContactTaggingService {
     return this.contactTaggingRepository.save(tag);
   }
 
-  findBy(where: Parameters<typeof this.contactTaggingRepository.findBy>['0']) {
+  findAll(
+    where?: Parameters<typeof this.contactTaggingRepository.findBy>['0']
+  ) {
     return this.contactTaggingRepository.findBy(where);
   }
 

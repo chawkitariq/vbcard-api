@@ -22,7 +22,7 @@ export class OrganizationCollaboratorService {
     );
   }
 
-  findBy(
+  findAll(
     where: Parameters<
       typeof this.organizationCollaboratorRepository.findBy
     >['0']
@@ -30,7 +30,7 @@ export class OrganizationCollaboratorService {
     return this.organizationCollaboratorRepository.findBy(where);
   }
 
-  findOneBy(
+  findOne(
     where: Parameters<
       typeof this.organizationCollaboratorRepository.findOneBy
     >['0']

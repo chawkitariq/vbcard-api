@@ -29,7 +29,7 @@ export class OrganizationCollaboratorController {
 
   @Get('organizations/:organizationId/collaborators')
   findAll(@GetUser() user: User, @Id('organizationId') organizationId: string) {
-    return this.organizationCollaboratorService.findBy({
+    return this.organizationCollaboratorService.findOne({
       organization: { id: organizationId, owner: { id: user.id } }
     });
   }
@@ -40,7 +40,7 @@ export class OrganizationCollaboratorController {
     @Id('organizationId') organizationId: string,
     @Id('collaboratorId') collaboratorId: string
   ) {
-    return this.organizationCollaboratorService.findOneBy({
+    return this.organizationCollaboratorService.findOne({
       id: collaboratorId,
       organization: { id: organizationId, owner: { id: user.id } }
     });

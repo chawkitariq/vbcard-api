@@ -17,23 +17,15 @@ export class ContactService {
     return this.contactRepository.save(contact);
   }
 
-  findAll() {
-    return this.contactRepository.find();
-  }
-
-  findBy(where?: Parameters<typeof this.contactRepository.findBy>['0']) {
+  findAll(where?: Parameters<typeof this.contactRepository.findBy>['0']) {
     return this.contactRepository.findBy(where);
   }
 
-  findOne(id: string) {
-    return this.contactRepository.findOneBy({ id });
-  }
-
-  findOneBy(where: Parameters<typeof this.contactRepository.findOneBy>['0']) {
+  findOne(where: Parameters<typeof this.contactRepository.findOneBy>['0']) {
     return this.contactRepository.findOneBy(where);
   }
 
-  existsBy(where: Parameters<typeof this.contactRepository.existsBy>['0']) {
+  exists(where: Parameters<typeof this.contactRepository.existsBy>['0']) {
     return this.contactRepository.existsBy(where);
   }
 

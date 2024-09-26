@@ -27,7 +27,7 @@ export class OrganizationInvitationController {
     @Id() id: string,
     @Body() { email }: CreateOrganizationInvitationDto
   ) {
-    const organization = await this.organizationService.findOneBy({
+    const organization = await this.organizationService.findOne({
       id,
       owner: { id: userId }
     });
@@ -41,7 +41,7 @@ export class OrganizationInvitationController {
 
   @Get('organizations/:id/invitations')
   findAll(@GetUser('id') userId: string, @Id() id: string) {
-    return this.organizationInvitationService.findBy({
+    return this.organizationInvitationService.findAll({
       organization: { id, owner: { id: userId } }
     });
   }
@@ -52,7 +52,7 @@ export class OrganizationInvitationController {
     @Id() organizationId: string,
     @Id('invitationId') invitationId: string
   ) {
-    return this.organizationInvitationService.findOneBy({
+    return this.organizationInvitationService.findOne({
       id: invitationId,
       organization: { id: organizationId, owner: { id: userId } }
     });

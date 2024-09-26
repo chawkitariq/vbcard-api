@@ -12,33 +12,24 @@ export class ContactStatisticTrackingService {
   ) {}
 
   create(createContactStatisticTrackingDto: CreateContactStatisticTrackingDto) {
-    const contactStatisticTracking = this.contactStatisticTrackingRepository.create(createContactStatisticTrackingDto);
-    return this.contactStatisticTrackingRepository.save(contactStatisticTracking);
+    const contactStatisticTracking =
+      this.contactStatisticTrackingRepository.create(
+        createContactStatisticTrackingDto
+      );
+    return this.contactStatisticTrackingRepository.save(
+      contactStatisticTracking
+    );
   }
 
   findAll() {
     return this.contactStatisticTrackingRepository.find();
   }
 
-  findOne(id: string) {
-    return this.contactStatisticTrackingRepository.findOneBy({
-      id
-    });
-  }
-
-  findOneBy({
-    userId = undefined,
-    contactId = undefined,
-    field = undefined
-  }: {
-    userId?: string;
-    contactId?: string;
-    field?: ContactStatisticTracking.Field;
-  }) {
-    return this.contactStatisticTrackingRepository.findOneBy({
-      user: { id: userId },
-      contact: { id: contactId },
-      field
-    });
+  findOne(
+    where: Parameters<
+      typeof this.contactStatisticTrackingRepository.findOneBy
+    >['0']
+  ) {
+    return this.contactStatisticTrackingRepository.findOneBy(where);
   }
 }

@@ -17,38 +17,25 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.userRepository.find();
+  findAll(where?: Parameters<typeof this.userRepository.findBy>['0']) {
+    return this.userRepository.findBy(where);
   }
 
-  async findOne(id: string) {
-    return this.userRepository.findOne({
-      where: { id }
-    });
+  async findOne(where: Parameters<typeof this.userRepository.findOneBy>['0']) {
+    return this.userRepository.findOneBy(where);
   }
 
-  async findOneByEmail(email: string) {
-    return this.userRepository.findOne({
-      where: { email }
-    });
+  async update(
+    criteria: Parameters<typeof this.userRepository.update>['0'],
+    updateUserDto: UpdateUserDto
+  ) {
+    return this.userRepository.update(criteria, updateUserDto);
   }
 
-  async findOneByVerificationToken(verificationToken: string) {
-    return this.userRepository.findOne({
-      where: {
-        verificationToken
-      }
-    });
-  }
-
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(id, updateUserDto);
-  }
-
-  async remove(id: string) {
-    return this.userRepository.softDelete({
-      id,
-      deletedAt: IsNull()
-    });
+  async remove(
+    criteria: Parameters<typeof this.userRepository.softDelete>['0']
+  ) {
+    const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });
+    return this.userRepository.softDelete(mergedCriteria);
   }
 }

@@ -26,7 +26,7 @@ export class OrganizationController {
     @GetUser() owner: User,
     @Body() { name }: CreateOrganizationDto
   ) {
-    const isAlreadyExist = await this.organizationService.existsBy({
+    const isAlreadyExist = await this.organizationService.exists({
       name,
       owner: { id: owner.id }
     });
@@ -40,12 +40,12 @@ export class OrganizationController {
 
   @Get()
   findAll(@GetUser() owner: User) {
-    return this.organizationService.findBy({ owner: { id: owner.id } });
+    return this.organizationService.findAll({ owner: { id: owner.id } });
   }
 
   @Get(':id')
   async findOne(@GetUser() owner: User, @Id() id: string) {
-    return this.organizationService.findOneBy({
+    return this.organizationService.findOne({
       id,
       owner: { id: owner.id }
     });
@@ -58,7 +58,7 @@ export class OrganizationController {
     @Body() { name, ...updateOrganizationDto }: UpdateOrganizationDto
   ) {
     if (name) {
-      const isNameAlreadyExist = await this.organizationService.existsBy({
+      const isNameAlreadyExist = await this.organizationService.exists({
         name,
         owner: { id: owner.id }
       });

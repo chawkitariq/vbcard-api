@@ -19,25 +19,24 @@ export class OrganizationMemberService {
     return this.organizationMemberRepository.save(organizationMember);
   }
 
-  findBy(
-    where: Parameters<typeof this.organizationMemberRepository.findBy>['0']
+  findAll(
+    where?: Parameters<typeof this.organizationMemberRepository.findBy>['0']
   ) {
     return this.organizationMemberRepository.findBy(where);
   }
 
-  findOne(id: string) {
-    return this.organizationMemberRepository.findOneBy({ id });
-  }
-
-  findOneBy(
+  findOne(
     where: Parameters<typeof this.organizationMemberRepository.findOneBy>['0']
   ) {
     return this.organizationMemberRepository.findOneBy(where);
   }
 
-  update(id: string, updateOrganizationMemberDto: UpdateOrganizationMemberDto) {
+  update(
+    criteria: Parameters<typeof this.organizationMemberRepository.update>['0'],
+    updateOrganizationMemberDto: UpdateOrganizationMemberDto
+  ) {
     return this.organizationMemberRepository.update(
-      id,
+      criteria,
       updateOrganizationMemberDto
     );
   }

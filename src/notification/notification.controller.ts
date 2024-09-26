@@ -28,7 +28,7 @@ export class NotificationController {
     @GetUser() sender: User,
     @Body() { recipientId, ...createNotificationDto }: CreateNotificationDto
   ) {
-    const recipient = await this.userService.findOne(recipientId);
+    const recipient = await this.userService.findOne({ id: recipientId });
 
     return this.notificationService.create({
       sender,
@@ -39,14 +39,14 @@ export class NotificationController {
 
   @Get()
   findAll(@GetUser() user: User) {
-    return this.notificationService.findBy({
+    return this.notificationService.findAll({
       sender: { id: user.id }
     });
   }
 
   @Get(':id')
   async findOne(@GetUser() user: User, @Id() id: string) {
-    const notification = await this.notificationService.findOneBy({
+    const notification = await this.notificationService.findOne({
       id,
       sender: { id: user.id }
     });
@@ -65,8 +65,9 @@ export class NotificationController {
     @Body() { recipientId, ...updateNotificationDto }: UpdateNotificationDto
   ) {
     if (recipientId) {
-      updateNotificationDto.recipient =
-        await this.userService.findOne(recipientId);
+      updateNotificationDto.recipient = await this.userService.findOne({
+        id: recipientId
+      });
     }
 
     const { affected } = await this.notificationService.update(
@@ -81,7 +82,7 @@ export class NotificationController {
       throw new NotFoundException('Notification not found');
     }
 
-    return this.notificationService.findOne(id);
+    return this.notificationService.findOne({ id });
   }
 
   @Delete(':id')

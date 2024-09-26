@@ -29,7 +29,7 @@ export class ContactTaggingController {
     @Id('contactId') contactId: string,
     @Body() { name }: CreateContactTagDto
   ) {
-    const contact = await this.contactService.findOne(contactId);
+    const contact = await this.contactService.findOne({ id: contactId });
 
     if (!contact) {
       throw new ConflictException('Contact not found');
@@ -60,7 +60,7 @@ export class ContactTaggingController {
 
   @Post('contacts/:contactId/tags')
   async findAll(@GetUser() user: User, @Id('contactId') contactId: string) {
-    return this.contactTaggingService.findBy({
+    return this.contactTaggingService.findAll({
       user: { id: user.id },
       contact: { id: contactId }
     });
@@ -72,7 +72,7 @@ export class ContactTaggingController {
     @Id('contactId') contactId: string,
     @Id('contactTagId') contactTagId: string
   ) {
-    const contact = await this.contactService.findOne(contactId);
+    const contact = await this.contactService.findOne({ id: contactId });
 
     if (!contact) {
       throw new BadRequestException('Contact not found');

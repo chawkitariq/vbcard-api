@@ -14,13 +14,16 @@ export class AuthenticationLocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, plainPassword: string): Promise<any> {
-    const user = await this.userService.findOneByEmail(email);
+    const user = await this.userService.findOne({ email });
 
     if (!user) {
       return null;
     }
 
-    const isValidPassword = await this.hashService.compare(plainPassword, user.password);
+    const isValidPassword = await this.hashService.compare(
+      plainPassword,
+      user.password
+    );
 
     if (!isValidPassword) {
       return null;
