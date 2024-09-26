@@ -17,7 +17,7 @@ async function bootstrap() {
       skipMissingProperties: true,
       forbidUnknownValues: true,
       whitelist: true,
-      transform: true,
+      transform: true
     })
   );
 
