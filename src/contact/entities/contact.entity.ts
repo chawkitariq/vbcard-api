@@ -1,5 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { File } from 'src/file/entities/file.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
@@ -8,15 +7,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   Relation,
-  Unique,
   UpdateDateColumn
 } from 'typeorm';
 
 @Entity({ name: 'contacts' })
-@Unique(['photo'])
 export class Contact {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -39,10 +35,6 @@ export class Contact {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'owner_id' })
   owner?: Relation<User>;
-
-  @OneToOne(() => File, { nullable: true })
-  @JoinColumn({ name: 'photo_id' })
-  photo?: Relation<File>;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
