@@ -53,7 +53,7 @@ export class ContactFollowerController {
       throw new BadRequestException('You are owner');
     }
 
-    return this.contactFollowerService.create({
+    await this.contactFollowerService.create({
       ...createContactFollowerDto,
       follower: user,
       contact
@@ -93,10 +93,14 @@ export class ContactFollowerController {
   }
 
   @Get('users/me/followings')
-  findUserMeFollowings(@GetUser() user: User) {
-    return this.contactFollowerService.findAll({
+  async findUserMeFollowings(@GetUser() user: User) {
+    const contacts = await this.contactFollowerService.findAll({
       follower: { id: user.id }
     });
+
+    return {
+      contacts
+    };
   }
 
   @Get('contacts/:contactId/followers')
@@ -104,8 +108,12 @@ export class ContactFollowerController {
     @GetUser() user: User,
     @Id('contactId') contactId: string
   ) {
-    return this.contactFollowerService.findAll({
+    const followers = await this.contactFollowerService.findAll({
       contact: { id: contactId, owner: { id: user.id } }
     });
+
+    return {
+      followers
+    };
   }
 }
