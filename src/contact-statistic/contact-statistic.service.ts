@@ -10,20 +10,20 @@ export class ContactStatisticService {
     private contactRepository: Repository<Contact>
   ) {}
 
-  async incrementViewed(contactId: string) {
-    const contact = await this.contactRepository.findOneBy({ id: contactId });
+  async incrementViewed(id: string) {
+    const contact = await this.contactRepository.findOneBy({ id });
     contact.viewed++;
     return this.contactRepository.save(contact);
   }
 
-  async incrementShared(contactId: string) {
-    const contact = await this.contactRepository.findOneBy({ id: contactId });
+  async incrementShared(id: string) {
+    const contact = await this.contactRepository.findOneBy({ id });
     contact.shared++;
     return this.contactRepository.save(contact);
   }
 
-  async incrementScanned(contactId: string) {
-    const contact = await this.contactRepository.findOneBy({ id: contactId });
+  async incrementScanned(id: string) {
+    const contact = await this.contactRepository.findOneBy({ id });
     contact.scanned++;
     return this.contactRepository.save(contact);
   }

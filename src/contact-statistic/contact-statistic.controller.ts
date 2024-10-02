@@ -4,24 +4,24 @@ import { ContactStatisticTrackingInterceptor } from 'src/contact-statistic-track
 import { Id } from 'src/decorators/id.decorator';
 
 @UseInterceptors(ContactStatisticTrackingInterceptor)
-@Controller('contacts/:contactId/statistics')
+@Controller('contacts/:id/statistics')
 export class ContactStatisticController {
   constructor(
     private readonly contactStatisticService: ContactStatisticService
   ) {}
 
   @Patch('viewed')
-  async incrementViewed(@Id('contactId') contactId: string) {
-    return this.contactStatisticService.incrementViewed(contactId);
+  async incrementViewed(@Id() id: string) {
+    return this.contactStatisticService.incrementViewed(id);
   }
 
   @Patch('shared')
-  async incrementShared(@Id('contactId') contactId: string) {
-    return this.contactStatisticService.incrementShared(contactId);
+  async incrementShared(@Id() id: string) {
+    return this.contactStatisticService.incrementShared(id);
   }
 
   @Patch('scanned')
-  async incrementScanned(@Id('contactId') contactId: string) {
-    return this.contactStatisticService.incrementScanned(contactId);
+  async incrementScanned(@Id() id: string) {
+    return this.contactStatisticService.incrementScanned(id);
   }
 }
