@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
   NotFoundException,
   HttpCode,
@@ -22,6 +21,7 @@ import { Contact } from './entities/contact.entity';
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
     @GetUser() owner: User,
@@ -35,13 +35,9 @@ export class ContactController {
 
   @Get()
   async findAll(@GetUser() owner: User) {
-    const contacts = await this.contactService.findAll({
+    return this.contactService.findAll({
       owner: { id: owner.id }
     });
-
-    return {
-      contacts
-    };
   }
 
   @Get(':id')
@@ -55,7 +51,7 @@ export class ContactController {
       throw new NotFoundException('Contact not found');
     }
 
-    return { contact };
+    return contact;
   }
 
   @Patch(':id')
@@ -75,6 +71,8 @@ export class ContactController {
     if (!affected) {
       throw new NotFoundException('Contact not found');
     }
+
+    return this.contactService.findOne({ id });
   }
 
   @Delete(':id')

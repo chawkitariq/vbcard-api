@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Delete,
-  Param,
   Body,
   Patch,
   BadRequestException,
@@ -27,18 +26,19 @@ export class ContactFollowerController {
     private readonly contactService: ContactService
   ) {}
 
-  @Post('contacts/:contactId/followings')
+  @HttpCode(HttpStatus.CREATED)
+  @Post('contacts/:contactId/followers')
   async follow(
     @GetUser() user: User,
     @Id('contactId') contactId: string,
     @Body() createContactFollowerDto: CreateContactFollowerDto
   ) {
-    const isAlreadyFollowing = await this.contactFollowerService.findOne({
+    const isAlreadyFollowed = await this.contactFollowerService.findOne({
       follower: { id: user.id },
       contact: { id: contactId }
     });
 
-    if (isAlreadyFollowing) {
+    if (isAlreadyFollowed) {
       throw new ConflictException('Already followed');
     }
 
@@ -47,9 +47,7 @@ export class ContactFollowerController {
       owner: { id: Not(user.id) }
     });
 
-    const isContactOwner = !contact;
-
-    if (isContactOwner) {
+    if (!contact) {
       throw new BadRequestException('You are owner');
     }
 
@@ -60,7 +58,7 @@ export class ContactFollowerController {
     });
   }
 
-  @Patch('contacts/:contactId/followings')
+  @Patch('contacts/:contactId/followers')
   async updateFollow(
     @GetUser() user: User,
     @Id('contactId') contactId: string,
@@ -79,8 +77,8 @@ export class ContactFollowerController {
     }
   }
 
-  @Delete('contacts/:contactId/followings')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete('contacts/:contactId/followers')
   async unfollow(@GetUser() user: User, @Id('contactId') contactId: string) {
     const { affected } = await this.contactFollowerService.delete({
       follower: { id: user.id },
@@ -92,15 +90,11 @@ export class ContactFollowerController {
     }
   }
 
-  @Get('users/me/followings')
+  @Get('users/me/followeds')
   async findUserMeFollowings(@GetUser() user: User) {
-    const contacts = await this.contactFollowerService.findAll({
+    return this.contactFollowerService.findAll({
       follower: { id: user.id }
     });
-
-    return {
-      contacts
-    };
   }
 
   @Get('contacts/:contactId/followers')
@@ -108,12 +102,8 @@ export class ContactFollowerController {
     @GetUser() user: User,
     @Id('contactId') contactId: string
   ) {
-    const followers = await this.contactFollowerService.findAll({
+    return this.contactFollowerService.findAll({
       contact: { id: contactId, owner: { id: user.id } }
     });
-
-    return {
-      followers
-    };
   }
 }
