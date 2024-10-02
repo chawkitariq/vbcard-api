@@ -1,14 +1,20 @@
-import { BadRequestException, Body, ConflictException, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  ConflictException,
+  Controller,
+  Post
+} from '@nestjs/common';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { TwoFactorAuthenticationService } from './two-factor-authentication.service';
 import { TwoFactorAuthenticationVerifyDto } from './dto/two-factor-authentication-verify.dto';
+import { TotpService } from 'src/totp/totp.service';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
   constructor(
-    private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
+    private readonly totpService: TotpService,
     private readonly userService: UserService
   ) {}
 
@@ -18,14 +24,16 @@ export class TwoFactorAuthenticationController {
       throw new ConflictException('2FA already enabled');
     }
 
-    const twoFactorAuthenticationSecret = this.twoFactorAuthenticationService.generateRandomBase32(20);
+    const twoFactorAuthenticationSecret =
+      this.totpService.generateRandomBase32(20);
 
     await this.userService.update(user.id, {
       twoFactorAuthenticationSecret,
       twoFactorAuthenticationEnabledAt: new Date()
     });
 
-    const otpauthUri = this.twoFactorAuthenticationService.generateTotpAuthUri(
+    const otpauthUri = this.totpService.generateOtpAuthUrl(
+      process.env.APP_NAME,
       user.email,
       twoFactorAuthenticationSecret
     );
@@ -36,12 +44,18 @@ export class TwoFactorAuthenticationController {
   }
 
   @Post('verify')
-  async verify(@GetUser() user: User, @Body() { token }: TwoFactorAuthenticationVerifyDto) {
+  async verify(
+    @GetUser() user: User,
+    @Body() { token }: TwoFactorAuthenticationVerifyDto
+  ) {
     if (!user.twoFactorAuthenticationEnabledAt) {
       throw new BadRequestException('2FA not enabled');
     }
 
-    const isValidTotpToken = this.twoFactorAuthenticationService.verifyTotp(token, user.twoFactorAuthenticationSecret);
+    const isValidTotpToken = this.totpService.verify(
+      token,
+      user.twoFactorAuthenticationSecret
+    );
 
     if (!isValidTotpToken) {
       throw new BadRequestException('Invalid 2FA token');

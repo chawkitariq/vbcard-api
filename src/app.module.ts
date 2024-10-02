@@ -27,6 +27,7 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
 import { OrganizationInvitationModule } from './organization-invitation/organization-invitation.module';
 import { OrganizationContactModule } from './organization-contact/organization-contact.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { TotpModule } from './totp/totp.module';
 
 @Module({
   imports: [
@@ -54,7 +55,8 @@ import { SubscriptionModule } from './subscription/subscription.module';
     OrganizationCollaboratorModule,
     OrganizationInvitationModule,
     OrganizationContactModule,
-    SubscriptionModule
+    SubscriptionModule,
+    TotpModule
   ],
   controllers: [AppController],
   providers: [

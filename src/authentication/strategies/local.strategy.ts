@@ -1,6 +1,6 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { HashService } from 'src/hash/hash.service';
 
@@ -17,7 +17,7 @@ export class AuthenticationLocalStrategy extends PassportStrategy(Strategy) {
     const user = await this.userService.findOne({ email });
 
     if (!user) {
-      return null;
+      throw new UnauthorizedException();
     }
 
     const isValidPassword = await this.hashService.compare(
@@ -26,7 +26,7 @@ export class AuthenticationLocalStrategy extends PassportStrategy(Strategy) {
     );
 
     if (!isValidPassword) {
-      return null;
+      throw new UnauthorizedException();
     }
 
     return user;

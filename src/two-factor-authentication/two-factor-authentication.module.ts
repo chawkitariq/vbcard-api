@@ -4,9 +4,10 @@ import { TwoFactorAuthenticationController } from './two-factor-authentication.c
 import { UserModule } from 'src/user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { TwoFactorAuthenticationGuard } from './guards/two-factor-authentication.guard';
+import { TotpModule } from 'src/totp/totp.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, TotpModule],
   providers: [
     TwoFactorAuthenticationService,
     {

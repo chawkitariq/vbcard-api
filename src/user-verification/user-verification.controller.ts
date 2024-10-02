@@ -25,7 +25,7 @@ export class UserVerificationController {
     const user = await this.userService.findOne({ verificationToken });
 
     if (!user) {
-      throw new BadRequestException('Invalid token');
+      throw new BadRequestException('Token not found');
     }
 
     if (user.isVerificationTokenExpired()) {
@@ -36,12 +36,12 @@ export class UserVerificationController {
   }
 
   @Public()
-  @Post('/verify/resend')
+  @Post('/verify/send')
   async verifyRefresh(@Query() { email }: UserVerifyResendDto) {
     const user = await this.userService.findOne({ email });
 
     if (user.isVerified()) {
-      throw new ConflictException('User already verified');
+      throw new ConflictException('Already verified');
     }
 
     await this.authVerificationService.refresh(user.id);

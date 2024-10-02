@@ -5,9 +5,10 @@ import { AuthenticationRegisterListener } from './listeners/authentication-regis
 import { UserVerificationController } from './user-verification.controller';
 import { UserVerificationGuard } from './guards/user-verification.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { TotpModule } from 'src/totp/totp.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, TotpModule],
   providers: [
     UserVerificationService,
     AuthenticationRegisterListener,
