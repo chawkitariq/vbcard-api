@@ -32,6 +32,9 @@ export class Contact {
   @Column({ default: 'private' })
   visibility: Contact.Visibility;
 
+  @Column({ default: 'leder' })
+  layout: Contact.Layout;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'owner_id' })
   owner?: Relation<User>;
@@ -52,5 +55,14 @@ export namespace Contact {
     Public = 'public',
     Shared = 'shared',
     Private = 'private'
+  }
+
+  export enum Layout {
+    Leder = 'leder',
+    Futer = 'futer',
+    Rider = 'rider',
+    Miter = 'miter',
+    Lext = 'lext',
+    Rixt = 'rixt'
   }
 }

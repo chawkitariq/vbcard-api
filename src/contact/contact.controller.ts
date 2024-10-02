@@ -16,6 +16,7 @@ import { UpdateContactDto } from './dto/update-contact.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { Id } from 'src/decorators/id.decorator';
+import { Contact } from './entities/contact.entity';
 
 @Controller('contacts')
 export class ContactController {
@@ -34,23 +35,27 @@ export class ContactController {
 
   @Get()
   async findAll(@GetUser() owner: User) {
-    return this.contactService.findAll({
+    const contacts = await this.contactService.findAll({
       owner: { id: owner.id }
     });
+
+    return {
+      contacts
+    };
   }
 
   @Get(':id')
   async findOne(@GetUser() owner: User, @Id() id: string) {
     const contact = await this.contactService.findOne({
       id,
-      owner: { id: owner.id }
+      visibility: Contact.Visibility.Public
     });
 
     if (!contact) {
       throw new NotFoundException('Contact not found');
     }
 
-    return contact;
+    return { contact };
   }
 
   @Patch(':id')
