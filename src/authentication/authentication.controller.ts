@@ -35,8 +35,8 @@ export class AuthenticationController {
   }
 
   @Public()
-  @UseGuards(AuthenticationLocalGuard)
   @Post('login')
+  @UseGuards(AuthenticationLocalGuard)
   async login(@GetUser() user: User) {
     return this.authenticationService.login(user);
   }

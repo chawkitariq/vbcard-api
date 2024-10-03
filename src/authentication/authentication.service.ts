@@ -24,7 +24,10 @@ export class AuthenticationService {
       password: hashedPassword
     });
 
-    this.eventEmitter.emit(AuthenticationRegisterEvent.name, new AuthenticationRegisterEvent(user.id));
+    this.eventEmitter.emit(
+      AuthenticationRegisterEvent.name,
+      new AuthenticationRegisterEvent(user.id)
+    );
 
     return user;
   }
@@ -32,7 +35,7 @@ export class AuthenticationService {
   async login({ id, email }: User) {
     const payload = { email, sub: id };
     return {
-      jwt: this.jwtService.sign(payload)
+      access_token: this.jwtService.sign(payload)
     };
   }
 }
