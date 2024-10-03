@@ -8,7 +8,9 @@ import {
   BadRequestException,
   HttpCode,
   HttpStatus,
-  ConflictException
+  ConflictException,
+  ForbiddenException,
+  NotFoundException
 } from '@nestjs/common';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
@@ -27,15 +29,17 @@ export class ContactFollowerController {
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
-  @Post('contacts/:contactId/followers')
-  async follow(
+  @Post('contacts/:id/followers')
+  async createFollower(
     @GetUser() user: User,
-    @Id('contactId') contactId: string,
+    @Id() id: string,
     @Body() createContactFollowerDto: CreateContactFollowerDto
   ) {
-    const isAlreadyFollowed = await this.contactFollowerService.findOne({
-      follower: { id: user.id },
-      contact: { id: contactId }
+    const isAlreadyFollowed = await this.contactFollowerService.exists({
+      where: {
+        follower: { id: user.id },
+        contact: { id }
+      }
     });
 
     if (isAlreadyFollowed) {
@@ -43,23 +47,49 @@ export class ContactFollowerController {
     }
 
     const contact = await this.contactService.findOne({
-      id: contactId,
+      id,
       owner: { id: Not(user.id) }
     });
 
     if (!contact) {
-      throw new BadRequestException('You are owner');
+      throw new ForbiddenException('You are owner');
     }
 
-    await this.contactFollowerService.create({
+    const follower = await this.contactFollowerService.create({
       ...createContactFollowerDto,
       follower: user,
       contact
     });
+
+    return follower;
   }
 
-  @Patch('contacts/:contactId/followers')
-  async updateFollow(
+  @Get('contacts/:contactId/followers')
+  async findAllFollower(
+    @GetUser() user: User,
+    @Id('contactId') contactId: string
+  ) {
+    const contact = await this.contactService.findOne({
+      id: contactId,
+      owner: { id: user.id }
+    });
+
+    if (!contact) {
+      throw new BadRequestException('Contact not found');
+    }
+
+    const followers = await this.contactFollowerService.findAll({
+      where: {
+        contact: { id: contact.id }
+      },
+      relations: ['follower']
+    });
+
+    return followers.map(({ follower }) => follower);
+  }
+
+  @Patch('users/me/followings/:contactId')
+  async updateFollowing(
     @GetUser() user: User,
     @Id('contactId') contactId: string,
     @Body() updateContactFollowerDto: UpdateContactFollowerDto
@@ -77,9 +107,41 @@ export class ContactFollowerController {
     }
   }
 
+  @Get('users/me/followings')
+  async findAllFollowing(@GetUser() user: User) {
+    const followings = await this.contactFollowerService.findAll({
+      where: {
+        follower: { id: user.id }
+      },
+      relations: ['contact']
+    });
+
+    return followings.map(({ contact }) => contact);
+  }
+
+  @Get('users/me/followings/:id')
+  async findOneFollwing(@GetUser('id') followerId: string, @Id() id: string) {
+    const following = await this.contactFollowerService.findOne({
+      where: {
+        contact: { id },
+        follower: { id: followerId }
+      },
+      relations: ['contact']
+    });
+
+    if (!following) {
+      throw new NotFoundException('Following not found');
+    }
+
+    return following.contact;
+  }
+
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete('contacts/:contactId/followers')
-  async unfollow(@GetUser() user: User, @Id('contactId') contactId: string) {
+  @Delete('users/me/followings/:contactId')
+  async deleteFollowing(
+    @GetUser() user: User,
+    @Id('contactId') contactId: string
+  ) {
     const { affected } = await this.contactFollowerService.delete({
       follower: { id: user.id },
       contact: { id: contactId }
@@ -88,22 +150,5 @@ export class ContactFollowerController {
     if (!affected) {
       throw new BadRequestException('Following not found');
     }
-  }
-
-  @Get('users/me/followeds')
-  async findUserMeFollowings(@GetUser() user: User) {
-    return this.contactFollowerService.findAll({
-      follower: { id: user.id }
-    });
-  }
-
-  @Get('contacts/:contactId/followers')
-  async findContactFollowers(
-    @GetUser() user: User,
-    @Id('contactId') contactId: string
-  ) {
-    return this.contactFollowerService.findAll({
-      contact: { id: contactId, owner: { id: user.id } }
-    });
   }
 }

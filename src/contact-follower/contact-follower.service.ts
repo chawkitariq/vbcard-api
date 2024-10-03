@@ -20,19 +20,25 @@ export class ContactFollowerService {
   }
 
   findOne(
-    where: Parameters<typeof this.contactFollowerRepository.findOneBy>['0']
+    options: Parameters<typeof this.contactFollowerRepository.findOne>['0']
   ) {
-    return this.contactFollowerRepository.findOneBy(where);
+    return this.contactFollowerRepository.findOne(options);
   }
 
   findAll(
-    where?: Parameters<typeof this.contactFollowerRepository.findBy>['0']
+    options?: Parameters<typeof this.contactFollowerRepository.find>['0']
   ) {
-    return this.contactFollowerRepository.findBy(where);
+    return this.contactFollowerRepository.find(options);
+  }
+
+  exists(
+    options?: Parameters<typeof this.contactFollowerRepository.exists>['0']
+  ) {
+    return this.contactFollowerRepository.exists(options);
   }
 
   update(
-    criteria: Parameters<typeof this.contactFollowerRepository.findBy>['0'],
+    criteria: Parameters<typeof this.contactFollowerRepository.update>['0'],
     body: UpdateContactFollowerDto
   ) {
     const mergedCriteria = Object.assign({}, criteria, { deletedAt: IsNull() });

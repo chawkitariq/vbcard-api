@@ -16,7 +16,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'contacts_followers' })
-@Unique(['contact', 'follower'])
+@Unique(['contact', 'follower', 'deletedAt'])
 export class ContactFollower {
   @PrimaryGeneratedColumn('uuid')
   id: string;

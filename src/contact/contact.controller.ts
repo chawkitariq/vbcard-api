@@ -16,16 +16,10 @@ import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { Id } from 'src/decorators/id.decorator';
 import { Contact } from './entities/contact.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 @Controller('contacts')
 export class ContactController {
-  constructor(
-    @InjectRepository(Contact)
-    private readonly contactRepository: Repository<Contact>,
-    private readonly contactService: ContactService
-  ) {}
+  constructor(private readonly contactService: ContactService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
@@ -46,8 +40,29 @@ export class ContactController {
     });
   }
 
+  @Get('public')
+  async findAllPublic() {
+    return this.contactService.findAll({
+      visibility: Contact.Visibility.Public
+    });
+  }
+
   @Get(':id')
   async findOne(@GetUser() owner: User, @Id() id: string) {
+    const contact = await this.contactService.findOne({
+      id,
+      owner: { id: owner.id }
+    });
+
+    if (!contact) {
+      throw new NotFoundException('Contact not found');
+    }
+
+    return contact;
+  }
+
+  @Get(':id/public')
+  async findOnePublic(@Id() id: string) {
     const contact = await this.contactService.findOne({
       id,
       visibility: Contact.Visibility.Public
