@@ -7,6 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC } from 'src/decorators/public.decorator';
 import { IS_SKIP_USER_VERIFICATION } from 'src/decorators/skip-user-verification';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class UserVerificationGuard implements CanActivate {
@@ -32,7 +33,7 @@ export class UserVerificationGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const user = request.user as User;
 
     if (!user?.isVerified?.()) {
       throw new UnauthorizedException('Not verified');
