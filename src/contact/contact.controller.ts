@@ -16,10 +16,16 @@ import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { Id } from 'src/decorators/id.decorator';
 import { Contact } from './entities/contact.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Controller('contacts')
 export class ContactController {
-  constructor(private readonly contactService: ContactService) {}
+  constructor(
+    @InjectRepository(Contact)
+    private readonly contactRepository: Repository<Contact>,
+    private readonly contactService: ContactService
+  ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post()

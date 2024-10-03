@@ -10,6 +10,7 @@ import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { TwoFactorAuthenticationVerifyDto } from './dto/two-factor-authentication-verify.dto';
 import { TotpService } from 'src/totp/totp.service';
+import { SkipTwoFactorAuthentication } from 'src/decorators/skip-two-factor-authentication';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
@@ -19,6 +20,7 @@ export class TwoFactorAuthenticationController {
   ) {}
 
   @Post('enable')
+  @SkipTwoFactorAuthentication()
   async enable(@GetUser() user: User) {
     if (user.twoFactorAuthenticationEnabledAt) {
       throw new ConflictException('2FA already enabled');
@@ -44,6 +46,7 @@ export class TwoFactorAuthenticationController {
   }
 
   @Post('verify')
+  @SkipTwoFactorAuthentication()
   async verify(
     @GetUser() user: User,
     @Body() { token }: TwoFactorAuthenticationVerifyDto
@@ -63,6 +66,19 @@ export class TwoFactorAuthenticationController {
 
     await this.userService.update(user.id, {
       twoFactorAuthenticationVerifiedAt: new Date()
+    });
+  }
+
+  @Post('disable')
+  async disable(@GetUser() user: User) {
+    if (!user.twoFactorAuthenticationEnabledAt) {
+      throw new BadRequestException('2FA not enabled');
+    }
+
+    await this.userService.update(user.id, {
+      twoFactorAuthenticationSecret: '',
+      twoFactorAuthenticationEnabledAt: null,
+      twoFactorAuthenticationVerifiedAt: null
     });
   }
 }

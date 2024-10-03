@@ -38,7 +38,7 @@ export class TwoFactorAuthenticationGuard implements CanActivate {
 
     if (
       user?.twoFactorAuthenticationEnabledAt &&
-      !user.verificationTokenExpirationAt
+      !user.twoFactorAuthenticationVerifiedAt
     ) {
       throw new UnauthorizedException('2FA required');
     }

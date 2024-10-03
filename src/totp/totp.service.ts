@@ -20,7 +20,7 @@ export class TotpService {
     return url;
   }
 
-  generate(secret = this.generateRandomBase32(10)) {
+  generate(secret = this.generateRandomBase32(20)) {
     return TOTP.generate(secret);
   }
 
