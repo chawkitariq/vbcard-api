@@ -13,13 +13,16 @@ export class AuthenticationJwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ sub }: any) {
+  async validate({ sub, tfaVerified }: any) {
     const user = await this.userService.findOne({ id: sub });
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return user;
+    return {
+      user,
+      tfaVerified
+    };
   }
 }

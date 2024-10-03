@@ -28,12 +28,12 @@ export class User {
   twoFactorAuthenticationSecret?: string;
 
   @Exclude()
-  @Column({ name: 'two_factor_authentication_enabled_at', type: 'timestamptz', nullable: true })
+  @Column({
+    name: 'two_factor_authentication_enabled_at',
+    type: 'timestamptz',
+    nullable: true
+  })
   twoFactorAuthenticationEnabledAt?: Date;
-
-  @Exclude()
-  @Column({ name: 'two_factor_authentication_verified_at', type: 'timestamptz', nullable: true })
-  twoFactorAuthenticationVerifiedAt?: Date;
 
   @Exclude()
   @Index()
@@ -41,7 +41,11 @@ export class User {
   verificationToken?: string;
 
   @Exclude()
-  @Column({ name: 'verification_token_expiration_at', type: 'timestamptz', nullable: true })
+  @Column({
+    name: 'verification_token_expiration_at',
+    type: 'timestamptz',
+    nullable: true
+  })
   verificationTokenExpirationAt?: Date;
 
   @Exclude()

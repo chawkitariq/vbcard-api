@@ -7,7 +7,6 @@ import {
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC } from 'src/decorators/public.decorator';
 import { IS_SKIP_TWO_FACTOR_AUTHENTICATION } from 'src/decorators/skip-two-factor-authentication';
-import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class TwoFactorAuthenticationGuard implements CanActivate {
@@ -34,12 +33,10 @@ export class TwoFactorAuthenticationGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user as User;
 
-    if (
-      user?.twoFactorAuthenticationEnabledAt &&
-      !user.twoFactorAuthenticationVerifiedAt
-    ) {
+    const { user, tfaVerified } = request;
+
+    if (user?.twoFactorAuthenticationEnabledAt && !tfaVerified) {
       throw new UnauthorizedException('2FA required');
     }
 

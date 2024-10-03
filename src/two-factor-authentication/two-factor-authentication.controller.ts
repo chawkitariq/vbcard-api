@@ -11,12 +11,14 @@ import { UserService } from 'src/user/user.service';
 import { TwoFactorAuthenticationVerifyDto } from './dto/two-factor-authentication-verify.dto';
 import { TotpService } from 'src/totp/totp.service';
 import { SkipTwoFactorAuthentication } from 'src/decorators/skip-two-factor-authentication';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
   constructor(
     private readonly totpService: TotpService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService
   ) {}
 
   @Post('enable')
@@ -34,14 +36,14 @@ export class TwoFactorAuthenticationController {
       twoFactorAuthenticationEnabledAt: new Date()
     });
 
-    const otpauthUri = this.totpService.generateOtpAuthUrl(
+    const otpAuthUri = this.totpService.generateOtpAuthUrl(
       process.env.APP_NAME,
       user.email,
       twoFactorAuthenticationSecret
     );
 
     return {
-      otpauthUri
+      otpAuthUri
     };
   }
 
@@ -64,9 +66,13 @@ export class TwoFactorAuthenticationController {
       throw new BadRequestException('Invalid 2FA token');
     }
 
-    await this.userService.update(user.id, {
-      twoFactorAuthenticationVerifiedAt: new Date()
-    });
+    return {
+      access_token: this.jwtService.sign({
+        sud: user.id,
+        email: user.email,
+        tfaVerified: true
+      })
+    };
   }
 
   @Post('disable')
@@ -77,8 +83,7 @@ export class TwoFactorAuthenticationController {
 
     await this.userService.update(user.id, {
       twoFactorAuthenticationSecret: '',
-      twoFactorAuthenticationEnabledAt: null,
-      twoFactorAuthenticationVerifiedAt: null
+      twoFactorAuthenticationEnabledAt: null
     });
   }
 }

@@ -5,9 +5,10 @@ import { UserModule } from 'src/user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { TwoFactorAuthenticationGuard } from './guards/two-factor-authentication.guard';
 import { TotpModule } from 'src/totp/totp.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [UserModule, TotpModule],
+  imports: [UserModule, TotpModule, JwtModule],
   providers: [
     TwoFactorAuthenticationService,
     {
