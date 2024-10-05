@@ -21,12 +21,12 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
+  // @Get()
   findAll() {
     return this.userService.findAll();
   }
 
-  @Get(':id')
+  // @Get(':id')
   async findOne(@Id() id: string) {
     const user = await this.userService.findOne({ id });
 
@@ -37,7 +37,7 @@ export class UserController {
     return user;
   }
 
-  @Patch(':id')
+  // @Patch(':id')
   async update(@Id() id: string, @Body() updateUserDto: UpdateUserDto) {
     const { affected } = await this.userService.update(id, updateUserDto);
 
@@ -48,7 +48,7 @@ export class UserController {
     return this.userService.findOne({ id });
   }
 
-  @Delete(':id')
+  // @Delete(':id')
   async remove(@Id() id: string) {
     const { affected } = await this.userService.remove(id);
 

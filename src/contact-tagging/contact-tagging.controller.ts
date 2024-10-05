@@ -2,32 +2,32 @@ import {
   Controller,
   Post,
   Body,
-  Param,
   Delete,
   BadRequestException,
-  ConflictException
+  ConflictException,
+  Get
 } from '@nestjs/common';
 import { ContactTaggingService } from './contact-tagging.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { ContactService } from 'src/contact/contact.service';
 import { CreateContactTagDto } from 'src/contact-tag/dto/create-contact-tag.dto';
-import { ContactTagService } from 'src/contact-tag/contact-tag.service';
 import { Id } from 'src/decorators/id.decorator';
+import { ContactTagController } from 'src/contact-tag/contact-tag.controller';
 
 @Controller()
 export class ContactTaggingController {
   constructor(
     private readonly contactTaggingService: ContactTaggingService,
     private readonly contactService: ContactService,
-    private readonly contactTagService: ContactTagService
+    private readonly contactTagController: ContactTagController
   ) {}
 
   @Post('contacts/:contactId/tags')
   async create(
     @GetUser() user: User,
     @Id('contactId') contactId: string,
-    @Body() { name }: CreateContactTagDto
+    @Body() { name, ...createContactTagDto }: CreateContactTagDto
   ) {
     const contact = await this.contactService.findOne({ id: contactId });
 
@@ -35,21 +35,22 @@ export class ContactTaggingController {
       throw new ConflictException('Contact not found');
     }
 
-    const tag = await this.contactTagService.create({ name });
-
-    if (!tag) {
-      throw new ConflictException('Tag not found');
-    }
-
-    const isNameAlreadyExist = await this.contactTaggingService.exists({
-      user: { id: user.id },
-      contact: { id: contactId },
-      tag: { name }
+    const isAlreadyTagged = await this.contactTaggingService.exists({
+      where: {
+        user: { id: user.id },
+        contact: { id: contact.id },
+        tag: { name }
+      }
     });
 
-    if (isNameAlreadyExist) {
-      throw new ConflictException('Contact already has the tag');
+    if (!isAlreadyTagged) {
+      throw new ConflictException('Contact already has tag');
     }
+
+    const tag = await this.contactTagController.create(user, {
+      ...createContactTagDto,
+      name
+    });
 
     return this.contactTaggingService.create({
       user,
@@ -58,47 +59,19 @@ export class ContactTaggingController {
     });
   }
 
-  @Post('contacts/:contactId/tags')
-  async findAll(@GetUser() user: User, @Id('contactId') contactId: string) {
-    return this.contactTaggingService.findAll({
-      user: { id: user.id },
-      contact: { id: contactId }
-    });
-  }
-
-  @Post('contacts/:contactId/tags/:contactTagId')
-  async update(
-    @GetUser() user: User,
-    @Id('contactId') contactId: string,
-    @Id('contactTagId') contactTagId: string
+  @Get('contacts/:contactId/tags')
+  async findAll(
+    @GetUser('id') userId: string,
+    @Id('contactId') contactId: string
   ) {
-    const contact = await this.contactService.findOne({ id: contactId });
-
-    if (!contact) {
-      throw new BadRequestException('Contact not found');
-    }
-
-    const tag = await this.contactTagService.findOne(contactTagId);
-
-    if (!tag) {
-      throw new BadRequestException('Tag not found');
-    }
-
-    const isAlreadyExist = await this.contactTaggingService.exists({
-      user: { id: user.id },
-      contact: { id: contactId },
-      tag: { id: contactTagId }
+    const contactTagging = await this.contactTaggingService.findAll({
+      where: {
+        user: { id: userId },
+        contact: { id: contactId }
+      }
     });
 
-    if (isAlreadyExist) {
-      throw new ConflictException('Contact already has the tag');
-    }
-
-    return this.contactTaggingService.create({
-      user,
-      contact,
-      tag
-    });
+    return contactTagging.map(({ tag }) => tag);
   }
 
   @Delete('contacts/:contactId/tags/:contactTagId')
@@ -114,7 +87,7 @@ export class ContactTaggingController {
     });
 
     if (!affected) {
-      throw new BadRequestException('Contact tag not found');
+      throw new BadRequestException("Contact doesn't have tag");
     }
   }
 }

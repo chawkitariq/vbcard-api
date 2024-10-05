@@ -7,7 +7,7 @@ import { ContactTag } from './entities/contact-tag.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([ContactTag])],
   controllers: [ContactTagController],
-  providers: [ContactTagService],
-  exports: [ContactTagService]
+  providers: [ContactTagController, ContactTagService],
+  exports: [ContactTagController, ContactTagService]
 })
 export class ContactTagModule {}

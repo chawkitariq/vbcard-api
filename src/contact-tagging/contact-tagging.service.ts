@@ -18,15 +18,21 @@ export class ContactTaggingService {
   }
 
   findAll(
-    where?: Parameters<typeof this.contactTaggingRepository.findBy>['0']
+    options?: Parameters<typeof this.contactTaggingRepository.find>['0']
   ) {
-    return this.contactTaggingRepository.findBy(where);
+    return this.contactTaggingRepository.find(options);
+  }
+
+  findOne(
+    options?: Parameters<typeof this.contactTaggingRepository.findOne>['0']
+  ) {
+    return this.contactTaggingRepository.findOne(options);
   }
 
   exists(
-    where: Parameters<typeof this.contactTaggingRepository.existsBy>['0']
+    options: Parameters<typeof this.contactTaggingRepository.exists>['0']
   ) {
-    return this.contactTaggingRepository.existsBy(where);
+    return this.contactTaggingRepository.exists(options);
   }
 
   remove(

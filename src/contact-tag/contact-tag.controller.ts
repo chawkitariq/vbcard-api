@@ -5,42 +5,95 @@ import {
   Body,
   Patch,
   Param,
-  Delete
+  Delete,
+  ConflictException,
+  NotFoundException,
+  BadRequestException
 } from '@nestjs/common';
 import { ContactTagService } from './contact-tag.service';
 import { CreateContactTagDto } from './dto/create-contact-tag.dto';
 import { UpdateContactTagDto } from './dto/update-contact-tag.dto';
 import { Id } from 'src/decorators/id.decorator';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
-@Controller('contacts-tags')
+@Controller('contactstags')
 export class ContactTagController {
   constructor(private readonly contactTagService: ContactTagService) {}
 
-  // @Post()
-  create(@Body() createContactTagDto: CreateContactTagDto) {
-    return this.contactTagService.create(createContactTagDto);
+  @Post()
+  async create(
+    @GetUser() owner: User,
+    @Body() { name, ...createContactTagDto }: CreateContactTagDto
+  ) {
+    const isExists = await this.contactTagService.exists({
+      where: { owner: { id: owner.id }, name }
+    });
+
+    if (isExists) {
+      throw new ConflictException('Tag already exists');
+    }
+
+    return this.contactTagService.create({
+      ...createContactTagDto,
+      name,
+      owner
+    });
   }
 
   @Get()
-  findAll() {
-    return this.contactTagService.findAll();
+  findAll(@GetUser('id') ownerId: string) {
+    return this.contactTagService.findAll({
+      where: {
+        owner: { id: ownerId }
+      }
+    });
   }
 
   @Get(':id')
-  findOne(@Id() id: string) {
-    return this.contactTagService.findOne(id);
+  async findOne(@GetUser('id') ownerId: string, @Id() id: string) {
+    const tag = await this.contactTagService.findOne({
+      where: {
+        id,
+        owner: { id: ownerId }
+      }
+    });
+
+    if (!tag) {
+      throw new NotFoundException('Tag not found');
+    }
+
+    return tag;
   }
 
   @Patch(':id')
-  update(
+  async update(
+    @GetUser() ownerId: string,
     @Id() id: string,
-    @Body() updateContactTagDto: UpdateContactTagDto
+    @Body() { name, ...updateContactTagDto }: UpdateContactTagDto
   ) {
-    return this.contactTagService.update(id, updateContactTagDto);
+    const { affected } = await this.contactTagService.update(
+      {
+        id,
+        owner: { id: ownerId }
+      },
+      { ...updateContactTagDto, name }
+    );
+
+    if (!affected) {
+      throw new BadRequestException('Tag not found');
+    }
   }
 
   @Delete(':id')
-  remove(@Id() id: string) {
-    return this.contactTagService.remove(id);
+  async remove(@GetUser('id') ownerId: string, @Id() id: string) {
+    const { affected } = await this.contactTagService.remove({
+      id,
+      owner: { id: ownerId }
+    });
+
+    if (!affected) {
+      throw new BadRequestException('Tag not found');
+    }
   }
 }

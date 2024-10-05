@@ -17,19 +17,26 @@ export class ContactTagService {
     return this.tagRepository.save(tag);
   }
 
-  findAll() {
-    return this.tagRepository.find();
+  findAll(options?: Parameters<typeof this.tagRepository.find>['0']) {
+    return this.tagRepository.find(options);
   }
 
-  findOne(id: string) {
-    return this.tagRepository.findOneBy({ id });
+  findOne(options?: Parameters<typeof this.tagRepository.findOne>['0']) {
+    return this.tagRepository.findOne(options);
   }
 
-  update(id: string, updateContactTagDto: UpdateContactTagDto) {
-    return this.tagRepository.update(id, updateContactTagDto);
+  exists(options: Parameters<typeof this.tagRepository.exists>['0']) {
+    return this.tagRepository.exists(options);
   }
 
-  remove(id: string) {
-    return this.tagRepository.delete(id);
+  update(
+    criteria: Parameters<typeof this.tagRepository.update>['0'],
+    updateContactTagDto: UpdateContactTagDto
+  ) {
+    return this.tagRepository.update(criteria, updateContactTagDto);
+  }
+
+  remove(criteria: Parameters<typeof this.tagRepository.delete>['0']) {
+    return this.tagRepository.delete(criteria);
   }
 }
