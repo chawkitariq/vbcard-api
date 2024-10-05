@@ -34,9 +34,9 @@ export class TwoFactorAuthenticationGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
 
-    const { user, tfaVerified } = request;
+    const { user } = request;
 
-    if (user?.twoFactorAuthenticationEnabledAt && !tfaVerified) {
+    if (user?.twoFactorAuthenticationEnabledAt) {
       throw new UnauthorizedException('2FA required');
     }
 

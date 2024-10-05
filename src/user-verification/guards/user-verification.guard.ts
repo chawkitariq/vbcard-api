@@ -36,7 +36,7 @@ export class UserVerificationGuard implements CanActivate {
     const user = request.user as User;
 
     if (!user?.isVerified?.()) {
-      throw new UnauthorizedException('Not verified');
+      throw new UnauthorizedException('User not verified');
     }
 
     return true;
