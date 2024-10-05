@@ -7,8 +7,9 @@ import { AuthenticationController } from './authentication.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthenticationJwtStrategy } from './strategies/jwt.strategy';
 import { HashModule } from 'src/hash/hash.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AuthenticationJwtGuard } from './guards/jwt.guard';
+import { UnauthorizedExceptionFilter } from './filters/unauthorized-exception.filter';
 
 @Module({
   imports: [
@@ -29,6 +30,10 @@ import { AuthenticationJwtGuard } from './guards/jwt.guard';
     {
       provide: APP_GUARD,
       useClass: AuthenticationJwtGuard
+    },
+    {
+      provide: APP_FILTER,
+      useClass: UnauthorizedExceptionFilter
     }
   ],
   controllers: [AuthenticationController]
