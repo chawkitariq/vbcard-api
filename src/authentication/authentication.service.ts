@@ -35,6 +35,7 @@ export class AuthenticationService {
   async login({ id, email }: User) {
     const payload = { email, sub: id };
     return {
+      token_type: 'Bearer',
       access_token: this.jwtService.sign(payload)
     };
   }

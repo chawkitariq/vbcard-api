@@ -2,6 +2,9 @@ import {
   Body,
   ConflictException,
   Controller,
+  Header,
+  HttpCode,
+  HttpStatus,
   Post,
   UseGuards
 } from '@nestjs/common';
@@ -36,6 +39,8 @@ export class AuthenticationController {
 
   @Public()
   @Post('login')
+  @Header('Cache-Control', 'no-store')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticationLocalGuard)
   async login(@GetUser() user: User) {
     return this.authenticationService.login(user);
