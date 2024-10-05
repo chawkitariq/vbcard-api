@@ -8,8 +8,8 @@ export class AuthenticationJwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET
+      secretOrKey: process.env.JWT_SECRET,
+      ignoreExpiration: false
     });
   }
 
@@ -17,7 +17,7 @@ export class AuthenticationJwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.userService.findOne({ id: sub });
 
     if (!user) {
-      throw new UnauthorizedException();
+      return false;
     }
 
     return user;

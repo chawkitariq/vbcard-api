@@ -1,8 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
-  Injectable,
-  UnauthorizedException
+  ForbiddenException,
+  Injectable
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC } from 'src/decorators/public.decorator';
@@ -36,7 +36,7 @@ export class UserVerificationGuard implements CanActivate {
     const user = request.user as User;
 
     if (!user?.isVerified?.()) {
-      throw new UnauthorizedException('User not verified');
+      throw new ForbiddenException('User not verified');
     }
 
     return true;

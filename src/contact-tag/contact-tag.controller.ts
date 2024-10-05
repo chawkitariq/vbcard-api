@@ -53,7 +53,7 @@ export class ContactTagController {
   @Get(':id')
   async findOne(@GetUser('id') ownerId: string, @Id() id: string) {
     const tag = await this.contactTagService.findOne({
-      where: {
+      where:  {
         id,
         owner: { id: ownerId }
       }
@@ -68,16 +68,16 @@ export class ContactTagController {
 
   @Patch(':id')
   async update(
-    @GetUser() ownerId: string,
+    @GetUser('id') ownerId: string,
     @Id() id: string,
-    @Body() { name, ...updateContactTagDto }: UpdateContactTagDto
+    @Body() updateContactTagDto: UpdateContactTagDto
   ) {
     const { affected } = await this.contactTagService.update(
       {
         id,
         owner: { id: ownerId }
       },
-      { ...updateContactTagDto, name }
+      updateContactTagDto
     );
 
     if (!affected) {

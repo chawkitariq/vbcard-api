@@ -2,7 +2,8 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  UnauthorizedException
+  UnauthorizedException,
+  ForbiddenException
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC } from 'src/decorators/public.decorator';
@@ -37,7 +38,7 @@ export class TwoFactorAuthenticationGuard implements CanActivate {
     const { user } = request;
 
     if (user?.twoFactorAuthenticationEnabledAt) {
-      throw new UnauthorizedException('2FA required');
+      throw new ForbiddenException('2FA required');
     }
 
     return true;
