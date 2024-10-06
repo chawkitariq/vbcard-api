@@ -22,6 +22,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ name: 'theme_mode', default: 'light' })
+  themeMode: User.ThemeMode;
+
   @Exclude()
   @Index()
   @Column({ name: 'two_factor_authentication_secret', nullable: true })
@@ -83,5 +86,13 @@ export class User {
   isVerificationTokenExpired(): boolean {
     const now = new Date();
     return this.verificationTokenExpirationAt <= now;
+  }
+}
+
+export namespace User {
+  export enum ThemeMode {
+    Light = 'light',
+    Dark = 'dark',
+    System = 'system'
   }
 }
