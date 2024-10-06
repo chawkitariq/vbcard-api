@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Id } from 'src/decorators/id.decorator';
+import { GetUser } from 'src/decorators/get-user.decorator';
 
 @Controller('users')
 export class UserController {
@@ -37,6 +38,11 @@ export class UserController {
     return user;
   }
 
+  @Get('me')
+  async findMe(@GetUser('id') userId: string) {
+    return this.userService.findOne({ id: userId });
+  }
+
   // @Patch(':id')
   async update(@Id() id: string, @Body() updateUserDto: UpdateUserDto) {
     const { affected } = await this.userService.update(id, updateUserDto);
@@ -55,5 +61,10 @@ export class UserController {
     if (!affected) {
       throw new NotFoundException('User not found');
     }
+  }
+
+  @Delete('me')
+  async deleteMe(@GetUser('id') userId: string) {
+    return this.userService.remove({ id: userId });
   }
 }

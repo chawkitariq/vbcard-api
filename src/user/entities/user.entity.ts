@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -77,7 +77,22 @@ export class User {
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz' })
   deletedAt: Date;
 
-  @Exclude()
+  @Expose()
+  isPremium(): boolean {
+    return !!this.premiumEndAt;
+  }
+
+  @Expose()
+  isBusiness(): boolean {
+    return !!this.businessEndAt;
+  }
+
+  @Expose()
+  isBanned(): boolean {
+    return !!this.bannedAt;
+  }
+
+  @Expose()
   isVerified(): boolean {
     return !!this.verifiedAt;
   }
