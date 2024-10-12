@@ -6,7 +6,7 @@ import { AuthenticationRegisterDto } from './dto/authentication-register.dto';
 import { HashService } from 'src/hash/hash.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AuthenticationRegisterEvent } from './events/authentication-register.event';
-const ms = require('ms');
+import ms from 'ms';
 
 @Injectable()
 export class AuthenticationService {
