@@ -6,6 +6,7 @@ import { AuthenticationRegisterDto } from './dto/authentication-register.dto';
 import { HashService } from 'src/hash/hash.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AuthenticationRegisterEvent } from './events/authentication-register.event';
+const ms = require('ms');
 
 @Injectable()
 export class AuthenticationService {
@@ -36,6 +37,7 @@ export class AuthenticationService {
     const payload = { email, sub: id };
     return {
       token_type: 'Bearer',
+      expiresIn: ms(process.env.JWT_EXPIRES_IN || '1h') / 1000,
       access_token: this.jwtService.sign(payload)
     };
   }
