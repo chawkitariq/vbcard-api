@@ -35,9 +35,11 @@ export class AuthenticationService {
 
   async login({ id, email }: User) {
     const payload = { email, sub: id };
+    const seconds = ms(process.env.JWT_EXPIRES_IN || '1h') / 1000;
+    const expiresIn = Date.now() + seconds;
     return {
       token_type: 'Bearer',
-      expires_in: ms(process.env.JWT_EXPIRES_IN || '1h') / 1000,
+      expires_in: expiresIn,
       access_token: this.jwtService.sign(payload)
     };
   }
