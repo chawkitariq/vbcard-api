@@ -37,7 +37,7 @@ export class AuthenticationService {
     const payload = { email, sub: id };
     return {
       token_type: 'Bearer',
-      expiresIn: ms(process.env.JWT_EXPIRES_IN || '1h') / 1000,
+      expires_in: ms(process.env.JWT_EXPIRES_IN || '1h') / 1000,
       access_token: this.jwtService.sign(payload)
     };
   }
