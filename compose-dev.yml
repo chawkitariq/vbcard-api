@@ -1,17 +1,28 @@
-version: '3'
-
 services:
   db:
     image: postgres
     restart: always
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/pgsql/data
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: vbcard
-      POSTGRES_PASSWORD: vbcard
-      POSTGRES_DB: vbcard
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+
+  api:
+    image: node:23
+    user: node
+    restart: always
+    working_dir: "/home/node/app"
+    volumes:
+      - "./:/home/node/app"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command: "yarn start:dev"
 
   minio:
     image: 'minio/minio:latest'
