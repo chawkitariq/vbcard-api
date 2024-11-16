@@ -38,10 +38,20 @@ describe('AuthenticationService', () => {
         password: 'password'
       };
 
+      it('should throw ConflictException if user already exists', async () => {
+        userService.existsBy.mockResolvedValue(true);
+
+        await expect(
+          authenticationService.register(authenticationRegisterDto)
+        ).rejects.toThrow(ConflictException);
+      });
+
       it('should register new user', async () => {
         const userFixture = new User();
+
         userService.create.mockResolvedValue(userFixture);
         hashService.hash.mockResolvedValue(authenticationRegisterDto.password);
+
         const newUser = await authenticationService.register(
           authenticationRegisterDto
         );
@@ -49,6 +59,7 @@ describe('AuthenticationService', () => {
         expect(userService.create).toHaveBeenCalledWith(
           authenticationRegisterDto
         );
+
         expect(newUser).toEqual(userFixture);
       });
     });
