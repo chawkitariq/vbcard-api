@@ -25,6 +25,10 @@ export class UserService {
     return this.userRepository.findOneBy(where);
   }
 
+  async existsBy(where: Parameters<typeof this.userRepository.existsBy>['0']) {
+    return this.userRepository.existsBy(where);
+  }
+
   async update(
     criteria: Parameters<typeof this.userRepository.update>['0'],
     updateUserDto: UpdateUserDto
