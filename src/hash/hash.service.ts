@@ -10,7 +10,10 @@ export class HashService {
    * @param {number} [saltOrRounds] - Optional salt or number of salt rounds. Defaults to environment variable `HASH_SALT_ROUNDS` or 10.
    * @returns {Promise<string>} A promise that resolves with the hashed value.
    */
-  async hash(value: string, saltOrRounds = +process.env.HASH_SALT_ROUNDS || 10): Promise<string> {
+  async hash(
+    value: string,
+    saltOrRounds = +process.env.HASH_SALT_ROUNDS || 10
+  ): Promise<string> {
     return bcrypt.hash(value, saltOrRounds);
   }
 

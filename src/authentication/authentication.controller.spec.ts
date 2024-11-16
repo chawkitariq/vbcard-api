@@ -6,10 +6,10 @@ describe('AuthenticationController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthenticationController],
+      providers: [AuthenticationController]
     }).compile();
 
-    controller = module.get<AuthenticationController>(AuthenticationController);
+    controller = module.get(AuthenticationController);
   });
 
   it('should be defined', () => {
