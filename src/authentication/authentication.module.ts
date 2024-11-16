@@ -27,13 +27,15 @@ import { UnauthorizedExceptionFilter } from './filters/unauthorized-exception.fi
     AuthenticationService,
     AuthenticationLocalStrategy,
     AuthenticationJwtStrategy,
+    AuthenticationJwtGuard,
+    UnauthorizedExceptionFilter,
     {
       provide: APP_GUARD,
-      useClass: AuthenticationJwtGuard
+      useExisting: AuthenticationJwtGuard
     },
     {
       provide: APP_FILTER,
-      useClass: UnauthorizedExceptionFilter
+      useExisting: UnauthorizedExceptionFilter
     }
   ],
   controllers: [AuthenticationController]

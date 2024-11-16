@@ -1,34 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthenticationController } from './authentication.controller';
-import { AuthenticationService } from './authentication.service';
+import { AppModule } from 'src/app.module';
+import { DataSource } from 'typeorm';
 import { UserService } from 'src/user/user.service';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { ConflictException } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 
 describe('AuthenticationController', () => {
   let authenticationController: AuthenticationController;
-  let authenticationService: DeepMocked<AuthenticationService>;
-  let userService: DeepMocked<UserService>;
+  let userService: UserService;
+  let dataSource: DataSource;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AuthenticationController,
-        {
-          provide: AuthenticationService,
-          useValue: createMock<AuthenticationService>()
-        },
-        {
-          provide: UserService,
-          useValue: createMock<UserService>()
-        }
-      ]
+      imports: [AppModule]
     }).compile();
 
     authenticationController = module.get(AuthenticationController);
-    authenticationService = module.get(AuthenticationService);
+
     userService = module.get(UserService);
+    dataSource = module.get(DataSource);
+  });
+
+  afterEach(async () => {
+    await dataSource.synchronize(true);
   });
 
   it('should be defined', () => {
@@ -42,18 +37,18 @@ describe('AuthenticationController', () => {
     };
 
     it('should register new user', async () => {
-      userService.existsBy.mockResolvedValue(false);
-
       await authenticationController.register(authenticationRegisterDto);
 
-      expect(authenticationService.register).toHaveBeenCalledWith(
-        authenticationRegisterDto
-      );
+      const registeredUser = await userService.findOne({
+        email: authenticationRegisterDto.email
+      });
+
+      expect(registeredUser).toBeDefined();
+      expect(registeredUser.email).toEqual(authenticationRegisterDto.email);
     });
 
     it('should throw ConflictException if user already exists', async () => {
-      userService.existsBy.mockResolvedValue(true);
-
+      await authenticationController.register(authenticationRegisterDto);
       const register = authenticationController.register(
         authenticationRegisterDto
       );
@@ -65,9 +60,12 @@ describe('AuthenticationController', () => {
   describe('login', () => {
     it('should login user', async () => {
       const userFixture = new User();
-      await authenticationController.login(userFixture);
 
-      expect(authenticationService.login).toHaveBeenCalledWith(userFixture);
+      const response = await authenticationController.login(userFixture);
+
+      expect(response).not.toBeNull();
+      expect(response).toBeDefined();
+      expect(response).toBeInstanceOf(Object);
     });
   });
 });

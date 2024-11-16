@@ -11,9 +11,10 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [UserModule, TotpModule, JwtModule],
   providers: [
     TwoFactorAuthenticationService,
+    TwoFactorAuthenticationGuard,
     {
       provide: APP_GUARD,
-      useClass: TwoFactorAuthenticationGuard
+      useExisting: TwoFactorAuthenticationGuard
     }
   ],
   controllers: [TwoFactorAuthenticationController]
