@@ -15,7 +15,7 @@ import { TotpModule } from 'src/totp/totp.module';
     UserVerificationGuard,
     {
       provide: APP_GUARD,
-      useClass: UserVerificationGuard
+      useExisting: UserVerificationGuard
     }
   ],
   controllers: [UserVerificationController],
