@@ -1,4 +1,4 @@
-import { IsDefined, IsEmail, IsNotEmpty, IsString, IsStrongPassword } from 'class-validator';
+import { IsDefined, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class AuthenticationRegisterDto {
   @IsDefined()
