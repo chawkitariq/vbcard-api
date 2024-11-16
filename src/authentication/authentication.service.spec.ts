@@ -6,6 +6,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TestBed, Mocked } from '@suites/unit';
 import { User } from 'src/user/entities/user.entity';
 import { ConflictException } from '@nestjs/common';
+import { AuthenticationRegisterEvent } from './events/authentication-register.event';
 
 describe('AuthenticationService', () => {
   describe('isolated', () => {
@@ -46,11 +47,38 @@ describe('AuthenticationService', () => {
         ).rejects.toThrow(ConflictException);
       });
 
-      it('should register new user', async () => {
-        const userFixture = new User();
+      it('should hash password', async () => {
+        const hashedPassword = 'hashedPassword';
+        hashService.hash.mockResolvedValue(hashedPassword);
 
+        userService.create.mockResolvedValue(new User());
+
+        await authenticationService.register(authenticationRegisterDto);
+
+        expect(hashService.hash).toHaveBeenCalledWith(
+          authenticationRegisterDto.password
+        );
+      });
+
+      it('should trigger AuthenticationRegisterEvent on successfull registration', async () => {
+        eventEmitter.emit.mockImplementation();
+
+        const userFixture = new User();
         userService.create.mockResolvedValue(userFixture);
+
+        await authenticationService.register(authenticationRegisterDto);
+
+        expect(eventEmitter.emit).toHaveBeenCalledWith(
+          AuthenticationRegisterEvent.name,
+          new AuthenticationRegisterEvent(userFixture.id)
+        );
+      });
+
+      it('should create new user', async () => {
         hashService.hash.mockResolvedValue(authenticationRegisterDto.password);
+
+        const userFixture = new User();
+        userService.create.mockResolvedValue(userFixture);
 
         const newUser = await authenticationService.register(
           authenticationRegisterDto
