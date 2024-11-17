@@ -11,12 +11,9 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - name: Run docker compose
-              run: docker compose --version
-            #   uses: actions/setup-node@v4
-            #   with:
-            #     node_version: "23"
-
-            # - name: Install dependencies
-            #   run: yarn
-            # - run: yarn test
+            - name: Run test inside docker compose api service
+              run: |
+                docker compose -f \ 
+                docker-compose.yml -f \ 
+                docker-compose.dev.yml -f \ 
+                docker-compose.test.yml run --rm api yarn test
