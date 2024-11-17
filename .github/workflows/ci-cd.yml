@@ -13,7 +13,7 @@ jobs:
 
             - name: Run test inside docker compose api service
               run: |
-                docker compose -f \ 
-                docker-compose.yml -f \ 
-                docker-compose.dev.yml -f \ 
-                docker-compose.test.yml run --rm api yarn test
+                docker compose \
+                -f "docker-compose.yml" \
+                -f "docker-compose.dev.yml" \ 
+                -f "docker-compose.test.yml" run --rm api yarn test
