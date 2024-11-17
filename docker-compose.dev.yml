@@ -1,27 +1,17 @@
+name: vbcard-api_dev
 services:
   db:
-    image: postgres
-    restart: always
-    volumes:
-      - dbdata:/var/lib/pgsql/data
     ports:
       - 5432:5432
-    environment:
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
 
   api:
     build:
       context: .
-      dockerfile: Dockerfile.local
-    restart: always
+      dockerfile: Dockerfile.dev
     volumes:
       - "./:/home/node/app"
     ports:
       - "3000:3000"
-    depends_on:
-      - db
     command: "yarn start:dev"
 
   minio:
@@ -45,5 +35,4 @@ services:
       timeout: 5s
 
 volumes:
-  dbdata:
   minio:

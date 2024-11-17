@@ -1,7 +1,0 @@
-FROM node:23
-
-RUN npm i -g @nestjs/cli
-
-USER node:node
-
-WORKDIR /home/node/app
