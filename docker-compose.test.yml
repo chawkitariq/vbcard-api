@@ -1,0 +1,15 @@
+name: vbcard-api_test
+services:
+  db:
+    ports: !reset []
+    volumes: !reset []
+
+  api:
+    ports: !reset []
+    command: !reset null
+
+  minio:
+    ports: !reset []
+    volumes: !reset []
+
+volumes: !reset {}
