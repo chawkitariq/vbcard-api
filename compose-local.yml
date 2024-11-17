@@ -14,8 +14,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    user: node
+      dockerfile: Dockerfile.local
     restart: always
     volumes:
       - "./:/home/node/app"

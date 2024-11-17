@@ -29,4 +29,4 @@ COPY --chown=node:node --from=builder /home/node/app/dist dist
 
 EXPOSE 3000
 
-CMD [ "yarn", "start:prod" ]
+CMD [ "sh", "-c", "yarn; yarn start:prod" ]

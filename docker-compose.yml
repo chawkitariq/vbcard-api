@@ -13,8 +13,9 @@ services:
 
   api:
     build: .
-    user: node
     restart: always
+    volumes:
+      - './.env:/home/node/app/.env'
     ports:
       - '3000:3000'
     depends_on:
