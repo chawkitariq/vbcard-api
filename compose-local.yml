@@ -12,10 +12,10 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
 
   api:
-    image: node:23
-    user: node
+    build:
+      context: .
+      dockerfile: Dockerfile.local
     restart: always
-    working_dir: "/home/node/app"
     volumes:
       - "./:/home/node/app"
     ports:
