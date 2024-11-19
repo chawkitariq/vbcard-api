@@ -1,15 +1,10 @@
 name: vbcard-api_test
 services:
-  db:
-    ports: !reset []
-    volumes: !reset []
 
   api:
-    ports: !reset []
-    command: !reset null
-
-  minio:
-    ports: !reset []
-    volumes: !reset []
-
-volumes: !reset {}
+    build: node:23
+    volumes:
+      - "./:/home/node/app"
+    ports:
+      - "3000:3000"
+    command: sh -c "yarn; yarn test:watch"
