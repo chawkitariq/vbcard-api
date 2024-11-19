@@ -31,14 +31,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Log in to the Container registry
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: ${{ env.REGISTRY }}
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to the github container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push to the github container registry
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -46,7 +46,7 @@ jobs:
           tags: ${{env.IMAGE_NAME}}:latest
 
   deploy:
-    needs: test
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
