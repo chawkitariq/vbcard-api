@@ -2,7 +2,7 @@ name: vbcard-api_test
 services:
 
   api:
-    build: node:23
+    image: node:23
     volumes:
       - "./:/home/node/app"
     ports:
