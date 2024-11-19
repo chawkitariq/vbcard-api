@@ -1,15 +1,53 @@
 name: VBCard CI/CD Workflow
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Run test inside docker compose api service
-              run: docker compose -f docker-compose.test.yml run --rm api sh -c "yarn; yarn test src/authentication/"
+      - name: Run test inside docker compose api service
+        run: docker compose -f docker-compose.test.yml run --rm api sh -c "yarn; yarn test src/authentication/"
+
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # - name: Log in to the Container registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ${{ env.REGISTRY }}
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: ${{env.IMAGE_NAME}}:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Connect to remote server
+        run: echo "remote server connection..."
