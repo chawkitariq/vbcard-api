@@ -1,11 +1,23 @@
 name: vbcard-api_test
 services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: vbcard
+      POSTGRES_PASSWORD: vbcard
+      POSTGRES_DB: vbcard
 
   api:
     image: node:23
     working_dir: "/home/node/app"
     volumes:
       - "./:/home/node/app"
-    ports:
-      - "3000:3000"
     command: sh -c "yarn; yarn test:watch"
+    environment:
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_USERNAME: "vbcard"
+      DB_PASSWORD: "vbcard"
+      DB_DATABASE: "vbcard"
+    depends_on:
+      - db
