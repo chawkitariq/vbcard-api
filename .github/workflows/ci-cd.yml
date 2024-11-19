@@ -19,6 +19,7 @@ jobs:
         run: docker compose -f docker-compose.test.yml run --rm api sh -c "yarn; yarn test src/authentication/"
 
   build:
+    needs: test
     runs-on: ubuntu-latest
 
     permissions:
@@ -45,6 +46,7 @@ jobs:
           tags: ${{env.IMAGE_NAME}}:latest
 
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
