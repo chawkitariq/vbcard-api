@@ -8,9 +8,9 @@ on:
 env:
   REGISTRY: ghcr.io
 
-permissions:
-  contents: read
-  packages: write
+# permissions:
+#   contents: read
+#   packages: write
 
 jobs:
   test:
@@ -39,8 +39,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
           tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
+          push: true
 
   deploy:
     needs: build
