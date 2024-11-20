@@ -8,9 +8,8 @@ on:
 env:
   REGISTRY: ghcr.io
 
-# permissions:
-#   contents: read
-#   packages: write
+permissions:
+  packages: write
 
 jobs:
   test:
