@@ -7,7 +7,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   test:
@@ -22,12 +21,6 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
-
     steps:
       - uses: actions/checkout@v4
 
@@ -36,14 +29,14 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
 
       - name: Build and push to the github container registry
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{env.IMAGE_NAME}}:latest
+          tags: ${{ github.repository }}:latest
 
   deploy:
     needs: build
