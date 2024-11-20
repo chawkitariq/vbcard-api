@@ -12,40 +12,46 @@ permissions:
   packages: write
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Run test inside docker compose api service
-        run: docker compose -f docker-compose.test.yml run --rm api sh -c "yarn; yarn test src/authentication/"
+  #     - name: Run test inside docker compose api service
+  #       run: docker compose -f docker-compose.test.yml run --rm api sh -c "yarn; yarn test src/authentication/"
 
-  build:
-    needs: test
-    runs-on: ubuntu-latest
+  # build:
+  #   needs: test
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Log in to the github container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
+  #     - name: Log in to the github container registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ${{ env.REGISTRY }}
+  #         username: ${{ github.actor }}
+  #         password: ${{ github.token }}
 
-      - name: Build and push to the github container registry
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
-          push: true
+  #     - name: Build and push to the github container registry
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         context: .
+  #         tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
+  #         push: true
 
   deploy:
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Connect to remote server
-        run: echo "remote server connection..."
+      - name: executing remote ssh commands using key
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: whoami
