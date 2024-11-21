@@ -1,4 +1,5 @@
 name: vbcard-api_test
+
 services:
   db:
     image: postgres
@@ -9,18 +10,34 @@ services:
 
   api:
     image: node:23
-    working_dir: "/home/node/app"
+    working_dir: '/home/node/app'
     volumes:
-      - "./:/home/node/app"
-    command: sh -c "yarn; yarn test:watch"
+      - './:/home/node/app'
     environment:
-      DB_HOST: "db"
-      DB_PORT: "5432"
-      DB_USERNAME: "vbcard"
-      DB_PASSWORD: "vbcard"
-      DB_DATABASE: "vbcard"
-      JWT_SECRET: "qsd"
-      JWT_EXPIRES_IN: "1h"
-      HASH_SALT_ROUNDS: "10"
+      DB_HOST: 'db'
+      DB_PORT: '5432'
+      DB_USERNAME: 'vbcard'
+      DB_PASSWORD: 'vbcard'
+      DB_DATABASE: 'vbcard'
+      JWT_SECRET: 'qsd'
+      JWT_EXPIRES_IN: '1h'
+      HASH_SALT_ROUNDS: '10'
+    command: sh -c "yarn; yarn test:watch"
     depends_on:
       - db
+
+  minio:
+    image: 'minio/minio:latest'
+    environment:
+      MINIO_ROOT_USER: vbcard
+      MINIO_ROOT_PASSWORD: vbcard
+    command: 'minio server /data/minio --console-address ":8900"'
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:9000/minio/health/live'
+      retries: 3
+      timeout: 5s
+
