@@ -48,15 +48,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: executing remote ssh commands using key
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          # port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd www
-            git pull origin main
-            docker compose down
-            docker compose up -d
+      - name: docker compose remote deployment
+        run: |
+          mkdir ~/.ssh
+          touch ~/.ssh/id_ed25519
+          echo ${{ secrets.SSH_KEY }} > ~/.ssh/id_ed25519
+          DOCKER_HOST=“ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} docker ps -a
+
+      # - name: executing remote ssh commands using key
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     # port: ${{ secrets.SSH_PORT }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     script: |
+      #       cd www
+      #       git pull origin main
+      #       docker compose down
+      #       docker compose up -d
