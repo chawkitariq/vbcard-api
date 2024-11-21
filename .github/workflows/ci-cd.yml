@@ -52,7 +52,7 @@ jobs:
         run: |
           mkdir ~/.ssh
           touch ~/.ssh/id_ed25519
-          echo ${{ secrets.SSH_KEY }} > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
           DOCKER_HOST=“ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} docker ps -a
 
       # - name: executing remote ssh commands using key
