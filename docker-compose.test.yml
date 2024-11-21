@@ -19,7 +19,7 @@ services:
       DB_USERNAME: 'vbcard'
       DB_PASSWORD: 'vbcard'
       DB_DATABASE: 'vbcard'
-      JWT_SECRET: 'qsd'
+      JWT_SECRET: 'vbcard'
       JWT_EXPIRES_IN: '1h'
       HASH_SALT_ROUNDS: '10'
     command: sh -c "yarn; yarn test:watch"
