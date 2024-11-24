@@ -1,3 +1,5 @@
+name: vbcard-api_localstack
+
 services:
   localstack:
     image: localstack/localstack

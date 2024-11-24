@@ -1,4 +1,5 @@
 name: vbcard-api_dev
+
 services:
   db:
     image: postgres
