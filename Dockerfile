@@ -1,4 +1,4 @@
-FROM node:23 AS builder
+FROM node:22 AS builder
 
 USER node:node
 
@@ -15,7 +15,7 @@ ARG NODE_ENV="production"
 
 RUN yarn build
 
-FROM node:23-slim
+FROM node:22-slim
 
 ENV NODE_ENV="production"
 
