@@ -4,40 +4,24 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_USER: vbcard
-      POSTGRES_PASSWORD: vbcard
-      POSTGRES_DB: vbcard
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
 
   api:
-    image: node:23
-    working_dir: '/home/node/app'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     volumes:
       - './:/home/node/app'
-    environment:
-      DB_HOST: 'db'
-      DB_PORT: '5432'
-      DB_USERNAME: 'vbcard'
-      DB_PASSWORD: 'vbcard'
-      DB_DATABASE: 'vbcard'
-      JWT_SECRET: 'vbcard'
-      JWT_EXPIRES_IN: '1h'
-      HASH_SALT_ROUNDS: '10'
-    command: sh -c "yarn; yarn test:watch"
+    env_file:
+      - .env
     depends_on:
       - db
 
   minio:
     image: 'minio/minio:latest'
     environment:
-      MINIO_ROOT_USER: vbcard
-      MINIO_ROOT_PASSWORD: vbcard
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: password
     command: 'minio server /data/minio --console-address ":8900"'
-    healthcheck:
-      test:
-        - CMD
-        - curl
-        - '-f'
-        - 'http://localhost:9000/minio/health/live'
-      retries: 3
-      timeout: 5s
-
