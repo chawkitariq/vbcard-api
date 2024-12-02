@@ -1,73 +1,57 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# VBCard API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+The **VBCard API** repository is the backend API for the [VBCard](https://github.com/chawkitariq/vbcard-app) mobile application. It provides API endpoints for managing business cards.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Setup
 
-## Description
+### Environment Variables
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Copy the `.env.example` file to `.env` to configure your environment variables.
 
-## Installation
+### MinIO (S3 Storage)
+
+**IMPORTANT**: MinIO setup require the app to be run in [development mode](#development).
+
+To set up MinIO as a local S3-compatible object storage service:
+
+1. Visit [http://localhost:8900](http://localhost:8900).
+2. Log in using the following credentials:
+   - Username: `minio`
+   - Password: `password`
+3. Create new access keys:
+   - Navigate to [http://localhost:8900/access-keys/new-account](http://localhost:8900/access-keys/new-account).
+   - Copy the `Access Key` and set it in the `.env` file under `AWS_S3_ACCESS_KEY_ID`.
+   - Copy the `Secret Key` and set it in the `.env` file under `AWS_S3_SECRET_ACCESS_KEY`.
+4. Create a new bucket:
+   - Visit [http://localhost:8900/buckets/add-bucket](http://localhost:8900/buckets/add-bucket).
+   - Create a bucket named as you want and set it in the `.env` file under `AWS_S3_BUCKET`.
+
+## Development
 
 ```bash
-$ yarn install
+# Start app
+docker compose -f docker-compose.dev.yml up
+
+# Stop app
+docker compose -f docker-compose.dev.yml down
 ```
 
-## Running the app
+## Production
 
 ```bash
-# development
-$ yarn run start
+# Start app
+docker compose up
 
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+# Stop app
+docker compose down
 ```
 
 ## Test
 
 ```bash
-# unit tests
-$ yarn run test
+# Run all tests
+docker compose -f docker-compose.test.yml run api yarn test
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+# Run all tests and watch change
+docker compose -f docker-compose.test.yml run api yarn test:watch
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
